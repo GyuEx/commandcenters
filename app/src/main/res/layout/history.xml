@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="text_color" type="int"/>
+        <variable name="text_color_string" type="String"/>
+        <variable name="back_color" type="String"/>
+
+        <variable
+            name="viewModel"
+            type="com.beyondinc.commandcenter.viewmodel.HistoryViewModel" />
+
+        <variable
+            name="pos"
+            type="Integer" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white">
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            android:onClick="@{v->viewModel.onClick(pos)}">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:includeFontPadding="false"
+                    android:textSize="15dp"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:focusable="true"
+                    android:textColor="@android:color/black"
+                    android:text="@{viewModel.getTime(pos)}"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/dL01"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:includeFontPadding="false"
+                    android:textSize="15dp"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:singleLine="true"
+                    android:text="@{viewModel.getState(pos)}"
+                    android:textColor="@android:color/black"/>
+
+                <TextView
+                    android:id="@+id/dL02"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:includeFontPadding="false"
+                    android:textSize="15dp"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:singleLine="true"
+                    android:text="@{viewModel.getName(pos)}"
+                    android:textColor="@android:color/black"/>
+
+                <TextView
+                    android:id="@+id/dL03"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:textSize="15dp"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:singleLine="true"
+                    android:text="@{viewModel.getCode(pos)}"
+                    android:textColor="@android:color/black"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white">
+        </TextView>
+
+    </LinearLayout>
+</layout>

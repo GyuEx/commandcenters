@@ -1,0 +1,150 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "com.beyondinc.commandcenter"
+        minSdkVersion 23
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            applicationVariants.all { variant ->
+                if (variant.buildType.name == "release") {
+                    variant.outputs.all { output ->
+                        def apkName = variant.flavorName + "_manager_"
+                        outputFileName = apkName + defaultConfig.versionName + ".apk"
+                    }
+                }
+            }
+        }
+    }
+    flavorDimensions "commandcenter"
+    productFlavors {
+        dev {
+            dimension = "commandcenter"
+            manifestPlaceholders=[appName:"비욘드 통합관제 개발"]
+            applicationIdSuffix ".dev"
+            buildConfigField "String", "app_id", '"7"'
+        }
+        beyond {
+            dimension = "commandcenter"
+            manifestPlaceholders=[appName:"비욘드 통합관제"]
+            applicationIdSuffix ".isok"
+            buildConfigField "String", "app_id", '"7"'
+        }
+        ckds {
+            dimension = "commandcenter"
+            manifestPlaceholders=[appName:"최강배달 통합관제"]
+            applicationIdSuffix ".ckds"
+            buildConfigField "String", "app_id", '"17"'
+        }
+//        roadpilot {
+//            dimension = "commandcenter"
+//            manifestPlaceholders=[appName:"로드파일럿 통합관제"]
+//            applicationIdSuffix ".roadpilot"
+//            buildConfigField "String", "app_id", '"37"'
+//        }
+//        dsp {
+//            dimension = "commandcenter"
+//            manifestPlaceholders=[appName:"워밍업 통합관제"]
+//            applicationIdSuffix ".dsp"
+//            buildConfigField "String", "app_id", '"47"'
+//        }
+//        lemon {
+//            dimension = "commandcenter"
+//            manifestPlaceholders=[appName:"레몬콜 통합관제"]
+//            applicationIdSuffix ".lemon"
+//            buildConfigField "String", "app_id", '"57"'
+//        }
+        lod {
+            dimension = "commandcenter"
+            manifestPlaceholders=[appName:"배달의전설 통합관제"]
+            applicationIdSuffix ".lod"
+            buildConfigField "String", "app_id", '"77"'
+        }
+//        gsc {
+//            dimension = "commandcenter"
+//            manifestPlaceholders=[appName:"우딜 통합관제"]
+//            applicationIdSuffix ".gsc"
+//            buildConfigField "String", "app_id", '"127"'
+//        }
+    }
+    sourceSets {
+        String sharedTestDir = 'src/sharedTest/java'
+        test {
+            java.srcDir sharedTestDir
+        }
+        androidTest {
+            java.srcDir sharedTestDir
+        }
+        beyond {
+            res.srcDirs = ['src/main/res', 'src/beyond/res']
+        }
+        ckds {
+            res.srcDirs = ['src/main/res', 'src/ckds/res']
+        }
+        lod {
+            res.srcDirs = ['src/main/res', 'src/lod/res']
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.wear:wear:1.0.0'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    // ViewModel and LiveData
+    implementation "android.arch.lifecycle:extensions:\$lifecycle_version"
+    // alternatively - just ViewModel
+    implementation "android.arch.lifecycle:viewmodel:\$lifecycle_version" // For Kotlin use viewmodel-ktx
+    // alternatively - just LiveData
+    implementation "android.arch.lifecycle:livedata:\$lifecycle_version"
+    // alternatively - Lifecycles only (no ViewModel or LiveData).
+    //     Support library depends on this lightweight import
+    implementation "android.arch.lifecycle:runtime:\$lifecycle_version"
+    annotationProcessor "android.arch.lifecycle:compiler:\$lifecycle_version" // For Kotlin use kapt instead of annotationProcessor
+    // alternately - if using Java8, use the following instead of compiler
+    implementation "android.arch.lifecycle:common-java8:\$lifecycle_version"
+    // optional - ReactiveStreams support for LiveData
+    implementation "android.arch.lifecycle:reactivestreams:\$lifecycle_version"
+    // optional - Test helpers for LiveData
+    testImplementation "android.arch.core:core-testing:\$lifecycle_version"
+    compileOnly 'com.google.android.wearable:wearable:2.6.0'
+}
