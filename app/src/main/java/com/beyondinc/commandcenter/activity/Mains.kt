@@ -2,6 +2,7 @@ package com.beyondinc.commandcenter.activity
 
 import android.content.Context
 import android.os.Bundle
+import android.sax.StartElementListener
 import android.util.Log
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -14,10 +15,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.databinding.ActivityMainBinding
-import com.beyondinc.commandcenter.fragment.DetailDialog
-import com.beyondinc.commandcenter.fragment.HistoryDialog
-import com.beyondinc.commandcenter.fragment.OrderFragment
-import com.beyondinc.commandcenter.fragment.SelectDialog
+import com.beyondinc.commandcenter.fragment.*
+import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 
@@ -30,6 +29,8 @@ class Mains : AppCompatActivity(), MainsFun {
     companion object {
         var fr: Fragment? = null
         var oderfrag: Fragment? = null
+        var mapfrag: Fragment? = null
+        var checkfrag: Fragment? = null
         var fragmentTransaction: FragmentTransaction? = null
         var dialog:SelectDialog? = null
         var detail:DetailDialog? = null
@@ -52,10 +53,13 @@ class Mains : AppCompatActivity(), MainsFun {
 
         Log.e(Tag, "On Create // " + Vars.isLogin)
 
+        setFragment()
+
         fragmentTransaction = supportFragmentManager.beginTransaction()
-        oderfrag = OrderFragment()
-        fr = oderfrag
-        fragmentTransaction!!.add(R.id.mL01, fr!!)
+        checkfrag = CheckFragment()
+        fr = checkfrag
+        fragmentTransaction!!.replace(R.id.mL02, fr!!)
+        fragmentTransaction!!.show(fr!!)
         fragmentTransaction!!.commitAllowingStateLoss()
 
 //        Thread thread = new ListViewThread();
@@ -65,12 +69,37 @@ class Mains : AppCompatActivity(), MainsFun {
         getDeviceSize()
     }
 
+    override fun setFragment() {
+        if(viewModel!!.layer.value == viewModel!!.SELECT_MAP)
+        {
+            fragmentTransaction = supportFragmentManager.beginTransaction()
+            mapfrag = MapFragment()
+            fr = mapfrag
+            fragmentTransaction!!.replace(R.id.mL01, fr!!)
+            fragmentTransaction!!.show(fr!!)
+            fragmentTransaction!!.commitAllowingStateLoss()
+        }
+        else if(viewModel!!.layer.value == viewModel!!.SELECT_ORDER)
+        {
+            fragmentTransaction = supportFragmentManager.beginTransaction()
+            oderfrag = OrderFragment()
+            fr = oderfrag
+            fragmentTransaction!!.replace(R.id.mL01, fr!!)
+            fragmentTransaction!!.show(fr!!)
+            fragmentTransaction!!.commitAllowingStateLoss()
+        }
+    }
+
+
+
     fun getDeviceSize() {
         /// 사용하는 핸드폰 전체 화면 사이즈 가져옴
         val windowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display = windowManager.defaultDisplay
         display.getSize(Vars.DeviceSize)
     }
+
+
 
     override fun closeDialog() {
         try {
@@ -138,4 +167,13 @@ class Mains : AppCompatActivity(), MainsFun {
             history!!.show(supportFragmentManager, "History")
         }
     }
+
+    override fun showDrawer(){
+        binding!!.Mains!!.openDrawer(binding!!.mdL01)
+    }
+
+    override fun closeDrawer() {
+        binding!!.Mains!!.closeDrawer(binding!!.mdL01)
+    }
+
 }

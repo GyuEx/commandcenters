@@ -30,7 +30,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="0"
                 android:background="@color/white"
-                app:layout="@{viewModel.layer == 1? 1 : 0 }">
+                app:layout="@{viewModel.select == viewModel.SELECT_BRIFE ? 1 : 0}">
 
                 <TextView
                     android:layout_width="0dp"
@@ -58,8 +58,8 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:background="@color/black"
-                    android:onClick="@{v->viewModel.showDialog()}"
-                    android:textColor="@color/white">
+                    android:onClick="@{v->viewModel.click_breifing()}"
+                    android:textColor="@drawable/click_text_color">
                 </TextView>
 
                 <TextView

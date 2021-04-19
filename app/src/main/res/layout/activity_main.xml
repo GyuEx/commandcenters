@@ -5,20 +5,24 @@
 
     <data>
         <variable
-            name="text_color_mainbtn1"
+            name="text_color_brief"
             type="int" />
         <variable
-            name="text_color_mainbtn2"
+            name="text_color_store"
             type="int" />
         <variable
-            name="text_color_mainbtn3"
+            name="text_color_rider"
+            type="int" />
+        <variable
+            name="text_color_map"
             type="int" />
         <variable
             name="viewModel"
             type="com.beyondinc.commandcenter.viewmodel.MainsViewModel" />
     </data>
 
-    <LinearLayout
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/Mains"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activity.Mains">
@@ -45,6 +49,7 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
                         android:layout_marginLeft="15dp"
+                        android:onClick="@{v->viewModel.showDrawer()}"
                         android:background="@drawable/menu_btn">
                     </Button>
 
@@ -52,85 +57,205 @@
                         android:id="@+id/mB02"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="6"
+                        android:layout_weight="8"
                         android:gravity="center"
                         android:textSize="25dp"
                         android:textStyle="bold"
                         android:background="@color/black"
                         android:textColor="@drawable/click_text_color"
+                        android:onClick="@{v->viewModel.click_check()}"
                         android:text="오더현황 ▼">
                     </Button>
 
-                    <Button
+                    <TextView
                         android:id="@+id/mB03"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="5dp"
                         android:layout_weight="3"
+                        android:button="@drawable/map_btn"
                         android:gravity="center"
+                        android:background="@drawable/map_btn"
+                        android:onClick="@{v->viewModel.click_map_to_order()}"
                         android:textSize="25dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
                         android:textStyle="bold"
-                        android:background="@drawable/map_btn">
-                    </Button>
+                        app:text_color_map="@{viewModel.layer == viewModel.SELECT_MAP ? 1 : 0}">
+
+                    </TextView>
 
                 </LinearLayout>
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="2">
+                    android:layout_weight="27">
 
-                    <TextView
-                        android:id="@+id/mB04"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textSize="25dp"
-                        android:textStyle="bold"
-                        android:onClick="@{v->viewModel.setLayoutBtn1()}"
-                        android:text="배정"
-                        app:text_color_mainbtn1="@{viewModel.layer}">
-                    </TextView>
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/mB05"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="2"
+                            android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="0"
+                                    app:layout="@{viewModel.layer == viewModel.SELECT_ORDER ? 1 : 0}"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/mB04"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:gravity="center"
+                                        android:textSize="25dp"
+                                        android:textStyle="bold"
+                                        android:onClick="@{v->viewModel.click_brife()}"
+                                        android:text="배정"
+                                        app:text_color_breif="@{viewModel.select == viewModel.SELECT_BRIFE ? 1 : 0}">
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/mB05"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:gravity="center"
+                                        android:textSize="25dp"
+                                        android:textStyle="bold"
+                                        android:onClick="@{v->viewModel.click_store()}"
+                                        android:text="가맹점"
+                                        app:text_color_store="@{viewModel.select == viewModel.SELECT_STORE? 1:0}">
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/mB06"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:gravity="center"
+                                        android:textSize="25dp"
+                                        android:textStyle="bold"
+                                        android:onClick="@{v->viewModel.click_rider()}"
+                                        android:text="라이더"
+                                        app:text_color_rider="@{viewModel.select == viewModel.SELECT_RIDER?1:0}">
+                                    </TextView>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:orientation="vertical"
+                                    app:layout="@{viewModel.layer == viewModel.SELECT_MAP ? 1 : 0}"
+                                    android:layout_weight="0">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="0dp"
+                                        android:orientation="horizontal"
+                                        android:padding="5dp"
+                                        android:background="@color/white"
+                                        android:layout_weight="1">
+
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:background="@drawable/map_menu_btn_background"
+                                            android:layout_weight="2">
+
+                                            <TextView
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:textColor="@color/white"
+                                                android:text="기사"
+                                                android:gravity="center"
+                                                android:textSize="25dp"
+                                                android:textStyle="bold">
+                                            </TextView>
+
+                                        </LinearLayout>
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:orientation="vertical"
+                                            android:layout_weight="5">
+
+                                            <TextView
+                                                android:layout_width="match_parent"
+                                                android:layout_height="0dp"
+                                                android:textColor="@color/black"
+                                                android:text="배:2 픽:2 완:1"
+                                                android:gravity="center"
+                                                android:layout_weight="1">
+
+                                            </TextView>
+
+                                            <TextView
+                                                android:layout_width="match_parent"
+                                                android:layout_height="0dp"
+                                                android:textColor="@color/black"
+                                                android:text="전:30 운:1 대:0 식:0 퇴:29"
+                                                android:gravity="center"
+                                                android:layout_weight="1">
+
+                                            </TextView>
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:background="@drawable/map_menu_btn_background"
+                                            android:layout_weight="2">
+
+                                            <TextView
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:textColor="@color/white"
+                                                android:text="오더"
+                                                android:gravity="center"
+                                                android:textSize="25dp"
+                                                android:textStyle="bold">
+                                            </TextView>
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/mL01"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="25"
+                            android:background="@color/white"
+                            android:orientation="horizontal">
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/mL02"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textSize="25dp"
-                        android:textStyle="bold"
-                        android:onClick="@{v->viewModel.setLayoutBtn2()}"
-                        android:text="가맹점"
-                        app:text_color_mainbtn2="@{viewModel.layer}">
-                    </TextView>
+                        android:layout_height="0dp"
+                        app:layout_check="@{viewModel.checkview == viewModel.SELECT_CHECK ? 1 : 0}"
+                        android:orientation="vertical"
+                        tools:ignore="MissingConstraints">
 
-                    <TextView
-                        android:id="@+id/mB06"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textSize="25dp"
-                        android:textStyle="bold"
-                        android:onClick="@{v->viewModel.setLayoutBtn3()}"
-                        android:text="라이더"
-                        app:text_color_mainbtn3="@{viewModel.layer}">
-                    </TextView>
+                    </LinearLayout>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/mL01"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="20"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -211,9 +336,234 @@
                         android:gravity="center"
                         android:textSize="15dp"
                         android:layout_weight="1"/>
-
                 </LinearLayout>
-
         </LinearLayout>
-    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mdL01"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:layout_gravity="start"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="@{v->viewModel.closeDrawer()}"
+                    android:background="@drawable/exit_w_btn"
+                    android:gravity="left">
+
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="7"
+                    android:gravity="left">
+
+                </TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@drawable/s_logo"
+                android:layout_weight="5">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/notice"
+                    android:gravity="left">
+
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="7"
+                    android:text="공지사항"
+                    android:textColor="@color/black"
+                    android:textSize="30dp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="left|center_vertical">
+
+                </TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/setting"
+                    android:gravity="left">
+
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="7"
+                    android:text="환경설정"
+                    android:textColor="@color/black"
+                    android:textSize="30dp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="left|center_vertical">
+
+                </TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/logout"
+                    android:gravity="left">
+
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="7"
+                    android:text="로그아웃"
+                    android:textColor="@color/black"
+                    android:textSize="30dp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="left|center_vertical">
+
+                </TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/call"
+                    android:gravity="left">
+
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="7"
+                    android:text="1899-4231"
+                    android:textColor="@color/black"
+                    android:textSize="30dp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="left|center_vertical">
+
+                </TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/kakao"
+                    android:gravity="left">
+
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="7"
+                    android:text="비욘드딜리버리 헬프데스크"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="left|center_vertical">
+
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1">
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
 </layout>

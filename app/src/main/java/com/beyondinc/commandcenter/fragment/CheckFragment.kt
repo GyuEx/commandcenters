@@ -1,44 +1,45 @@
 package com.beyondinc.commandcenter.fragment
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.ViewModelProvider
-import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 import com.beyondinc.commandcenter.R
-import com.beyondinc.commandcenter.databinding.FragmentOrderBinding
-import com.beyondinc.commandcenter.util.Finals
+import com.beyondinc.commandcenter.databinding.FragmentCheckBinding
+import com.beyondinc.commandcenter.viewmodel.CheckViewModel
+import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 
-class OrderFragment : Fragment() {
-    var binding: FragmentOrderBinding? = null
-    var viewModel: MainsViewModel? = null
+class CheckFragment : Fragment() {
+
+    private var binding: FragmentCheckBinding? = null
+    private var viewModel: CheckViewModel? = null
 
     companion object {
         var fr: Fragment? = null
-        var listfrag: Fragment? = null
+        var checklistfrag: Fragment? = null
         var fragmentTransaction: FragmentTransaction? = null
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_order, container, false)
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_check, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DataBindingUtil.bind(view)
-        viewModel = ViewModelProvider(requireActivity()).get(MainsViewModel::class.java)
+        viewModel = CheckViewModel()
         binding!!.viewModel = viewModel
         binding!!.lifecycleOwner = requireActivity()
 
         fragmentTransaction = childFragmentManager.beginTransaction()
-        listfrag = ListFragment()
-        fr = listfrag
-        fragmentTransaction!!.add(R.id.ofL02, fr!!)
+        checklistfrag = CheckListFragment()
+        fr = checklistfrag
+        fragmentTransaction!!.add(R.id.cfL02, fr!!)
         fragmentTransaction!!.commitAllowingStateLoss()
     }
 }
