@@ -1,10 +1,15 @@
 package com.beyondinc.commandcenter.viewmodel
 
+import android.os.Handler
+import android.os.Message
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.adapter.RecyclerAdapterCheck
 import com.beyondinc.commandcenter.data.Checkdata
+import com.beyondinc.commandcenter.fragment.CheckListFragment
+import com.beyondinc.commandcenter.handler.MainThread
+import com.beyondinc.commandcenter.util.Vars
 
 class CheckViewModel : ViewModel() {
     var items: ArrayList<Checkdata>? = null
@@ -72,11 +77,7 @@ class CheckViewModel : ViewModel() {
     fun allEnable(){
         for(i in 0 until items!!.size)
         {
-            val memo = Checkdata()
-            memo.id = items!![i].id
-            memo.title = items!![i].title
-            memo.use = true
-            items!!.add(memo)
+            items!![i].use = true
         }
         allcheck.postValue(true)
         onCreate()
@@ -84,13 +85,19 @@ class CheckViewModel : ViewModel() {
     fun allDisable(){
         for(i in 0 until items!!.size)
         {
-            val memo = Checkdata()
-            memo.id = items!![i].id
-            memo.title = items!![i].title
-            memo.use = false
-            items!!.add(memo)
+            items!![i].use = false
         }
         allcheck.postValue(false)
         onCreate()
+    }
+
+    fun click_Success()
+    {
+
+    }
+
+    fun click_cancel()
+    {
+        Vars.mvm!!.click_check()
     }
 }

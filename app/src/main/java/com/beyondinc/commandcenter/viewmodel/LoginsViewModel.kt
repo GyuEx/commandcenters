@@ -17,7 +17,7 @@ class LoginsViewModel() : ViewModel() {
     }
 
     var isLogin = false
-    val mainthread = MainThread(handler)
+    //val mainthread = MainThread(handler)
 
     fun Logins() {
         if(isLogin == false)

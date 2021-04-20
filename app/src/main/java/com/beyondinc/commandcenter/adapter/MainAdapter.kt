@@ -5,6 +5,7 @@ import android.provider.SyncStateContract
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -127,11 +128,17 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("custom_checkbox")
     fun setCustomCheck(view: View, height: Boolean) {
-        Log.e("Check", "called box")
         if (height == true) {
             view.setBackgroundResource(R.drawable.checkbox_sel)
         } else {
             view.setBackgroundResource(R.drawable.checkbox_nor)
         }
     }
+
+    @JvmStatic
+    @BindingAdapter("check_filter")
+    fun setcheck_filter(view: CheckBox, height: Boolean) {
+        view.isChecked = height == true
+    }
+
 }

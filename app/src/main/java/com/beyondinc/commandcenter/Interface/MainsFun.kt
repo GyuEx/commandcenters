@@ -1,5 +1,7 @@
 package com.beyondinc.commandcenter.Interface
 
+import com.beyondinc.commandcenter.handler.MainThread
+
 interface MainsFun {
 
     fun setFragment()
@@ -13,6 +15,5 @@ interface MainsFun {
     fun closeOderdetail()
     fun closeHistory()
     fun closeDrawer()
-
 }
 

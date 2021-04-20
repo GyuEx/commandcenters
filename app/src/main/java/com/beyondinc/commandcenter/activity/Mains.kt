@@ -2,9 +2,7 @@ package com.beyondinc.commandcenter.activity
 
 import android.content.Context
 import android.os.Bundle
-import android.sax.StartElementListener
 import android.util.Log
-import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -16,14 +14,13 @@ import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.databinding.ActivityMainBinding
 import com.beyondinc.commandcenter.fragment.*
-import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 
 
 class Mains : AppCompatActivity(), MainsFun {
     var binding: ActivityMainBinding? = null
-    var viewModel: MainsViewModel? = null
+    //var viewModel: MainsViewModel? = null
     private val Tag = "Mains Activity"
 
     companion object {
@@ -47,39 +44,35 @@ class Mains : AppCompatActivity(), MainsFun {
         Vars.mContext = this
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        viewModel = ViewModelProvider(this).get(MainsViewModel::class.java)
+        Vars.mvm = ViewModelProvider(this).get(MainsViewModel::class.java)
         binding!!.lifecycleOwner = this
-        binding!!.viewModel = viewModel
+        binding!!.viewModel = Vars.mvm
 
         Log.e(Tag, "On Create // " + Vars.isLogin)
 
         setFragment()
 
         fragmentTransaction = supportFragmentManager.beginTransaction()
-        checkfrag = CheckFragment()
+        checkfrag = CheckListFragment()
         fr = checkfrag
         fragmentTransaction!!.replace(R.id.mL02, fr!!)
         fragmentTransaction!!.show(fr!!)
         fragmentTransaction!!.commitAllowingStateLoss()
 
-//        Thread thread = new ListViewThread();
-//        thread.setDaemon(true);
-//        thread.start();
-
         getDeviceSize()
     }
 
     override fun setFragment() {
-        if(viewModel!!.layer.value == viewModel!!.SELECT_MAP)
+        if(Vars.mvm!!.layer.value == Vars.mvm!!.SELECT_MAP)
         {
             fragmentTransaction = supportFragmentManager.beginTransaction()
-            mapfrag = MapFragment()
+            mapfrag = DriverFragment()
             fr = mapfrag
             fragmentTransaction!!.replace(R.id.mL01, fr!!)
             fragmentTransaction!!.show(fr!!)
             fragmentTransaction!!.commitAllowingStateLoss()
         }
-        else if(viewModel!!.layer.value == viewModel!!.SELECT_ORDER)
+        else if(Vars.mvm!!.layer.value == Vars.mvm!!.SELECT_ORDER)
         {
             fragmentTransaction = supportFragmentManager.beginTransaction()
             oderfrag = OrderFragment()
@@ -175,5 +168,4 @@ class Mains : AppCompatActivity(), MainsFun {
     override fun closeDrawer() {
         binding!!.Mains!!.closeDrawer(binding!!.mdL01)
     }
-
 }

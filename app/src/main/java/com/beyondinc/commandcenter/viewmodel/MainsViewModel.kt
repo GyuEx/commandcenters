@@ -8,12 +8,12 @@ import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 
 class MainsViewModel : ViewModel() {
-    @JvmField
+    var Tag = "MainsViewModel"
+
     var layer = MutableLiveData<Int>()
     var select = MutableLiveData<Int>()
     var popuptitle = MutableLiveData<String>()
     var checkview = MutableLiveData<Int>()
-    var Tag = "MainsViewModel"
 
     //View Codes
     val SELECT_EMPTY : Int = 0
@@ -76,7 +76,6 @@ class MainsViewModel : ViewModel() {
     }
 
     fun click_check(){
-        Log.e(Tag,"Check init")
 
         if(checkview.value == SELECT_CHECK)
         {

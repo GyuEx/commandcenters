@@ -1,21 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:bind="http://schemas.android.com/apk/res-auto">
+<layout xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
             name="viewModel"
             type="com.beyondinc.commandcenter.viewmodel.CheckViewModel" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#E6000000"
+        android:clickable="true"
+        android:focusable="true"
         android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview"
+        <LinearLayout
+            android:id="@+id/cfL01"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            bind:verAdapter="@{viewModel.getAdapter()}">
-        </androidx.recyclerview.widget.RecyclerView>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="30"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="전체선택"
+                    android:paddingLeft="10dp"
+                    android:gravity="center"
+                    android:textColor="@drawable/click_text_color"
+                    android:onClick="@{v->viewModel.allEnable()}"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="전체해제"
+                    android:paddingLeft="10dp"
+                    android:textColor="@drawable/click_text_color"
+                    android:onClick="@{v->viewModel.allDisable()}"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/white">
+
+            </TextView>
+
+        </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="10"
+                bind:verAdapter="@{viewModel.getAdapter()}">
+            </androidx.recyclerview.widget.RecyclerView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@drawable/check_sucess_btn"
+                        android:background="@color/white"
+                        android:text="완료"
+                        android:layout_margin="10dp"
+                        android:gravity="center"
+                        android:textSize="20dp"
+                        android:onClick="@{v->viewModel.click_Success()}"
+                        android:textStyle="bold"
+                        android:layout_weight="1">
+
+                    </Button>
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@drawable/check_cencel_btn"
+                        android:text="취소"
+                        android:layout_margin="10dp"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
+                        android:onClick="@{v->viewModel.click_cancel()}"
+                        android:layout_weight="1">
+                    </Button>
+
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </layout>

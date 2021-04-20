@@ -1,6 +1,9 @@
 package com.beyondinc.commandcenter.fragment
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +13,11 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 import com.beyondinc.commandcenter.R
+import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.databinding.FragmentOrderBinding
+import com.beyondinc.commandcenter.handler.MainThread
 import com.beyondinc.commandcenter.util.Finals
+import com.beyondinc.commandcenter.util.Vars
 
 class OrderFragment : Fragment() {
     var binding: FragmentOrderBinding? = null

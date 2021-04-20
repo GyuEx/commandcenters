@@ -33,7 +33,6 @@ class DialogViewModel : ViewModel() {
             memo.velue3 = "" + i
             items!!.add(memo)
         }
-        Log.e("insert", "data inserting")
         adapter!!.notifyDataSetChanged()
     }
 
