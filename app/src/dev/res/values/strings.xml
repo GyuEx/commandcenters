@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">통합관제(개발)</string>
+    <string name="icon_color">#00ff00</string>
+
+    <string name="default_token">eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ3b29kZWwiLCJVc2VySWQiOiJ3b29kZWwiLCJQYXNzd2QiOiJhcHBrZXkiLCJHcmFudFR5cGUiOiJydyIsIlNlcnZpY2VOYW1lIjoid29vZGVsIiwiQWNjZXNzRXhwaXJlRFQiOiIyMTIwLTA5LTA2IDEyOjQ4OjM2In0.Gf0U5k_3vCbcb0O6xOeetwnk66N8HiJwFe_iQ-Ri8iCZRi2DDHns3GYWnk9Xf1vteuu3AJQ13iOEQaq1N99ZCA</string>
+
+    <string name="remote_connect_url">https://dev.stds.co.kr:8443/byservice/</string>
+    <string name="alarm_url">tcp:dev.stds.co.kr:27070</string>
+    <string name="app_down_url">https://dev.stds.co.kr:8443/Apps/PkgDown.action?AppId=</string>
+</resources>

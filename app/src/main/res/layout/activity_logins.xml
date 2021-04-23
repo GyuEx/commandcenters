@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.beyondinc.commandcenter.viewmodel.LoginsViewModel" />
+            type="com.beyondinc.commandcenter.viewmodel.LoginViewModel" />
     </data>
 
 <LinearLayout
@@ -131,12 +131,13 @@
                         android:orientation="vertical">
 
                         <EditText
-                            android:id="@+id/editTextTextPersonName"
+                            android:id="@+id/PersonName"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:background="@drawable/login_edit_text_id"
                             android:ems="10"
+                            android:text="@={viewModel.id}"
                             android:hint="ID를 입력해주세요"
                             android:inputType="textPersonName"
                             android:textColorHint="@color/gray"
@@ -144,11 +145,12 @@
                             android:textColor="@color/black" />
 
                         <EditText
-                            android:id="@+id/editTextTextPassword"
+                            android:id="@+id/Password"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:ems="10"
+                            android:text="@={viewModel.pw}"
                             android:inputType="textPassword"
                             android:background="@drawable/login_edit_text_passwd"
                             android:textColor="@color/black"
@@ -169,7 +171,7 @@
                         android:layout_height="match_parent"
                         android:background="@drawable/login_btn"
                         android:text="로그인"
-                        android:onClick="@{v->viewModel.Logins()}"
+                        android:onClick="@{v->viewModel.Login()}"
                         android:textSize="30dp"
                         android:textStyle="bold"
                         />

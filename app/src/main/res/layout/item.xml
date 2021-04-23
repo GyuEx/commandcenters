@@ -20,6 +20,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/lightgray"
         android:orientation="vertical">
 
         <TextView
@@ -31,148 +32,174 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/lightgray"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:paddingRight="15dp"
-            android:paddingLeft="15dp"
-            android:onClick="@{v->viewModel.ListClick()}">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0"
+                android:gravity="center"
+                android:paddingLeft="15dp"
+                android:onClick="@{v->viewModel.setUse(pos)}"
+                app:layout="@{viewModel.select == viewModel.getSelectBrife ? 1 : 0}"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/usetime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:includeFontPadding="false"
-                    android:text="@{viewModel.getUsetime(pos)}"
-                    android:textSize="15sp"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:textStyle="bold"
-                    app:text_color_string="@{viewModel.items.get(pos).usetime}"/>
-
-                <TextView
-                    android:id="@+id/resttime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:includeFontPadding="false"
-                    android:text="@{viewModel.getResttime(pos)}"
-                    android:textSize="13sp"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    app:text_color="@{viewModel.items.get(pos).delay}"/>
-                <TextView
-                    android:id="@+id/pay"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:includeFontPadding="false"
-                    android:text="@{viewModel.getPay(pos)}"
-                    android:textSize="13sp"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:textColor="@android:color/black"/>
+                    <View
+                        android:id="@+id/ciV01"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/checkbox_nor"
+                        app:custom_checkbox="@{viewModel.items.get(pos).use}"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:orientation="vertical"
-                android:paddingLeft="20dp">
+                android:layout_weight="10"
+                android:orientation="horizontal"
+                android:background="@color/lightgray"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingRight="15dp"
+                android:onClick="@{v->viewModel.ListClick()}">
 
-                <TextView
-                    android:id="@+id/title"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:includeFontPadding="false"
-                    android:text="@{viewModel.getTitle(pos)}"
-                    android:textSize="15sp"
-                    android:gravity="left"
-                    android:singleLine="true"
-                    android:ellipsize="marquee"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:focusable="true"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold"/>
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/adress"
-                    android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/usetime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="@{viewModel.getUsetime(pos)}"
+                        android:textSize="15sp"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:textStyle="bold"
+                        app:text_color_string="@{viewModel.items.get(pos).orderId}"/>
+
+                    <TextView
+                        android:id="@+id/resttime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="@{viewModel.getResttime(pos)}"
+                        android:textSize="13sp"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        app:text_color="@{viewModel.items.get(pos).id}"/>
+                    <TextView
+                        android:id="@+id/pay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="@{viewModel.getPay(pos)}"
+                        android:textSize="13sp"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:textColor="@android:color/black"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:includeFontPadding="false"
-                    android:text="@{viewModel.getAdress(pos)}"
-                    android:textSize="13sp"
-                    android:gravity="left"
-                    android:singleLine="true"
-                    android:ellipsize="marquee"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:focusable="true"
-                    android:textColor="@android:color/black"/>
+                    android:layout_weight="4"
+                    android:orientation="vertical"
+                    android:paddingLeft="20dp">
 
-                <TextView
-                    android:id="@+id/poi"
-                    android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="@{viewModel.getTitle(pos)}"
+                        android:textSize="15sp"
+                        android:gravity="left"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:focusable="true"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/adress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="@{viewModel.getAdress(pos)}"
+                        android:textSize="13sp"
+                        android:gravity="left"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:focusable="true"
+                        android:textColor="@android:color/black"/>
+
+                    <TextView
+                        android:id="@+id/poi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="@{viewModel.getPoi(pos)}"
+                        android:textSize="13sp"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:focusable="true"
+                        android:gravity="left"
+                        android:textColor="@android:color/black"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:includeFontPadding="false"
-                    android:text="@{viewModel.getPoi(pos)}"
-                    android:textSize="13sp"
-                    android:singleLine="true"
-                    android:ellipsize="marquee"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:focusable="true"
-                    android:gravity="left"
-                    android:textColor="@android:color/black"/>
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/rider"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="@{viewModel.getRider(pos)}"
+                        android:textSize="13sp"
+                        android:gravity="center"
+                        android:textColor="@android:color/black"
+                        android:singleLine="true"
+                        android:textStyle="bold"/>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/rider"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:includeFontPadding="false"
-                    android:text="@{viewModel.getRider(pos)}"
-                    android:textSize="13sp"
-                    android:gravity="center"
-                    android:textColor="@android:color/black"
-                    android:singleLine="true"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/work"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:includeFontPadding="false"
-                    android:textSize="13sp"
-                    android:gravity="center"
-                    android:text="@{viewModel.getWork(pos)}"
-                    app:back_color="@{viewModel.items.get(pos).Work}"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:singleLine="true"
-                    android:textColor="@android:color/white"/>
-                <TextView
-                    android:id="@+id/paywon"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:includeFontPadding="false"
-                    android:text="@{viewModel.getPaywon(pos)}"
-                    android:textSize="13sp"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:textColor="@android:color/black"/>
+                    <TextView
+                        android:id="@+id/work"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:textSize="13sp"
+                        android:gravity="center"
+                        android:text="@{viewModel.getWork(pos)}"
+                        app:back_color="@{viewModel.items.get(pos).orderId}"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:singleLine="true"
+                        android:textColor="@android:color/white"/>
+                    <TextView
+                        android:id="@+id/paywon"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="@{viewModel.getPaywon(pos)}"
+                        android:textSize="13sp"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:textColor="@android:color/black"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 

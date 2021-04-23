@@ -1,21 +1,28 @@
 package com.beyondinc.commandcenter.viewmodel
 
+import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Message
 import android.util.Log
-import androidx.core.graphics.createBitmap
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.beyondinc.commandcenter.Interface.LoginsFun
 import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.adapter.RecyclerAdapter
-import com.beyondinc.commandcenter.data.Dialogdata
+import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
-import com.beyondinc.commandcenter.handler.MainThread
+import com.beyondinc.commandcenter.util.Finals
+import com.beyondinc.commandcenter.util.MakeJsonParam
+import com.beyondinc.commandcenter.util.Procedures
 import com.beyondinc.commandcenter.util.Vars
+import org.json.simple.JSONArray
+import java.util.*
+import java.util.concurrent.ConcurrentHashMap
+import kotlin.collections.HashMap
+import kotlin.concurrent.timer
 
 class ItemViewModel : ViewModel() {
-    var items: HashMap<Int,Orderdata>? = null
+    var Realitems: ConcurrentHashMap<String,ConcurrentHashMap<String,Orderdata>>? = null
+    var items: ConcurrentHashMap<Int,Orderdata>? = null
     var adapter: RecyclerAdapter? = null
 
     var state_brifes = MutableLiveData<Boolean>()
@@ -29,6 +36,11 @@ class ItemViewModel : ViewModel() {
     var count_pikup = MutableLiveData<Int>()
     var count_complete = MutableLiveData<Int>()
     var count_cancel = MutableLiveData<Int>()
+
+    var select = MutableLiveData<Int>()
+
+    var time = 0
+    var timerTask : Timer? = null
 
     init {
         Log.e("Memo", "Memo call")
@@ -47,53 +59,77 @@ class ItemViewModel : ViewModel() {
         count_cancel.postValue(0)
 
         if (items == null) {
-            items = HashMap()
+            items = ConcurrentHashMap(Collections.synchronizedMap(HashMap<Int,Orderdata>()))
+        }
+        if (Realitems == null)
+        {
+            Realitems = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
         }
         if (adapter == null) {
             adapter = RecyclerAdapter(this)
         }
-        insertLogic()
 
-        var handler: Handler = object : Handler() {
+        select.postValue(Finals.SELECT_EMPTY)
+
+        Vars.ItemHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
-                if (msg.what == 1) {
-
-                    if(Vars.oderList?.size < items!!.size)
-                    {
-                        for(i in Vars.oderList!!.size..items!!.size)
-                        {
-                            items!!.remove(i)
-                        }
-                    }
-                    Vars.oderList!!.let { items!!.putAll(it) }
-
+                Log.e("MMMMMM",msg.what.toString())
+                if (msg.what == Finals.INSERT_ORDER) insertLogic()
+                else if (msg.what == Finals.SELECT_EMPTY)
+                {
+                    select.postValue(Finals.SELECT_EMPTY)
+                    onCreate()
+                }
+                else if (msg.what == Finals.SELECT_BRIFE)
+                {
+                    select.postValue(Finals.SELECT_BRIFE)
                     onCreate()
                 }
             }
         }
-
-        val mainthread = MainThread(handler)
-        mainthread.start()
+        insertLogic()
     }
 
-    fun insertLogic() {
-
-        for (i in 0..10) {
-            val memo = Orderdata()
-            memo.id = i
-            memo.usetime = i.toString() + "분"
-            memo.resttime = "$i 초"
-            memo.pay = "카드"
-            memo.title = "면곡당 " + i + "호점"
-            memo.adress = "장안동 " + i + "번지"
-            memo.poi = i.toString() + "편한세상"
-            memo.rider = "$i km"
-            memo.work = "픽업"
-            memo.paywon = "$i 원"
-            memo.delay = i
-            items!![memo.id] = memo
+    fun StartTimer()
+    {
+        timerTask = timer(period = 1000)
+        {
+            if(time == Vars.timecnt)
+            {
+                Log.e("Timer","Live Timer ==== $time")
+                Vars.MainsHandler!!.obtainMessage(Finals.CALL_ORDER).sendToTarget()
+                time = 0
+            }
+            else
+            {
+                Log.e("Timer","Live Timer ==== $time")
+                time++
+            }
         }
-        onCreate()
+    }
+
+    fun insertLogic()
+    {
+        Vars.orderList!!.let { Realitems!!.putAll(it) }
+        ////여기서 필터랑 전체 구현해야댐....///
+        if(select.value == Finals.SELECT_EMPTY)
+        {
+            var it : Iterator<String> = Realitems!!.keys.iterator()
+            var cnt = 0
+            var itemp : ConcurrentHashMap<Int,Orderdata> = ConcurrentHashMap()
+            while (it.hasNext())
+            {
+                var ctemp = Realitems!![it.next()]
+                var rit : Iterator<String> = ctemp!!.keys.iterator()
+                while (rit.hasNext())
+                {
+                    ctemp[rit.next()]?.let { it1 -> itemp.put(cnt, it1) }
+                    cnt++
+                }
+            }
+            itemp!!.let { items!!.putAll(it) }
+            onCreate()
+        }
     }
 
     fun ListClick() {
@@ -110,11 +146,11 @@ class ItemViewModel : ViewModel() {
 
         for(i in 0 until items!!.keys.size)
         {
-            if(items!![i]!!.work!! == "접수") cntbr++
-            else if (items!![i]!!.work!! == "배정") cntre++
-            else if (items!![i]!!.work!! == "픽업") cntpi++
-            else if (items!![i]!!.work!! == "완료") cntco++
-            else if (items!![i]!!.work!! == "취소") cntca++
+            if(items!![i]!!.ApprovalTypeName!! == "접수") cntbr++
+            else if (items!![i]!!.ApprovalTypeName!! == "배정") cntre++
+            else if (items!![i]!!.ApprovalTypeName!! == "픽업") cntpi++
+            else if (items!![i]!!.ApprovalTypeName!! == "완료") cntco++
+            else if (items!![i]!!.ApprovalTypeName!! == "취소") cntca++
         }
 
         count_briefes.postValue(cntbr)
@@ -124,6 +160,14 @@ class ItemViewModel : ViewModel() {
         count_cancel.postValue(cntca)
 
         adapter!!.notifyDataSetChanged()
+
+
+        //로그인 프로세스 마지막, 타이머를 켬
+        if(!Logindata.OrderList)
+        {
+            Logindata.OrderList = true
+            StartTimer()
+        }
     }
 
     fun onResume() {}
@@ -132,40 +176,50 @@ class ItemViewModel : ViewModel() {
 //        return items
 //    }
 
+    fun getSelectBrife(): Int{
+        return Finals.SELECT_BRIFE
+    }
+
     fun getUsetime(pos: Int): String? {
-        return items!![pos]?.usetime
+        return items!![pos]?.AgencyRequestTime
     }
 
     fun getResttime(pos: Int): String? {
-        return items!![pos]?.resttime
+        return items!![pos]?.AgencyRequestTime
     }
 
     fun getPay(pos: Int): String? {
-        return items!![pos]?.pay
+        return items!![pos]?.ApprovalTypeName
     }
 
     fun getTitle(pos: Int): String? {
-        return items!![pos]?.title
+        return items!![pos]?.AgencyName
     }
 
     fun getAdress(pos: Int): String? {
-        return items!![pos]?.adress
+        return items!![pos]?.CustomerShortAddr
     }
 
     fun getPoi(pos: Int): String? {
-        return items!![pos]?.poi
+        return items!![pos]?.CustomerDetailAddr
     }
 
     fun getRider(pos: Int): String? {
-        return items!![pos]?.rider
+        return items!![pos]?.DeliveryDistance
     }
 
     fun getWork(pos: Int): String? {
-        return items!![pos]?.work
+        return items!![pos]?.PickupDT
     }
 
     fun getPaywon(pos: Int): String? {
-        return items!![pos]?.paywon
+        return items!![pos]?.DeliveryFee
+    }
+
+    fun setUse(pos: Int){
+        Log.e("UsePos","" + pos + " // " + items!![pos]!!.use)
+        //items!![pos]!!.use = items!![pos]!!.use != true
+        onCreate()
     }
 
     fun click_brief_filter(){

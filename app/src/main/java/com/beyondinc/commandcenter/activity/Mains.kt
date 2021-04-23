@@ -14,13 +14,14 @@ import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.databinding.ActivityMainBinding
 import com.beyondinc.commandcenter.fragment.*
+import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 
 
 class Mains : AppCompatActivity(), MainsFun {
     var binding: ActivityMainBinding? = null
-    //var viewModel: MainsViewModel? = null
+    var viewModel: MainsViewModel? = null
     private val Tag = "Mains Activity"
 
     companion object {
@@ -44,11 +45,9 @@ class Mains : AppCompatActivity(), MainsFun {
         Vars.mContext = this
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        Vars.mvm = ViewModelProvider(this).get(MainsViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MainsViewModel::class.java)
         binding!!.lifecycleOwner = this
-        binding!!.viewModel = Vars.mvm
-
-        Log.e(Tag, "On Create // " + Vars.isLogin)
+        binding!!.viewModel = viewModel
 
         setFragment()
 
@@ -62,17 +61,21 @@ class Mains : AppCompatActivity(), MainsFun {
         getDeviceSize()
     }
 
+    override fun onStart() {
+        super.onStart()
+    }
+
     override fun setFragment() {
-        if(Vars.mvm!!.layer.value == Vars.mvm!!.SELECT_MAP)
+        if(viewModel!!.layer.value == Finals.SELECT_MAP)
         {
             fragmentTransaction = supportFragmentManager.beginTransaction()
-            mapfrag = DriverFragment()
+            mapfrag = RiderFragment()
             fr = mapfrag
             fragmentTransaction!!.replace(R.id.mL01, fr!!)
             fragmentTransaction!!.show(fr!!)
             fragmentTransaction!!.commitAllowingStateLoss()
         }
-        else if(Vars.mvm!!.layer.value == Vars.mvm!!.SELECT_ORDER)
+        else if(viewModel!!.layer.value == Finals.SELECT_ORDER)
         {
             fragmentTransaction = supportFragmentManager.beginTransaction()
             oderfrag = OrderFragment()
@@ -82,8 +85,6 @@ class Mains : AppCompatActivity(), MainsFun {
             fragmentTransaction!!.commitAllowingStateLoss()
         }
     }
-
-
 
     fun getDeviceSize() {
         /// 사용하는 핸드폰 전체 화면 사이즈 가져옴

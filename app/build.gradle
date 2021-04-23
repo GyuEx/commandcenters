@@ -149,5 +149,8 @@ dependencies {
     implementation "android.arch.lifecycle:reactivestreams:\$lifecycle_version"
     // optional - Test helpers for LiveData
     testImplementation "android.arch.core:core-testing:\$lifecycle_version"
-    compileOnly 'com.google.android.wearable:wearable:2.6.0'
+
+    implementation "commons-codec:commons-codec:1.15"
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 }

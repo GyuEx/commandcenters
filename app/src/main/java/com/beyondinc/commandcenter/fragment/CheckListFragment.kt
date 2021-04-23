@@ -8,8 +8,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.databinding.FragmentListCheckBinding
-import com.beyondinc.commandcenter.handler.MainThread
 import com.beyondinc.commandcenter.viewmodel.CheckViewModel
+import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 
 class CheckListFragment : Fragment() {
     private var binding: FragmentListCheckBinding? = null

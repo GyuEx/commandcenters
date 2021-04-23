@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.R
+import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import org.w3c.dom.Text
 
@@ -128,6 +129,7 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("custom_checkbox")
     fun setCustomCheck(view: View, height: Boolean) {
+        Log.e("aa", "" + height)
         if (height == true) {
             view.setBackgroundResource(R.drawable.checkbox_sel)
         } else {
@@ -136,9 +138,62 @@ object MainAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter("check_filter")
-    fun setcheck_filter(view: CheckBox, height: Boolean) {
-        view.isChecked = height == true
+    @BindingAdapter("filter_breifes")
+    fun filter_breifes(view: TextView, height: Boolean) {
+        Log.e("aa","" + height)
+        if(height)view.setBackgroundResource(R.drawable.state1_p)
+        else view.setBackgroundResource(R.drawable.state1_n)
     }
 
+    @JvmStatic
+    @BindingAdapter("filter_recive")
+    fun filter_recive(view: TextView, height: Boolean) {
+        if(height)view.setBackgroundResource(R.drawable.state2_p)
+        else view.setBackgroundResource(R.drawable.state2_n)
+    }
+
+    @JvmStatic
+    @BindingAdapter("filter_pikup")
+    fun filter_pikup(view: TextView, height: Boolean) {
+        if(height)view.setBackgroundResource(R.drawable.state3_p)
+        else view.setBackgroundResource(R.drawable.state3_n)
+    }
+
+    @JvmStatic
+    @BindingAdapter("filter_complete")
+    fun filter_complete(view: TextView, height: Boolean) {
+        if(height)view.setBackgroundResource(R.drawable.state4_p)
+        else view.setBackgroundResource(R.drawable.state4_n)
+    }
+
+    @JvmStatic
+    @BindingAdapter("filter_cancel")
+    fun filter_cancel(view: TextView, height: Boolean) {
+        if(height)view.setBackgroundResource(R.drawable.state5_p)
+        else view.setBackgroundResource(R.drawable.state5_n)
+    }
+
+    @JvmStatic
+    @BindingAdapter("filter_font_size")
+    fun filter_font_size(view: TextView, height: String) {
+        if(height.length == 1) view.textSize = 25F
+        else if(height.length == 2) view.textSize = 25F
+        else if(height.length == 3) view.textSize = 20F
+        else if(height.length == 4) view.textSize = 15F
+    }
+
+    @JvmStatic
+    @BindingAdapter("Main_title_font")
+    fun main_title_font(view: TextView, height: Int) {
+        if(height == Finals.SELECT_MAP) view.text = "관제지도"
+        else if(height == Finals.SELECT_EMPTY) view.text = "오더현황 ▼"
+        else if(height == Finals.SELECT_CHECK) view.text = "오더현황 ▲"
+    }
+
+    @JvmStatic
+    @BindingAdapter("Main_title_font2")
+    fun main_title_font2(view: TextView, height: Int) {
+        if(height == Finals.SELECT_MAP) view.text = "관제지도"
+        else if(height == Finals.SELECT_ORDER) view.text = "오더현황 ▼"
+    }
 }

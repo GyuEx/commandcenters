@@ -17,7 +17,7 @@ import com.beyondinc.commandcenter.util.Vars
 
 class ListFragment : Fragment() {
     private var binding: FragmentListBinding? = null
-    //private var viewModel: ItemViewModel? = null
+    private var viewModel: ItemViewModel? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -27,8 +27,8 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DataBindingUtil.bind(view)
-        Vars.ivm = ItemViewModel()
-        binding!!.viewModel = Vars.ivm
+        viewModel = ItemViewModel()
+        binding!!.viewModel = viewModel
         binding!!.lifecycleOwner = requireActivity()
     }
 }

@@ -3,11 +3,10 @@ package com.beyondinc.commandcenter.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.beyondinc.commandcenter.activity.Mains
 import com.beyondinc.commandcenter.databinding.CheckBinding
-import com.beyondinc.commandcenter.databinding.DialogBinding
-import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.CheckViewModel
-import com.beyondinc.commandcenter.viewmodel.DialogViewModel
+import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 
 class RecyclerAdapterCheck(private val viewModel: CheckViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -22,7 +21,7 @@ class RecyclerAdapterCheck(private val viewModel: CheckViewModel) : RecyclerView
     }
 
     override fun getItemCount(): Int {
-        return if (viewModel.getItems() == null) 0 else viewModel!!.getItems()!!.size
+        return if (viewModel.items == null) 0 else viewModel?.items!!.size
     }
 
     class ItemViewHolder(private val binding: CheckBinding) : RecyclerView.ViewHolder(binding.root) {

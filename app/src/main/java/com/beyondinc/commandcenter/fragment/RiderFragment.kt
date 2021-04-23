@@ -1,5 +1,6 @@
 package com.beyondinc.commandcenter.fragment
 
+import android.graphics.Camera
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,9 +18,12 @@ import com.beyondinc.commandcenter.databinding.FragmentMapBinding
 import com.beyondinc.commandcenter.databinding.FragmentOrderBinding
 import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.NaverMap
 import com.naver.maps.map.NaverMapSdk
 
-class DriverFragment : Fragment() {
+class RiderFragment : Fragment() {
     var binding: FragmentMapBinding? = null
     var viewModel: MainsViewModel? = null
 
@@ -27,6 +31,7 @@ class DriverFragment : Fragment() {
         var fr: Fragment? = null
         var mapFragment: MapFragment? = null
         var fragmentTransaction: FragmentTransaction? = null
+        private lateinit var mapInstance: NaverMap
     }
 
 

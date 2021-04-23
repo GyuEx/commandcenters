@@ -1,25 +1,43 @@
 package com.beyondinc.commandcenter.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
-import android.view.WindowManager
-import androidx.lifecycle.ViewModel
+import android.os.Handler
 import com.beyondinc.commandcenter.data.Orderdata
-import com.beyondinc.commandcenter.viewmodel.DialogViewModel
-import com.beyondinc.commandcenter.viewmodel.ItemViewModel
-import com.beyondinc.commandcenter.viewmodel.MainsViewModel
+import com.beyondinc.commandcenter.repository.database.entity.Centerdata
+import com.beyondinc.commandcenter.repository.database.entity.Riderdata
+import org.json.simple.JSONArray
+import java.util.*
+import java.util.concurrent.ConcurrentHashMap
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
+@SuppressLint("StaticFieldLeak")
 object Vars {
-
-    var mvm : MainsViewModel ?= null;
-    var ivm : ItemViewModel ?= null;
 
     var mContext: Context? = null
     var mWorkState = 0
+    var LoginResult : String? = null
 
-    var isLogin = false
+    var timecnt = 60 // 오더요청주기설정
+
     var DeviceSize = Point()
 
-    var oderList : HashMap<Int,Orderdata> = HashMap()
-    //var oderList : ArrayList<Orderdata> = ArrayList()
+    var sendList: ArrayList<HashMap<String,JSONArray>> = ArrayList(Collections.synchronizedList(ArrayList()))
+    var receiveList: ArrayList<HashMap<String,ArrayList<HashMap<String, String>>>> = ArrayList(Collections.synchronizedList(ArrayList()))
+
+    var centerList: ConcurrentHashMap<String,Centerdata> = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
+    var riderList: ConcurrentHashMap<String,ConcurrentHashMap<String,Riderdata>> = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
+    var orderList: ConcurrentHashMap<String,ConcurrentHashMap<String,Orderdata>> = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
+
+    var MainsHandler : Handler? = null
+    var ItemHandler : Handler? = null
+    var LoginHandler : Handler? = null
+    var CheckHandler : Handler? = null
+    var DialogHandler : Handler? = null
+    var HistoryHandler : Handler? = null
+
+    var MainThread : Thread? = null
+    var HttpThread : Thread? = null
 }

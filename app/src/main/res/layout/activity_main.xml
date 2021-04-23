@@ -5,18 +5,6 @@
 
     <data>
         <variable
-            name="text_color_brief"
-            type="int" />
-        <variable
-            name="text_color_store"
-            type="int" />
-        <variable
-            name="text_color_rider"
-            type="int" />
-        <variable
-            name="text_color_map"
-            type="int" />
-        <variable
             name="viewModel"
             type="com.beyondinc.commandcenter.viewmodel.MainsViewModel" />
     </data>
@@ -59,11 +47,14 @@
                         android:layout_height="match_parent"
                         android:layout_weight="8"
                         android:gravity="center"
+                        android:textAlignment="center"
                         android:textSize="25dp"
                         android:textStyle="bold"
                         android:background="@color/black"
                         android:textColor="@drawable/click_text_color"
                         android:onClick="@{v->viewModel.click_check()}"
+                        app:Main_title_font="@{viewModel.checkview}"
+                        app:Main_title_font2="@{viewModel.layer}"
                         android:text="오더현황 ▼">
                     </Button>
 
@@ -82,7 +73,7 @@
                         android:onClick="@{v->viewModel.click_map_to_order()}"
                         android:textSize="25dp"
                         android:textStyle="bold"
-                        app:text_color_map="@{viewModel.layer == viewModel.SELECT_MAP ? 1 : 0}">
+                        app:text_color_map="@{viewModel.layer == viewModel.getSelectMap ? 1 : 0}">
 
                     </TextView>
 
@@ -108,7 +99,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:layout_weight="0"
-                                    app:layout="@{viewModel.layer == viewModel.SELECT_ORDER ? 1 : 0}"
+                                    app:layout="@{viewModel.layer == viewModel.getSelectOder ? 1 : 0}"
                                     android:orientation="horizontal">
 
                                     <TextView
@@ -121,7 +112,7 @@
                                         android:textStyle="bold"
                                         android:onClick="@{v->viewModel.click_brife()}"
                                         android:text="배정"
-                                        app:text_color_breif="@{viewModel.select == viewModel.SELECT_BRIFE ? 1 : 0}">
+                                        app:text_color_breif="@{viewModel.select == viewModel.getSelectBrife ? 1 : 0}">
                                     </TextView>
 
                                     <TextView
@@ -134,7 +125,7 @@
                                         android:textStyle="bold"
                                         android:onClick="@{v->viewModel.click_store()}"
                                         android:text="가맹점"
-                                        app:text_color_store="@{viewModel.select == viewModel.SELECT_STORE? 1:0}">
+                                        app:text_color_store="@{viewModel.select == viewModel.getSelectStore? 1:0}">
                                     </TextView>
 
                                     <TextView
@@ -147,7 +138,7 @@
                                         android:textStyle="bold"
                                         android:onClick="@{v->viewModel.click_rider()}"
                                         android:text="라이더"
-                                        app:text_color_rider="@{viewModel.select == viewModel.SELECT_RIDER?1:0}">
+                                        app:text_color_rider="@{viewModel.select == viewModel.getSelectRider?1:0}">
                                     </TextView>
                                 </LinearLayout>
 
@@ -155,7 +146,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:orientation="vertical"
-                                    app:layout="@{viewModel.layer == viewModel.SELECT_MAP ? 1 : 0}"
+                                    app:layout="@{viewModel.layer == viewModel.getSelectMap ? 1 : 0}"
                                     android:layout_weight="0">
 
                                     <LinearLayout
@@ -249,7 +240,7 @@
                         android:id="@+id/mL02"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        app:layout_check="@{viewModel.checkview == viewModel.SELECT_CHECK ? 1 : 0}"
+                        app:layout_check="@{viewModel.checkview == viewModel.getSelectCheck ? 1 : 0}"
                         android:orientation="vertical"
                         tools:ignore="MissingConstraints">
                     </LinearLayout>
