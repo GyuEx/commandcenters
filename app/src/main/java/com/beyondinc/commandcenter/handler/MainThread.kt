@@ -139,6 +139,7 @@ class MainThread() : Thread() , ThreadFun{
                             Vars.orderList[ctemp.toString()] = itemp
                         }
                         Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+                        Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
                     }
                     else if(code == Procedures.RIDER_LOCATION_IN_CENTER)
                     {
@@ -178,7 +179,8 @@ class MainThread() : Thread() , ThreadFun{
                                 }
                             }
                         }
-                        Vars.MainsHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget()
+                        Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget()
+                        Vars.SubRiderHandler!!.obtainMessage(Finals.INSERT_RIDER).sendToTarget()
                     }
                 }
                 Thread.sleep(200)

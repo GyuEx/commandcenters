@@ -26,5 +26,7 @@
 
     <color name="edittext">#FF17488A</color>
 
+    <color name="trans_black">#B3000000</color>
+    <color name="trans_white">#B3FFFFFF</color>
 
 </resources>

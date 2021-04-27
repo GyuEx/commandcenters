@@ -1,8 +1,11 @@
 package com.beyondinc.commandcenter.net
 
 import android.util.Log
+import android.widget.Toast
 import com.beyondinc.commandcenter.Interface.ThreadFun
 import com.beyondinc.commandcenter.util.Crypto
+import com.beyondinc.commandcenter.util.Finals
+import com.beyondinc.commandcenter.util.Procedures
 import com.beyondinc.commandcenter.util.Vars
 import org.json.simple.JSONArray
 import org.json.simple.JSONObject
@@ -19,6 +22,7 @@ import kotlin.collections.HashMap
 class HttpConn : Thread(), ThreadFun {
 
     var isKeep : Boolean = false
+    var code : String? = null
 
     init {
         isKeep = true
@@ -74,7 +78,7 @@ class HttpConn : Thread(), ThreadFun {
                 {
                     val jsonMessage = Vars.sendList.removeAt(0)
 
-                    val code = jsonMessage.keys.iterator().next()
+                    code = jsonMessage.keys.iterator().next()
                     val data = jsonMessage[code]
 
                     Log.e("Connect", "" + code)
@@ -82,7 +86,7 @@ class HttpConn : Thread(), ThreadFun {
 
                     val requestCipherKey = Crypto.generateMD5Hash("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ3b29kZWwiLCJVc2VySWQiOiJ3b29kZWwiLCJQYXNzd2QiOiJhcHBrZXkiLCJHcmFudFR5cGUiOiJydyIsIlNlcnZpY2VOYW1lIjoid29vZGVsIiwiQWNjZXNzRXhwaXJlRFQiOiIyMTIwLTA5LTA2IDEyOjQ4OjM2In0.Gf0U5k_3vCbcb0O6xOeetwnk66N8HiJwFe_iQ-Ri8iCZRi2DDHns3GYWnk9Xf1vteuu3AJQ13iOEQaq1N99ZCA")!!.toLowerCase(Locale.getDefault())
                     val responseCipherKey = Crypto.generateMD5Hash(Crypto.getCurrentTimeKey())!!.toLowerCase(Locale.getDefault())
-                    val requestJson = makeRequestJSON(responseCipherKey,code,data!!)
+                    val requestJson = makeRequestJSON(responseCipherKey, code!!,data!!)
                     val requestPlainString = requestJson.toString()
                     val requestBody = Crypto.AES256.encrypt(requestPlainString, requestCipherKey)
                     var receiveDoc = StringBuilder()
@@ -92,7 +96,7 @@ class HttpConn : Thread(), ThreadFun {
                     val url = URL("https://dev.stds.co.kr:8443/byservice/ManagerAppCipherConnect.action")
                     val con: HttpURLConnection = url.openConnection() as HttpURLConnection
                     con.connectTimeout = 3000 //서버에 연결되는 Timeout 시간 설정
-                    con.readTimeout = 30000 // InputStream 읽어 오는 Timeout 시간 설정
+                    con.readTimeout = 3000 // InputStream 읽어 오는 Timeout 시간 설정
                     con.setRequestProperty("UserAddData", "2")
                     con.setRequestProperty("content-type", "application/json; charset=utf-8")
                     con.setRequestProperty("authorization", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ3b29kZWwiLCJVc2VySWQiOiJ3b29kZWwiLCJQYXNzd2QiOiJhcHBrZXkiLCJHcmFudFR5cGUiOiJydyIsIlNlcnZpY2VOYW1lIjoid29vZGVsIiwiQWNjZXNzRXhwaXJlRFQiOiIyMTIwLTA5LTA2IDEyOjQ4OjM2In0.Gf0U5k_3vCbcb0O6xOeetwnk66N8HiJwFe_iQ-Ri8iCZRi2DDHns3GYWnk9Xf1vteuu3AJQ13iOEQaq1N99ZCA")
@@ -131,17 +135,18 @@ class HttpConn : Thread(), ThreadFun {
                         Log.e("HTTP" , "" + resultMethodBlock)
 
                         var temp : HashMap<String,ArrayList<HashMap<String, String>>> = HashMap()
-                        temp.put(code, returnData)
+                        temp[code!!] = returnData
                         Vars.receiveList.add(temp)
 
                     } else {
-                        println(con.responseMessage)
+                        Log.e("HTTP", con.responseMessage)
                     }
-                    Thread.sleep(50)
+                    Thread.sleep(100)
                 }
 
             } catch (e: Exception) {
-                System.err.println(e.toString())
+                if(code == Procedures.LOGIN) Vars.LoginHandler!!.obtainMessage(Finals.LOGIN_FAIL).sendToTarget()
+                else Vars.MainsHandler!!.obtainMessage(Finals.LOGIN_FAIL).sendToTarget()
             }
         }
     }

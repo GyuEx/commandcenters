@@ -48,7 +48,8 @@ class LoginViewModel() : ViewModel() {
                 }
                 else if (msg.what == Finals.LOGIN_FAIL)
                 {
-                    Toast.makeText(Vars.mContext, Logindata.MSG, Toast.LENGTH_SHORT).show()
+                    if(Logindata.MSG == null) Toast.makeText(Vars.mContext, "서버접속실패, 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                    else Toast.makeText(Vars.mContext, Logindata.MSG, Toast.LENGTH_SHORT).show()
                     (Vars.mContext as LoginsFun).LoginFail()
                 }
             }
@@ -68,6 +69,9 @@ class LoginViewModel() : ViewModel() {
         ).show()
         else
         {
+            Logindata.LoginId = id.value
+            Logindata.LoginPw = pw.value //굳이 비밀번호를 저장할 필요가 있을까?
+
             (Vars.mContext as LoginsFun).Login(id.value!!, pw.value!!)
             if(saveId.value == true) {
                 var pref = PreferenceManager.getDefaultSharedPreferences(Vars.mContext)

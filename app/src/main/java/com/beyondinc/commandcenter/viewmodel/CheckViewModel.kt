@@ -36,9 +36,11 @@ class CheckViewModel : ViewModel() {
         Vars.CheckHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
                 Log.e("Check View","aaaa")
-                if (msg.what == Finals.INSERT_STORE) { insertStore() }
+                if (msg.what == Finals.INSERT_STORE) insertStore()
             }
         }
+
+        Vars.MainsHandler!!.obtainMessage(Finals.CALL_CENTER).sendToTarget()
     }
 
     fun insertStore() {

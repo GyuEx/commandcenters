@@ -3,6 +3,7 @@ package com.beyondinc.commandcenter.adapter
 import android.graphics.Color
 import android.provider.SyncStateContract
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
@@ -10,12 +11,14 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import org.w3c.dom.Text
 
 object MainAdapter {
@@ -147,6 +150,16 @@ object MainAdapter {
     }
 
     @JvmStatic
+    @BindingAdapter("drawer_open")
+    fun setDrawer_Open(view: DrawerLayout, height: Boolean) {
+        if (height == true) {
+            view.openDrawer(Gravity.LEFT)
+        } else {
+            view.closeDrawer(Gravity.LEFT)
+        }
+    }
+
+    @JvmStatic
     @BindingAdapter("filter_breifes")
     fun filter_breifes(view: TextView, height: Boolean) {
         Log.e("aa","" + height)
@@ -204,5 +217,12 @@ object MainAdapter {
     fun main_title_font2(view: TextView, height: Int) {
         if(height == Finals.SELECT_MAP) view.text = "관제지도"
         else if(height == Finals.SELECT_ORDER) view.text = "오더현황 ▼"
+    }
+
+    @JvmStatic
+    @BindingAdapter("Slide_low_layer")
+    fun setSlideLowLayer(view: SlidingUpPanelLayout, height: Boolean) {
+        if(height == true) view.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
+        else view.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
     }
 }

@@ -60,7 +60,7 @@ class Logins : AppCompatActivity() , LoginsFun {
     override fun Login(id : String, pw: String) {
         if (!isLogin) {
             var temp: HashMap<String, JSONArray> = HashMap()
-            temp.put(Procedures.LOGIN, MakeJsonParam().makeLoginParameter(id, pw))
+            temp[Procedures.LOGIN] = MakeJsonParam().makeLoginParameter(id, pw)
             Vars.sendList.add(temp)
             isLogin = true
         }

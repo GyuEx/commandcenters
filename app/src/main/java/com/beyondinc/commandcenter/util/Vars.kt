@@ -34,8 +34,11 @@ object Vars {
 
     var MainsHandler : Handler? = null
     var ItemHandler : Handler? = null
+    var SubItemHandler : Handler? = null
     var LoginHandler : Handler? = null
     var CheckHandler : Handler? = null
+    var MapHandler : Handler? = null
+    var SubRiderHandler : Handler? = null
     var DialogHandler : Handler? = null
     var HistoryHandler : Handler? = null
 

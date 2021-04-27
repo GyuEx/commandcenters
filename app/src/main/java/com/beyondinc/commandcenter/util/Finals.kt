@@ -29,6 +29,7 @@ object Finals {
     val CALL_STORE : Int = 41
     val CALL_RIDER : Int = 42
     val CALL_ORDER : Int = 43
+    val CALL_CENTER : Int = 44
 
     val INSERT_LOGIN : Int = 51
     val INSERT_STORE : Int = 52
@@ -42,7 +43,15 @@ object Finals {
 
     val CREATE_RIDER_MARKER : Int = 71
 
+    val MAP_FOR_ORDER : Int = 81
+    val MAP_FOR_STATE : Int = 82
+
+    val Map_FOR_DOPEN : Int = 86
+    val Map_FOR_DCLOSE : Int = 87
+
     val LOGIN_SUCESS : Int = 101
     val LOGIN_FAIL : Int = 102
+
+    val HTTP_ERROR : Int = 110
 
 }

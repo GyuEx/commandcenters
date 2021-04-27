@@ -169,6 +169,7 @@
                                                 android:textColor="@color/white"
                                                 android:text="기사"
                                                 android:gravity="center"
+                                                android:onClick="@{v->viewModel.MapDrOpen()}"
                                                 android:textSize="25dp"
                                                 android:textStyle="bold">
                                             </TextView>

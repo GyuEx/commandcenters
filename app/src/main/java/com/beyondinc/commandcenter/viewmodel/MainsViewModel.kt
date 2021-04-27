@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.Interface.MainsFun
-import com.beyondinc.commandcenter.Interface.MapFun
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.util.*
@@ -36,17 +35,18 @@ class MainsViewModel : ViewModel() {
                 Log.e("Main Hanldler" , "" + msg.what)
                 if(msg.what == Finals.CALL_RIDER) getRiderList()
                 else if(msg.what == Finals.INSERT_RIDER) insertRider()
+                else if(msg.what == Finals.CALL_CENTER) getCenterList()
                 else if(msg.what == Finals.CALL_ORDER) getOrderList()
                 else if(msg.what == Finals.ClOSE_CHECK) checkview.postValue(Finals.SELECT_EMPTY)
                 else if(msg.what == Finals.ORDER_ITEM_SELECT) showOrderDetail(msg.obj)
-                else if(msg.what == Finals.CREATE_RIDER_MARKER) riderMarker()
+                else if(msg.what == Finals.HTTP_ERROR) HttpError()
             }
         }
-        getCenterList()
     }
 
-    fun riderMarker(){
-        (Vars.mContext as MapFun).createRider()
+    fun HttpError()
+    {
+        Toast.makeText(Vars.mContext,"서버접속실패",Toast.LENGTH_SHORT).show()
     }
 
     fun insertRider()
@@ -61,7 +61,7 @@ class MainsViewModel : ViewModel() {
     fun getCenterList()
     {
         var temp : HashMap<String,JSONArray> =  HashMap()
-        temp.put(Procedures.CENTER_LIST,MakeJsonParam().makeCenterListParameter("commandcenter"))
+        temp.put(Procedures.CENTER_LIST,MakeJsonParam().makeCenterListParameter(Logindata.LoginId!!))
         Vars.sendList.add(temp)
     }
 
@@ -74,7 +74,7 @@ class MainsViewModel : ViewModel() {
             ids.add(Vars.centerList[it.next()]!!.centerId)
         }
         var temp : HashMap<String, JSONArray> =  HashMap()
-        temp.put(Procedures.ORDER_LIST_IN_CENTER, MakeJsonParam().makeFullOrderListParameter("commandcenter",ids))
+        temp.put(Procedures.ORDER_LIST_IN_CENTER, MakeJsonParam().makeFullOrderListParameter(Logindata.LoginId!!,ids))
         Vars.sendList.add(temp)
 
         getRiderGPS()
@@ -89,7 +89,7 @@ class MainsViewModel : ViewModel() {
             ids.add(Vars.centerList[it.next()]!!.centerId)
         }
         var temp : HashMap<String, JSONArray> =  HashMap()
-        temp.put(Procedures.RIDER_LOCATION_IN_CENTER, MakeJsonParam().makeRidersLocationParameter("commandcenter",ids))
+        temp.put(Procedures.RIDER_LOCATION_IN_CENTER, MakeJsonParam().makeRidersLocationParameter(Logindata.LoginId!!,ids))
         Vars.sendList.add(temp)
     }
 
@@ -102,7 +102,7 @@ class MainsViewModel : ViewModel() {
             ids.add(Vars.centerList[it.next()]!!.centerId)
         }
         var temp : HashMap<String,JSONArray> =  HashMap()
-        temp.put(Procedures.RIDER_LIST_IN_CENTER,MakeJsonParam().makeRiderListParameter("commandcenter",ids))
+        temp.put(Procedures.RIDER_LIST_IN_CENTER,MakeJsonParam().makeRiderListParameter(Logindata.LoginId!!,ids))
         Vars.sendList.add(temp)
     }
 
@@ -125,12 +125,10 @@ class MainsViewModel : ViewModel() {
         return Finals.SELECT_BRIFE
     }
 
-//    fun getItemAddrCust() : String?{
-//
-//    }
-//    fun getItemAddrAgnecy() : String?{
-//
-//    }
+    fun MapDrOpen(){
+        Vars.MapHandler!!.obtainMessage(Finals.Map_FOR_DOPEN).sendToTarget()
+    }
+
     fun getItemPaymonet() : String?{
         var pay = ""
         if(Item.value!!.ApprovalTypeName == "현금") pay = "(현)"

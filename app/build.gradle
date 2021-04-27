@@ -131,7 +131,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     // Naver map
-    implementation "com.naver.maps:map-sdk:3.10.2"
+    implementation 'com.naver.maps:map-sdk:3.11.0'
 
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:\$lifecycle_version"
@@ -151,6 +151,8 @@ dependencies {
     testImplementation "android.arch.core:core-testing:\$lifecycle_version"
 
     implementation "commons-codec:commons-codec:1.15"
+
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 }
