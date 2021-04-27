@@ -96,13 +96,11 @@ class ItemViewModel : ViewModel() {
         {
             if(time == Vars.timecnt)
             {
-                Log.e("Timer","Live Timer ==== $time")
                 Vars.MainsHandler!!.obtainMessage(Finals.CALL_ORDER).sendToTarget()
                 time = 0
             }
             else
             {
-                Log.e("Timer","Live Timer ==== $time")
                 time++
             }
         }
@@ -123,17 +121,42 @@ class ItemViewModel : ViewModel() {
                 var rit : Iterator<String> = ctemp!!.keys.iterator()
                 while (rit.hasNext())
                 {
-                    ctemp[rit.next()]?.let { it1 -> itemp.put(cnt, it1) }
-                    cnt++
+                    var rittemp = rit.next()
+//                    if(Vars.f_center.size > 0)
+//                    { // 속도차이가 날수있을것 같아서 차후에 검토
+                        if(Vars.f_center.contains(ctemp[rittemp]?.RcptCenterId) || Vars.f_five.contains(ctemp[rittemp]?.DeliveryStateName))
+                        {
+                            continue
+                        }
+                        else
+                        {
+                            itemp.put(cnt,ctemp[rittemp]!!)
+                            cnt++
+                        }
+//                    }
+//                    else
+//                    {
+//                        ctemp[rittemp]?.let { it1 -> itemp.put(cnt, it1) }
+//                        cnt++
+//                    }
                 }
             }
+
+            if(itemp.keys.size < items!!.keys.size)
+            {
+                for(i in itemp.keys.size..items!!.keys.size)
+                {
+                    items!!.remove(i)
+                }
+            }
+
             itemp!!.let { items!!.putAll(it) }
             onCreate()
         }
     }
 
-    fun ListClick() {
-        (Vars.mContext as MainsFun).showOderdetail()
+    fun ListClick(pos: Int) {
+        Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ITEM_SELECT, items?.get(pos)).sendToTarget()
     }
 
     fun onCreate() {
@@ -143,14 +166,25 @@ class ItemViewModel : ViewModel() {
         var cntpi : Int = 0
         var cntco : Int = 0
         var cntca : Int = 0
+        var multi : Int = 0
 
         for(i in 0 until items!!.keys.size)
         {
-            if(items!![i]!!.ApprovalTypeName!! == "접수") cntbr++
-            else if (items!![i]!!.ApprovalTypeName!! == "배정") cntre++
-            else if (items!![i]!!.ApprovalTypeName!! == "픽업") cntpi++
-            else if (items!![i]!!.ApprovalTypeName!! == "완료") cntco++
-            else if (items!![i]!!.ApprovalTypeName!! == "취소") cntca++
+            if(items!![i]!!.DeliveryStateName!! == "접수") cntbr++
+            else if (items!![i]!!.DeliveryStateName!! == "배정") cntre++
+            else if (items!![i]!!.DeliveryStateName!! == "픽업") cntpi++
+            else if (items!![i]!!.DeliveryStateName!! == "완료") cntco++
+            else if (items!![i]!!.DeliveryStateName!! == "취소") cntca++
+        }
+
+        for(i in 0 until items!!.keys.size)
+        {
+            if(items!![i]!!.use!! && select.value == Finals.SELECT_BRIFE) multi++
+            else if(select.value != Finals.SELECT_BRIFE)
+            {
+                items!![i]!!.use = false
+                multi = 0
+            }
         }
 
         count_briefes.postValue(cntbr)
@@ -158,6 +192,8 @@ class ItemViewModel : ViewModel() {
         count_pikup.postValue(cntpi)
         count_complete.postValue(cntco)
         count_cancel.postValue(cntca)
+
+        Vars.multiSelectCnt = multi
 
         adapter!!.notifyDataSetChanged()
 
@@ -169,12 +205,6 @@ class ItemViewModel : ViewModel() {
             StartTimer()
         }
     }
-
-    fun onResume() {}
-
-//    fun getItems(flag:Int): HashMap<Int, Orderdata>? {
-//        return items
-//    }
 
     fun getSelectBrife(): Int{
         return Finals.SELECT_BRIFE
@@ -205,11 +235,12 @@ class ItemViewModel : ViewModel() {
     }
 
     fun getRider(pos: Int): String? {
-        return items!![pos]?.DeliveryDistance
+        return if(items!![pos]?.DeliveryStateName=="접수") items!![pos]?.DeliveryDistance
+        else(items!![pos]?.RiderName)
     }
 
     fun getWork(pos: Int): String? {
-        return items!![pos]?.PickupDT
+        return items!![pos]?.DeliveryStateName
     }
 
     fun getPaywon(pos: Int): String? {
@@ -218,32 +249,82 @@ class ItemViewModel : ViewModel() {
 
     fun setUse(pos: Int){
         Log.e("UsePos","" + pos + " // " + items!![pos]!!.use)
-        //items!![pos]!!.use = items!![pos]!!.use != true
+        items!![pos]!!.use = items!![pos]!!.use != true
         onCreate()
     }
 
     fun click_brief_filter(){
-        if(state_brifes.value == true)state_brifes.postValue(false)
-        else state_brifes.postValue(true)
+        if(state_brifes.value == true)
+        {
+            state_brifes.postValue(false)
+            Vars.f_five.add("접수")
+            insertLogic()
+        }
+        else
+        {
+            state_brifes.postValue(true)
+            Vars.f_five.remove("접수")
+            insertLogic()
+        }
     }
 
     fun click_recive_filter(){
-        if(state_recive.value == true)state_recive.postValue(false)
-        else state_recive.postValue(true)
+        if(state_recive.value == true)
+        {
+            state_recive.postValue(false)
+            Vars.f_five.add("배정")
+            insertLogic()
+        }
+        else
+        {
+            state_recive.postValue(true)
+            Vars.f_five.remove("배정")
+            insertLogic()
+        }
     }
 
     fun click_picup_filter(){
-        if(state_pikup.value == true)state_pikup.postValue(false)
-        else state_pikup.postValue(true)
+        if(state_pikup.value == true)
+        {
+            state_pikup.postValue(false)
+            Vars.f_five.add("픽업")
+            insertLogic()
+        }
+        else
+        {
+            state_pikup.postValue(true)
+            Vars.f_five.remove("픽업")
+            insertLogic()
+        }
     }
 
     fun click_complete_filter(){
-        if(state_complete.value == true)state_complete.postValue(false)
-        else state_complete.postValue(true)
+        if(state_complete.value == true)
+        {
+            state_complete.postValue(false)
+            Vars.f_five.add("완료")
+            insertLogic()
+        }
+        else
+        {
+            state_complete.postValue(true)
+            Vars.f_five.remove("완료")
+            insertLogic()
+        }
     }
 
     fun click_cancel_filter(){
-        if(state_cancel.value == true)state_cancel.postValue(false)
-        else state_cancel.postValue(true)
+        if(state_cancel.value == true)
+        {
+            state_cancel.postValue(false)
+            Vars.f_five.add("취소")
+            insertLogic()
+        }
+        else
+        {
+            state_cancel.postValue(true)
+            Vars.f_five.remove("취소")
+            insertLogic()
+        }
     }
 }

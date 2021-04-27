@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.beyondinc.commandcenter.viewmodel.DialogViewModel" />
+            type="com.beyondinc.commandcenter.viewmodel.RiderViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

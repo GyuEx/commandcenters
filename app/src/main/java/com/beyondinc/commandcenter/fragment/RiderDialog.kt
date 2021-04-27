@@ -1,27 +1,18 @@
-package com.beyondinc.commandcenter.fragment
+import com.beyondinc.commandcenter.fragment.RiderFragment
 
-import android.annotation.SuppressLint
-import android.app.Dialog
-import android.content.Context
-import android.graphics.Point
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.DataBindingUtil.setContentView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.R
-import com.beyondinc.commandcenter.activity.Mains
-import com.beyondinc.commandcenter.databinding.ActivityMainBinding
-import com.beyondinc.commandcenter.databinding.DialogBinding
 import com.beyondinc.commandcenter.databinding.DialogPopupBinding
 import com.beyondinc.commandcenter.util.Vars
-import com.beyondinc.commandcenter.viewmodel.DialogViewModel
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 
-class SelectDialog : DialogFragment() {
+class RiderDialog : DialogFragment() {
 
     var binding: DialogPopupBinding? = null
     var viewModel: MainsViewModel? = null
@@ -51,9 +42,9 @@ class SelectDialog : DialogFragment() {
         binding!!.lifecycleOwner = requireActivity()
 
         fragmentTransaction = childFragmentManager.beginTransaction()
-        selectFragment = SelectFragment()
+        selectFragment = RiderFragment()
         fr = selectFragment
-        fragmentTransaction!!.add(R.id.dpL01, fr!!)
+        fragmentTransaction!!.replace(R.id.dpL01, fr!!)
         fragmentTransaction!!.commitAllowingStateLoss()
     }
 

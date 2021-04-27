@@ -15,7 +15,6 @@ class RecyclerAdapter(private val viewModel: ItemViewModel) : RecyclerView.Adapt
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ItemViewHolder) {
-            viewModel.items
             holder.bind(viewModel, position)
         }
     }

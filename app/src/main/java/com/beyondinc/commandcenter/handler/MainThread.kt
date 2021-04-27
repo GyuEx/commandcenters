@@ -8,10 +8,14 @@ import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.repository.database.entity.Centerdata
 import com.beyondinc.commandcenter.repository.database.entity.Order
 import com.beyondinc.commandcenter.repository.database.entity.Riderdata
+import com.beyondinc.commandcenter.util.Codes
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Procedures
 import com.beyondinc.commandcenter.util.Vars
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.collections.HashMap
 
 class MainThread() : Thread() , ThreadFun{
 
@@ -136,8 +140,48 @@ class MainThread() : Thread() , ThreadFun{
                         }
                         Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
                     }
+                    else if(code == Procedures.RIDER_LOCATION_IN_CENTER)
+                    {
+                        for (i in 0 until data!!.size) {
+
+                            var id = data[i]["DriverId"].toString()
+                            var rx = data[i]["LastLocationLongitude"].toString()
+                            var ry = data[i]["LastLocationLatitude"].toString()
+                            var rt = data[i]["LastLocationModDT"].toString()
+
+                            var it : Iterator<String> = Vars.centerList.keys.iterator()
+                            while (it.hasNext())
+                            {
+                                var ct = it.next()
+                                if(Vars.riderList[ct]?.containsKey(id) == true)
+                                {
+                                    Vars.riderList[ct]?.get(id)?.latitude = ry
+                                    Vars.riderList[ct]?.get(id)?.longitude = rx
+                                    Vars.riderList[ct]?.get(id)?.ModDT = rt
+                                    Vars.riderList[ct]?.get(id)?.workingStateCode = Codes.RIDER_ON_WORK
+                                }
+                            }
+
+                            //라이더가 운행중인 상태인지 아닌지 여부 확인(출퇴근 처리가 좀 애매한것 같음)
+                            var rit : Iterator<String> = Vars.riderList.keys.iterator()
+                            while (rit.hasNext())
+                            {
+                                var rits = rit.next()
+                                var ritsr : Iterator<String> = Vars.riderList[rits]!!.keys.iterator()
+                                while (ritsr.hasNext())
+                                {
+                                    var ritsrr = ritsr.next()
+                                    val dateform = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale("ko","KR"))
+                                    var longTime = dateform.parse(Vars.riderList[rits]?.get(ritsrr)?.ModDT).time
+                                    var sysTime : Long = System.currentTimeMillis()
+                                    if((sysTime - longTime) > 60) Vars.riderList[rits]?.get(ritsrr)?.workingStateCode = Codes.RIDER_OFF_WORK
+                                }
+                            }
+                        }
+                        Vars.MainsHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget()
+                    }
                 }
-                Thread.sleep(100)
+                Thread.sleep(200)
 //            } catch (e: Exception) {
 //                e.printStackTrace()
 //                Log.e("MainThread",e.toString())

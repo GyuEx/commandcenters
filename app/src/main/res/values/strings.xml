@@ -1,11 +1,230 @@
 <resources>
-    <string name="app_name">commandcenter</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_oder_detail">OderDetail</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
-    <string name="hello_world">Hello Square World!</string>
+    <!-- 로그인 화면 -->
+    <string name="desc_main_logo">로그인 화면 이미지</string>
+    <string name="hint_input_id">아이디를 입력하세요</string>
+    <string name="hint_input_password">패스워드를 입력하세요</string>
+    <string name="checkbox_save_id">아이디 저장</string>
+    <string name="checkbox_save_password">비밀번호 저장</string>
+    <string name="button_login">로그인</string>
+
+    <!-- 메인 메뉴 (화면 타이틀) -->
+    <string name="desc_nav_header">내비게이션 헤더 이미지</string>
+    <string name="desc_menu_close">메뉴 닫기버튼</string>
+    <string name="title_center_list">센터목록</string>
+    <string name="title_order_list">오더현황</string>
+    <string name="title_control_map">관제지도</string>
+    <string name="title_config">환경설정</string>
+    <string name="title_logout">로그아웃</string>
+
+    <!-- 오더현황 화면 -->
+    <string name="label_assign_rider">배정</string>
+    <string name="label_all_list">전체</string>
+    <string name="label_filter_agency">가맹점</string>
+    <string name="label_filter_rider">라이더</string>
+    <string name="button_assign">배정하기</string>
+
+    <string name="text_no_order">현재 진행중인 오더가 없습니다.</string>
+
+    <string name="label_receipt">접</string>
+    <string name="label_assign">배</string>
+    <string name="label_pickup">픽</string>
+    <string name="label_complete">완</string>
+    <string name="label_cancel">취</string>
+
+    <!-- 오더현황 팝업 화면 -->
+    <string name="title_filter_agency">가맹점 기준 조회</string>
+    <string name="title_filter_rider">라이더 기준 조회</string>
+    <string name="title_assign_rider">라이더 배정</string>
+
+    <!-- 멀티배정 메시지 -->
+    <string name="message_proceed_multi_assign">총 %1$d개 중 %2$d개의 배정을 성공하였습니다.</string>
+
+    <!-- 오더상세 화면 -->
+    <string name="title_order_detail">오더상세</string>
+
+    <string name="label_change_assign">배정변경</string>
+    <string name="label_rollback_assign">배정취소</string>
+    <string name="label_force_complete">오더완료</string>
+    <string name="label_cancel_order">오더취소</string>
+
+    <string name="text_center_name">센터</string>
+    <string name="text_agency_name">가맹점</string>
+    <string name="text_agency_address">가맹점주소</string>
+    <string name="text_agency_phone_number">가맹점전화</string>
+    <string name="text_customer_address">고객주소</string>
+    <string name="text_customer_phone_number">고객전화</string>
+    <string name="text_sales_price">판매금액</string>
+    <string name="text_agency_memo">전달사항</string>
+    <string name="text_frame_price">(%1$s)%2$s</string>
+    <string name="text_delivery_fee">배달금액</string>
+    <string name="text_frame_fee">%1$s</string>
+    <string name="text_packing">포장</string>
+    <string name="label_complete_packing">포장완료</string>
+    <string name="text_delivery_status">배달상태</string>
+    <string name="text_delivery_distance">배달거리</string>
+    <string name="text_rider_name">라이더명</string>
+    <string name="text_rider_phone_number">라이더전화</string>
+    <string name="text_receipt_time">접수시간</string>
+    <string name="text_assign_time">배정시간</string>
+    <string name="text_time_announce"> [%1$d분 소요]</string>
+    <string name="text_pickup_time">픽업시간</string>
+    <string name="text_order_complete_time">완료시간</string>
+    <string name="text_order_cancel_time">취소시간</string>
+
+    <string name="desc_find_map">맵에서 위치찾기</string>
+    <string name="desc_call_phone">전화걸기</string>
+    <string name="desc_change_address">주소 변경하기</string>
+
+    <!-- 오더상세 기능 팝업 -->
+    <string name="title_change_sales_price">판매금액변경</string>
+    <string name="text_payment_type">구분 : </string>
+    <string name="text_payment_amount">금액 : </string>
+
+    <string-array name="payment_type_array">
+        <item>선결제</item>
+        <item>현금</item>
+        <item>카드</item>
+    </string-array>
+
+    <string name="title_extra_delivery_fee">추가배달료</string>
+    <string name="text_base_fee">배달료 : </string>
+    <string name="text_extra_fee">추가 : </string>
+
+    <string name="hint_input_amount">금액을 입력하세요</string>
+
+    <string name="title_change_address">고객주소 변경</string>
+    <string name="label_selected_address">선택주소</string>
+    <string name="label_detail_address">상세주소</string>
+
+    <string name="hint_input_address">주소를 입력하세요</string>
+
+
+    <!-- 관제지도 화면 -->
+    <string name="button_rider_list">기사</string>
+    <string name="button_order_list">오더</string>
+    <string name="format_text_map_summary">배:%1$d 픽:%2$d 완:%3$d\n전:%4$d 운:%5$d 대:%6$d 식:%7$d 퇴:%8$d</string>
+    <string name="format_text_rider_summary">%1$s : 배정 %2$d / 픽업 %3$d / 완료 %4$d</string>
+    <string name="format_text_order_content">%1$s > %2$s</string>
+    <string name="format_text_rider_status">%1$d / %2$d</string>
+    <string name="text_start">출발</string>
+    <string name="text_arrival">도착</string>
+
+    <string name="hint_rider_input">라이더명 검색</string>
+    <string name="hint_no_text"> </string>
+
+    <!-- 관제지도 기능 팝업 -->
+    <string name="select_order_detail">오더상세</string>
+    <string name="select_modify_assign">배정변경</string>
+    <string name="select_rollback_assign">배정취소</string>
+    <string name="select_rollback_pickup">픽업취소</string>
+    <string name="select_cancel_order">오더취소</string>
+
+    <string name="title_change_assign">라이더 배정 변경</string>
+
+    <!-- 환경설정 화면 -->
+    <string name="subtitle_user_setting">사용자 환경</string>
+    <string name="text_font_ratio">폰트조절</string>
+    <string name="text_ratio_format">%d%%</string>
+    <string name="text_default_ratio">100%</string>
+    <string name="text_center_nickname">센터 약칭사용</string>
+    <string name="button_setting_nickname">약칭설정</string>
+    <string name="text_rider_ordering_rule">라이더 정렬순서</string>
+    <string-array name="rider_order_rule">
+        <item>라이더 순</item>
+        <item>배정 순</item>
+    </string-array>
+    <string name="text_order_ordering_rule">오더 정렬순서</string>
+    <string-array name="order_order_rule">
+        <item>신규 접수 맨 위로</item>
+        <item>신규 접수 맨 아래로</item>
+    </string-array>
+
+    <string name="subtitle_alarm">알림설정</string>
+    <string name="text_voice_alarm">음성알림</string>
+    <string name="checkbox_receipt">접수</string>
+    <string name="checkbox_assign">배정</string>
+    <string name="checkbox_complete">완료</string>
+    <string name="checkbox_cancel">취소</string>
+
+    <string name="text_use_tts">TTS 사용여부</string>
+    <string name="checkbox_use">사용</string>
+
+    <!-- 약칭설정 팝업 화면 -->
+    <string name="title_center_nickname">센터약칭설정</string>
+
+    <!-- 확인 팝업 -->
+    <string name="message_confirm_logout">로그아웃 하시겠습니까?</string>
+    <string name="message_confirm_finish">앱을 종료하시겠습니까?</string>
+    <string name="message_confirm_assign_rider">에게 배정을 진행하시겠습니까?</string>
+    <string name="message_confirm_change_rider">배정을 변경하시겠습니까?</string>
+    <string name="message_confirm_cancel_assign">해당 오더를 접수상태로 변경하시겠습니까?</string>
+    <string name="message_confirm_cancel_pickup">해당 오더를 접수상태로 변경하시겠습니까?</string>
+    <string name="message_confirm_complete_order">오더를 완료처리 하시겠습니까?</string>
+    <string name="message_confirm_cancel_order">오더를 취소처리 하시겠습니까?</string>
+    <string name="message_confirm_pickup_ready">포장완료 상태로 변경하겠습니까?</string>
+    <string name="message_confirm_change_price">가격을 변경하시겠습니까?</string>
+    <string name="message_confirm_add_delivery_fee">배달료를 추가하시겠습니까?</string>
+    <string name="message_confirm_call_agency">가맹점에게 전화연결 하시겠습니까?</string>
+    <string name="message_confirm_call_customer">고객에게 전화연결 하시겠습니까?</string>
+    <string name="message_confirm_call_rider">라이더에게 전화연결 하시겠습니까?</string>
+
+    <!-- 로딩 화면 -->
+    <string name="text_loading_comment">데이터를 초기화하는 중입니다…</string>
+    <string name="text_upgrade_comment">업데이트 파일을 다운로드 중입니다…</string>
+    <string name="text_apply_nickname">약칭설정을 적용하는 중입니다…</string>
+
+    <!-- 공통 라벨 -->
+    <string name="button_ok">확인</string>
+    <string name="button_cancel">취소</string>
+    <string name="button_save">저장</string>
+    <string name="button_apply">변경</string>
+
+    <string name="hint_input_keyword">검색어를 입력하세요</string>
+    <string name="desc_search_keyword">키워드로 찾기</string>
+
+    <string name="default_count_number">0</string>
+
+    <!-- 구동중 알림 관련 -->
+    <string name="desc_notification">app activate notification</string>
+    <string name="message_activate_app">통합관리자 앱이 구동중입니다.</string>
+
+    <!-- 권한 설정 팝업 메시지 -->
+    <string name="message_reject_permission_phone_number">전화기능 권한 접근을 거부하여 앱을 사용할 수 없습니다.</string>
+    <string name="message_offer_request_permission">전화걸기 권한 허용이 필요합니다. 권한을 설정하시겠습니까?</string>
+    <string name="button_request_permission">권한 설정하기</string>
+    <string name="button_reject">거부</string>
+
+    <!-- 에러 메시지 -->
+    <string name="message_exception_permission">올바른 권한요청 결과가 돌아오지 않았습니다.</string>
+    <string name="message_cannot_get_phone_number">디바이스에서 등록된 전화번호를 가져올 수 없습니다.\n유심이 정상적으로 장착되었는지 혹은 국내 통신사 전화번호가 맞는지 확인 부탁드립니다.</string>
+    <string name="message_request_upgrade">새로운 버전의 앱이 존재합니다. 업데이트 하시겠습니까?\n취소하시면 앱이 종료됩니다.</string>
+    <string name="message_empty_id">아이디를 입력해주세요</string>
+    <string name="message_empty_password">비밀번호를 입력해주세요</string>
+    <string name="message_cannot_load_initial_data">올바른 초기 정보를 읽어오지 못했습니다. 관리자에게 문의하세요.</string>
+    <string name="message_rider_has_not_selected">선택된 라이더가 없어 목록을 출력할 수 없습니다. 먼저 라이더를 선택해주세요.</string>
+    <string name="message_cannot_assign_rider">현재 배정 가능한 라이더가 없습니다.</string>
+    <string name="message_cannot_call_map_app">위치정보에 오류가 발생했습니다.</string>
+    <string name="message_cannot_call_phone">설정된 연락처가 없거나 잘못된 정보입니다.</string>
+    <string name="message_illegal_json_data">올바른 JSON 데이터가 아닙니다.</string>
+    <string name="message_cannot_found_rider_position_info">라이더의 위치 정보를 불러오지 못했습니다.</string>
+    <string name="message_cannot_use_tts">TTS(Text-To-Speech) 사용을 할 수 없습니다.</string>
+    <string name="message_cannot_play_sound">사운드 리소스 재생에 실패하였습니다.</string>
+
+    <!-- roadpilot 주소-->
+    <string name="rconnect_roadpiot">https://dv.stds.co.kr:17060/roadpilot</string>
+    <string name="alarm_roadpiot">tcp:dv.stds.co.kr:27060</string>
+    <string name="appdown_roadpiot">http://dv.stds.co.kr:7090/Apps/PkgDown.action?AppId=</string>
+    <!-- dsp 주소-->
+    <string name="rconnect_dsp">https://dv.stds.co.kr:17050/dsp</string>
+    <string name="alarm_dsp">tcp:dv.stds.co.kr:27050</string>
+    <string name="appdown_dsp">http://dv.stds.co.kr:7090/Apps/PkgDown.action?AppId=</string>
+    <!-- lemon 주소-->
+    <string name="rconnect_lemon">https://dv.stds.co.kr:17030/dsp</string>
+    <string name="alarm_lemon">tcp:dv.stds.co.kr:27030</string>
+    <string name="appdown_lemon">http://dv.stds.co.kr:7090/Apps/PkgDown.action?AppId=</string>
+    <!-- gsc 주소-->
+    <string name="rconnect_gsc">https://dv.stds.co.kr:16990/dsp</string>
+    <string name="alarm_gsc">tcp:dv.stds.co.kr:26990</string>
+    <string name="appdown_gsc">http://dv.stds.co.kr:7090/Apps/PkgDown.action?AppId=</string>
+
 </resources>

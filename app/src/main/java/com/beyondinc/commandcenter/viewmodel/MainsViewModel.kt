@@ -4,10 +4,13 @@ import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Message
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.Interface.MainsFun
+import com.beyondinc.commandcenter.Interface.MapFun
 import com.beyondinc.commandcenter.data.Logindata
+import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.util.*
 import org.json.simple.JSONArray
 import kotlin.collections.ArrayList
@@ -21,6 +24,8 @@ class MainsViewModel : ViewModel() {
     var popuptitle = MutableLiveData<String>()
     var checkview = MutableLiveData<Int>()
 
+    var Item = MutableLiveData(Orderdata())
+
     init {
         Log.e(Tag, "ViewModel Enable Mains")
         layer.postValue(Finals.SELECT_ORDER)
@@ -28,19 +33,24 @@ class MainsViewModel : ViewModel() {
 
         Vars.MainsHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
+                Log.e("Main Hanldler" , "" + msg.what)
                 if(msg.what == Finals.CALL_RIDER) getRiderList()
                 else if(msg.what == Finals.INSERT_RIDER) insertRider()
                 else if(msg.what == Finals.CALL_ORDER) getOrderList()
+                else if(msg.what == Finals.ClOSE_CHECK) checkview.postValue(Finals.SELECT_EMPTY)
+                else if(msg.what == Finals.ORDER_ITEM_SELECT) showOrderDetail(msg.obj)
+                else if(msg.what == Finals.CREATE_RIDER_MARKER) riderMarker()
             }
         }
         getCenterList()
     }
 
+    fun riderMarker(){
+        (Vars.mContext as MapFun).createRider()
+    }
+
     fun insertRider()
     {
-
-        Log.e("AAA" , "" + Vars.riderList.size + " // " + Vars.riderList + "\n")
-
         if(!Logindata.RiderList)
         {
             Vars.MainsHandler!!.obtainMessage(Finals.CALL_ORDER).sendToTarget()
@@ -65,6 +75,21 @@ class MainsViewModel : ViewModel() {
         }
         var temp : HashMap<String, JSONArray> =  HashMap()
         temp.put(Procedures.ORDER_LIST_IN_CENTER, MakeJsonParam().makeFullOrderListParameter("commandcenter",ids))
+        Vars.sendList.add(temp)
+
+        getRiderGPS()
+    }
+
+    fun getRiderGPS()
+    {
+        var it : Iterator<String> = Vars.centerList.keys.iterator()
+        var ids : java.util.ArrayList<String> = java.util.ArrayList()
+        while (it.hasNext())
+        {
+            ids.add(Vars.centerList[it.next()]!!.centerId)
+        }
+        var temp : HashMap<String, JSONArray> =  HashMap()
+        temp.put(Procedures.RIDER_LOCATION_IN_CENTER, MakeJsonParam().makeRidersLocationParameter("commandcenter",ids))
         Vars.sendList.add(temp)
     }
 
@@ -100,6 +125,29 @@ class MainsViewModel : ViewModel() {
         return Finals.SELECT_BRIFE
     }
 
+//    fun getItemAddrCust() : String?{
+//
+//    }
+//    fun getItemAddrAgnecy() : String?{
+//
+//    }
+    fun getItemPaymonet() : String?{
+        var pay = ""
+        if(Item.value!!.ApprovalTypeName == "현금") pay = "(현)"
+        else if(Item.value!!.ApprovalTypeName == "카드") pay = "(카)"
+        else if(Item.value!!.ApprovalTypeName == "선결제") pay = "(선)"
+        pay += " " + Item.value!!.SalesPrice
+        return pay
+    }
+    fun getItemRiderPay() : String?{
+        var pay = ""
+        if(Item.value!!.ApprovalTypeName == "현금") pay = "(현)"
+        else if(Item.value!!.ApprovalTypeName == "카드") pay = "(카)"
+        else if(Item.value!!.ApprovalTypeName == "선결제") pay = "(선)"
+        pay += " " + Item.value!!.DeliveryFee
+        return pay
+    }
+
     fun click_brife() {
         if (select.value == Finals.SELECT_BRIFE) {
             select.postValue(Finals.SELECT_EMPTY)
@@ -113,18 +161,29 @@ class MainsViewModel : ViewModel() {
     fun click_store() {
         if (select.value == Finals.SELECT_STORE) {
             select.postValue(Finals.SELECT_EMPTY)
-        } else {
+        }
+        else if(select.value == Finals.SELECT_BRIFE) {
+            Vars.ItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
             select.postValue(Finals.SELECT_STORE)
-            showDialog(Finals.storetitle)
+            showDialog(2)
+        }
+        else {
+            select.postValue(Finals.SELECT_STORE)
+            showDialog(2)
         }
     }
 
     fun click_rider() {
         if (select.value == Finals.SELECT_RIDER) {
             select.postValue(Finals.SELECT_EMPTY)
-        } else {
+        }else if(select.value == Finals.SELECT_BRIFE) {
+            Vars.ItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
             select.postValue(Finals.SELECT_RIDER)
-            showDialog(Finals.ridertitle)
+            showDialog(3)
+        }
+        else {
+            select.postValue(Finals.SELECT_RIDER)
+            showDialog(3)
         }
     }
 
@@ -135,15 +194,19 @@ class MainsViewModel : ViewModel() {
             select.postValue(Finals.SELECT_EMPTY)
 
         }
-        else layer.postValue(Finals.SELECT_ORDER)
+        else
+        {
+            layer.postValue(Finals.SELECT_ORDER)
+        }
     }
 
     fun click_breifing() {
-        showDialog(Finals.breiftitle)
+        if(Vars.multiSelectCnt == 0) Toast.makeText(Vars.mContext,"선택된 오더가 없습니다.", Toast.LENGTH_SHORT).show()
+        else showDialog(1)
     }
 
     fun click_check() {
-        if (layer.value == Finals.SELECT_ORDER) {
+        if (layer.value == Finals.SELECT_ORDER && select.value != Finals.SELECT_BRIFE) {
             if (checkview.value == Finals.SELECT_CHECK) {
                 checkview.postValue(Finals.SELECT_EMPTY)
             } else {
@@ -152,9 +215,26 @@ class MainsViewModel : ViewModel() {
         }
     }
 
-    fun showDialog(txt : String){
-        popuptitle.postValue(txt)
-        (Vars.mContext as MainsFun).showDialog()
+    fun showDialog(txt : Int){
+        if(txt == 1) {
+            popuptitle.postValue(Finals.breiftitle)
+            (Vars.mContext as MainsFun).showDialogBrief()
+        }
+        else if(txt == 2)
+        {
+            popuptitle.postValue(Finals.storetitle)
+            (Vars.mContext as MainsFun).showDialogStore()
+        }
+        else if(txt == 3)
+        {
+            popuptitle.postValue(Finals.ridertitle)
+            (Vars.mContext as MainsFun).showDialogRider()
+        }
+    }
+
+    fun showOrderDetail(obj: Any) {
+        Item.postValue(obj as Orderdata?)
+        (Vars.mContext as MainsFun).showOderdetail()
     }
 
     fun closeDialog(){

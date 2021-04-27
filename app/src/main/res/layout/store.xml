@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
         <variable name="text_color" type="int"/>
@@ -9,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.beyondinc.commandcenter.viewmodel.DialogViewModel" />
+            type="com.beyondinc.commandcenter.viewmodel.StoreViewModel" />
 
         <variable
             name="pos"

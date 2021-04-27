@@ -3,14 +3,17 @@ package com.beyondinc.commandcenter.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.Interface.MainsFun
+import com.beyondinc.commandcenter.adapter.RecyclerAdapter
+import com.beyondinc.commandcenter.adapter.RecyclerAdapterHistory
 import com.beyondinc.commandcenter.adapter.RecyclerAdapterPopup
 import com.beyondinc.commandcenter.data.Dialogdata
+import com.beyondinc.commandcenter.data.Historydata
 import com.beyondinc.commandcenter.util.Vars
 import kotlin.collections.ArrayList
 
-class DialogViewModel : ViewModel() {
-    var items: ArrayList<Dialogdata>? = null
-    var adapter: RecyclerAdapterPopup? = null
+class MapViewModel : ViewModel() {
+    var items: ArrayList<Historydata>? = null
+    var adapter: RecyclerAdapterHistory? = null
 
     init {
         Log.e("Memo", "Memo call")
@@ -18,21 +21,22 @@ class DialogViewModel : ViewModel() {
             items = ArrayList()
         }
         if (adapter == null) {
-            adapter = RecyclerAdapterPopup(this)
+            adapter = RecyclerAdapterHistory(this)
         }
         insertLogic()
     }
 
     fun insertLogic() {
         for (i in 0..30) {
-            val memo = Dialogdata()
+            val memo = Historydata()
             memo.id = i
             memo.name = ("$i 번마")
-            memo.velue1 = "" + i
-            memo.velue2 = "" + i
-            memo.velue3 = "" + i
+            memo.time = "$i : $i : $i"
+            memo.state = "접수"
+            memo.code = "000000000" + i
             items!!.add(memo)
         }
+        Log.e("insert", "data inserting")
         adapter!!.notifyDataSetChanged()
     }
 
@@ -41,7 +45,7 @@ class DialogViewModel : ViewModel() {
     }
 
     fun close() {
-        (Vars.mContext as MainsFun).closeDialog()
+
     }
 
     fun onCreate() {
@@ -50,7 +54,7 @@ class DialogViewModel : ViewModel() {
 
     fun onResume() {}
 
-    fun getItems(): List<Dialogdata>? {
+    fun getItems(): List<Historydata>? {
         return items
     }
 
@@ -58,15 +62,15 @@ class DialogViewModel : ViewModel() {
         return items!![pos].name
     }
 
-    fun getVelue1(pos: Int): String? {
-        return items!![pos].velue1
+    fun getTime(pos: Int): String? {
+        return items!![pos].time
     }
 
-    fun getVelue2(pos: Int): String? {
-        return items!![pos].velue2
+    fun getState(pos: Int): String? {
+        return items!![pos].state
     }
 
-    fun getVelue3(pos: Int): String? {
-        return items!![pos].velue3
+    fun getCode(pos: Int): String? {
+        return items!![pos].code
     }
 }

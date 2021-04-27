@@ -128,12 +128,14 @@ class HttpConn : Thread(), ThreadFun {
                         val resultMethodBlock: JSONArray = results["Method"] as JSONArray
                         val returnData = makeResponseData(resultMethodBlock)
 
+                        Log.e("HTTP" , "" + resultMethodBlock)
+
                         var temp : HashMap<String,ArrayList<HashMap<String, String>>> = HashMap()
                         temp.put(code, returnData)
                         Vars.receiveList.add(temp)
 
                     } else {
-                        System.out.println(con.getResponseMessage())
+                        println(con.responseMessage)
                     }
                     Thread.sleep(50)
                 }

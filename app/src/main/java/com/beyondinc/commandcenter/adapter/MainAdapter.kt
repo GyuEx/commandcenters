@@ -129,11 +129,20 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("custom_checkbox")
     fun setCustomCheck(view: View, height: Boolean) {
-        Log.e("aa", "" + height)
         if (height == true) {
             view.setBackgroundResource(R.drawable.checkbox_sel)
         } else {
             view.setBackgroundResource(R.drawable.checkbox_nor)
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("custom_checkbox_login")
+    fun setCustomCheckLogin(view: CheckBox, height: Boolean) {
+        if (height == true) {
+            view.setButtonDrawable(R.drawable.k_login_check_p)
+        } else {
+            view.setButtonDrawable(R.drawable.k_login_check_n)
         }
     }
 

@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/white"
-        tools:context=".fragment.RiderFragment">
+        tools:context=".fragment.MapFragment">
 
             <LinearLayout
                 android:id="@+id/dfL01"

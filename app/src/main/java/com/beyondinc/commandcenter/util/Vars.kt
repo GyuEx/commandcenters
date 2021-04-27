@@ -18,6 +18,7 @@ object Vars {
 
     var mContext: Context? = null
     var mWorkState = 0
+    var multiSelectCnt = 0
     var LoginResult : String? = null
 
     var timecnt = 60 // 오더요청주기설정
@@ -40,4 +41,11 @@ object Vars {
 
     var MainThread : Thread? = null
     var HttpThread : Thread? = null
+
+    /*usefiler */
+    var f_center : ArrayList<String> = ArrayList()
+    var f_five : ArrayList<String> = ArrayList()
+
+    var f_store : String = ""
+    var f_rider : String = ""
 }

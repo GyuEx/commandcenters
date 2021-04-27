@@ -290,17 +290,17 @@ class MakeJsonParam {
 //        return parameterArray
 //    }
 
-//    fun makeRidersLocationParameter(loginID: String, centerIDs: List<String>): JSONArray {
-//        val parameterArray = JSONArray()
-//
-//        for (centerID in centerIDs) {
-//            val parameterJSON = makeBaseParameter(loginID)
-//            parameterJSON["CenterId"] = centerID
-//            parameterArray.add(parameterJSON)
-//        }
-//
-//        return parameterArray
-//    }
+    fun makeRidersLocationParameter(loginID: String, centerIDs: List<String>): JSONArray {
+        val parameterArray = JSONArray()
+
+        for (centerID in centerIDs) {
+            val parameterJSON = makeBaseParameter(loginID)
+            parameterJSON["CenterId"] = centerID
+            parameterArray.add(parameterJSON)
+        }
+
+        return parameterArray
+    }
 
 //    fun makeAlarmAcknowledgementParameter(alarmID: String): JSONArray {
 //        val parameterJSON = JSONObject()

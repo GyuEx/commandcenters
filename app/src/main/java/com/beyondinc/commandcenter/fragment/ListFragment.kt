@@ -31,4 +31,12 @@ class ListFragment : Fragment() {
         binding!!.viewModel = viewModel
         binding!!.lifecycleOwner = requireActivity()
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
 }

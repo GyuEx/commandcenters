@@ -4,15 +4,24 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.R
-import com.beyondinc.commandcenter.databinding.ActivityOderDetailBinding
+import com.beyondinc.commandcenter.databinding.DialogPopupBinding
+import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 
-class DetailDialog : DialogFragment() {
+class BriefDialog : DialogFragment() {
 
-    var binding: ActivityOderDetailBinding? = null
+    var binding: DialogPopupBinding? = null
     var viewModel: MainsViewModel? = null
+
+    companion object {
+        var fr: Fragment? = null
+        var selectFragment: Fragment? = null
+        var fragmentTransaction: FragmentTransaction? = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +31,7 @@ class DetailDialog : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.activity_oder_detail, container, false)
+        return inflater.inflate(R.layout.dialog_popup, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,5 +40,19 @@ class DetailDialog : DialogFragment() {
         viewModel = ViewModelProvider(requireActivity()).get(MainsViewModel::class.java)
         binding!!.viewModel = viewModel
         binding!!.lifecycleOwner = requireActivity()
+
+        fragmentTransaction = childFragmentManager.beginTransaction()
+        selectFragment = BriefFragment()
+        fr = selectFragment
+        fragmentTransaction!!.replace(R.id.dpL01, fr!!)
+        fragmentTransaction!!.commitAllowingStateLoss()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val params: ViewGroup.LayoutParams? = dialog?.window?.attributes
+        val deviceWidth = Vars.DeviceSize.x
+        params?.width = (deviceWidth).toInt()
+        dialog?.window?.attributes = params as WindowManager.LayoutParams
     }
 }

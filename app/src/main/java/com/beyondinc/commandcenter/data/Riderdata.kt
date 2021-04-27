@@ -10,6 +10,9 @@ class Riderdata
     var phoneNumber: String ? = ""
     var workingStateCode: String = Codes.RIDER_OFF_WORK
     var isEatTime: String = "N"
-    var latitude: Double? = null
-    var longitude: Double? = null
+    var latitude: String? = "0.0"
+    var longitude: String? = "0.0"
+    var ModDT : String? = "1900-01-01 00:00:00"
+    var assignCount : String? = "0"
+    var pickupCount : String? = "0"
 }

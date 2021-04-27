@@ -11,12 +11,16 @@ object Finals {
     val SELECT_STORE : Int = 3
     val SELECT_RIDER : Int = 4
 
-    val OPEN_POPUP : Int = 6
-    val CLOSE_POPUP : Int = 6
+    val OPEN_POPUP_BRIEF : Int = 6
+    val OPEN_POPUP_STORE : Int = 7
+    val OPEN_POPUP_RIDER : Int = 8
+    val CLOSE_POPUP : Int = 9
 
     val SELECT_MAP : Int = 14
     val SELECT_ORDER : Int = 15
     val SELECT_CHECK : Int = 16
+
+    val ClOSE_CHECK : Int = 21
 
     val breiftitle = "라이더 배정"
     val storetitle = "가맹점 기준 조회"
@@ -30,6 +34,13 @@ object Finals {
     val INSERT_STORE : Int = 52
     val INSERT_RIDER : Int = 53
     val INSERT_ORDER : Int = 54
+
+    val ORDER_ITEM_SELECT : Int = 61
+    val BRIEF_ITEM_SELECT : Int = 62
+    val STORE_ITEM_SELECT : Int = 63
+    val RIDER_ITEM_SELECT : Int = 64
+
+    val CREATE_RIDER_MARKER : Int = 71
 
     val LOGIN_SUCESS : Int = 101
     val LOGIN_FAIL : Int = 102

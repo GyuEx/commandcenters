@@ -165,7 +165,7 @@
                             android:textColor="@color/black"
                             android:gravity="center_vertical"
                             android:paddingLeft="15dp"
-                            android:text="커맨드센터"
+                            android:text="@{viewModel.item.centerName}"
                             android:singleLine="true"
                             android:background="@drawable/detail_data_background">
                         </TextView>
@@ -194,7 +194,7 @@
                             android:textColor="@color/black"
                             android:gravity="center_vertical"
                             android:paddingLeft="15dp"
-                            android:text="커맨드센터"
+                            android:text="@{viewModel.item.agencyName}"
                             android:singleLine="true"
                             android:background="@drawable/detail_data_background">
                         </TextView>
@@ -228,7 +228,7 @@
                                 android:textColor="@color/black"
                                 android:gravity="center_vertical"
                                 android:paddingLeft="15dp"
-                                android:text="서울시 금천구 독산동 1117-7 \n 삼성전자 서비스"
+                                android:text="@{viewModel.item.agencyAddrData}"
                                 android:singleLine="false"
                                 android:background="@drawable/detail_data_background">
                             </TextView>
@@ -281,7 +281,7 @@
                                 android:textColor="@color/black"
                                 android:gravity="center_vertical"
                                 android:paddingLeft="15dp"
-                                android:text="010-0000-0000"
+                                android:text="@{viewModel.item.agencyPhoneNo}"
                                 android:singleLine="true"
                                 android:background="@drawable/detail_data_background">
                             </TextView>
@@ -331,7 +331,7 @@
                                 android:textColor="@color/black"
                                 android:gravity="center_vertical"
                                 android:paddingLeft="15dp"
-                                android:text="서울시 동대문구 휘경동 1111-7 \n 동대문역사문화공원역"
+                                android:text="@{viewModel.item.customerShortAddr}"
                                 android:singleLine="false"
                                 android:background="@drawable/detail_data_background">
                             </TextView>
@@ -376,9 +376,8 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:textColor="@color/white"
-                            android:gravity="center_vertical"
-                            android:paddingLeft="15dp"
-                            android:text="(현)21,000"
+                            android:gravity="center"
+                            android:text="@{viewModel.getItemPaymonet()}"
                             android:singleLine="true"
                             android:background="@color/black">
                         </TextView>
@@ -398,9 +397,8 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:textColor="@color/white"
-                            android:gravity="center_vertical"
-                            android:paddingLeft="15dp"
-                            android:text="(카)6,200"
+                            android:gravity="center"
+                            android:text="@{viewModel.getItemRiderPay()}"
                             android:singleLine="true"
                             android:background="@color/black">
                         </TextView>
@@ -462,7 +460,7 @@
                             android:focusableInTouchMode="true"
                             android:marqueeRepeatLimit="marquee_forever"
                             android:focusable="true"
-                            android:text="제발빨리오세요, 급하고 배고프고 제발 초인종은 누르던지 말던지 빨리 가져다 주세요 제발"
+                            android:text="@{viewModel.item.storeMemo}"
 
                             android:singleLine="true"
                             android:background="@drawable/detail_data_background">
@@ -492,7 +490,7 @@
                             android:textColor="@color/black"
                             android:gravity="center_vertical"
                             android:paddingLeft="15dp"
-                            android:text="커맨드센터"
+                            android:text="@{viewModel.item.deliveryStateName}"
                             android:singleLine="true"
                             android:background="@drawable/detail_data_background">
                         </TextView>
@@ -521,7 +519,7 @@
                             android:textColor="@color/black"
                             android:gravity="center_vertical"
                             android:paddingLeft="15dp"
-                            android:text="커맨드센터"
+                            android:text="@{viewModel.item.deliveryDistance}"
                             android:singleLine="true"
                             android:background="@drawable/detail_data_background">
                         </TextView>
@@ -550,7 +548,7 @@
                             android:textColor="@color/black"
                             android:gravity="center_vertical"
                             android:paddingLeft="15dp"
-                            android:text="커맨드센터"
+                            android:text="@{viewModel.item.riderName}"
                             android:singleLine="true"
                             android:background="@drawable/detail_data_background">
                         </TextView>
@@ -584,7 +582,7 @@
                                 android:textColor="@color/black"
                                 android:gravity="center_vertical"
                                 android:paddingLeft="15dp"
-                                android:text="커맨드센터"
+                                android:text="@{viewModel.item.riderPhoneNo}"
                                 android:singleLine="true"
                                 android:background="@drawable/detail_data_background">
                             </TextView>
@@ -628,7 +626,7 @@
                             android:textColor="@color/black"
                             android:gravity="center_vertical"
                             android:paddingLeft="15dp"
-                            android:text="커맨드센터"
+                            android:text="@{viewModel.item.modDT}"
                             android:singleLine="true"
                             android:background="@drawable/detail_data_background">
                         </TextView>
@@ -657,7 +655,7 @@
                             android:textColor="@color/black"
                             android:gravity="center_vertical"
                             android:paddingLeft="15dp"
-                            android:text="커맨드센터"
+                            android:text="@{viewModel.item.modDT}"
                             android:singleLine="true"
                             android:background="@drawable/detail_data_background">
                         </TextView>
@@ -686,7 +684,7 @@
                             android:textColor="@color/black"
                             android:gravity="center_vertical"
                             android:paddingLeft="15dp"
-                            android:text="커맨드센터"
+                            android:text="@{viewModel.item.modDT}"
                             android:singleLine="true"
                             android:background="@drawable/detail_data_background">
                         </TextView>
@@ -715,7 +713,7 @@
                             android:textColor="@color/black"
                             android:gravity="center_vertical"
                             android:paddingLeft="15dp"
-                            android:text="커맨드센터"
+                            android:text="@{viewModel.item.modDT}"
                             android:singleLine="true"
                             android:background="@drawable/detail_data_background">
                         </TextView>

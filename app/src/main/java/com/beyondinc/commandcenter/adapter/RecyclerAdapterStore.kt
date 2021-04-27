@@ -3,12 +3,12 @@ package com.beyondinc.commandcenter.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.beyondinc.commandcenter.databinding.HistoryBinding
-import com.beyondinc.commandcenter.viewmodel.HistoryViewModel
+import com.beyondinc.commandcenter.databinding.StoreBinding
+import com.beyondinc.commandcenter.viewmodel.StoreViewModel
 
-class RecyclerAdapterHistory(private val viewModel: HistoryViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RecyclerAdapterStore(private val viewModel: StoreViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val binding = HistoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = StoreBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ItemViewHolder(binding)
     }
 
@@ -19,11 +19,11 @@ class RecyclerAdapterHistory(private val viewModel: HistoryViewModel) : Recycler
     }
 
     override fun getItemCount(): Int {
-        return if (viewModel.getItems() == null) 0 else viewModel!!.getItems()!!.size
+        return if (viewModel.items == null) 0 else viewModel?.items!!.size
     }
 
-    class ItemViewHolder(private val binding: HistoryBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(viewModel: HistoryViewModel?, pos: Int) {
+    class ItemViewHolder(private val binding: StoreBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(viewModel: StoreViewModel?, pos: Int) {
             binding.viewModel = viewModel
             binding.pos = pos
             binding.executePendingBindings()

@@ -1,12 +1,12 @@
 package com.beyondinc.commandcenter.Interface
 
-import com.beyondinc.commandcenter.handler.MainThread
-
 interface MainsFun {
 
     fun setFragment()
 
-    fun showDialog()
+    fun showDialogBrief()
+    fun showDialogStore()
+    fun showDialogRider()
     fun showOderdetail()
     fun showHistory()
     fun showDrawer()

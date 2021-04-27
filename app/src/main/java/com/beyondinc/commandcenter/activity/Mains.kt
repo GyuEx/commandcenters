@@ -1,9 +1,12 @@
 package com.beyondinc.commandcenter.activity
 
+import RiderDialog
+import StoreDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
@@ -30,9 +33,13 @@ class Mains : AppCompatActivity(), MainsFun {
         var mapfrag: Fragment? = null
         var checkfrag: Fragment? = null
         var fragmentTransaction: FragmentTransaction? = null
-        var dialog:SelectDialog? = null
+        var fragmentTransactionSub: FragmentTransaction? = null
+        var dialog:DialogFragment? = null
         var detail:DetailDialog? = null
         var history:HistoryDialog? = null
+
+        val FINISH_INTERVAL_TIME: Long = 2000
+        var backPressedTime: Long = 0
     }
 
     override fun onDestroy() {
@@ -45,18 +52,31 @@ class Mains : AppCompatActivity(), MainsFun {
         Vars.mContext = this
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        //프래그먼트를 재활용할것, 죽이게되면 뷰모델이 초기화됨
+
+        fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransactionSub = supportFragmentManager.beginTransaction()
+
+        checkfrag = CheckListFragment()
+        mapfrag = MapFragment()
+        oderfrag = OrderFragment()
+
+        fragmentTransactionSub!!.add(R.id.mL02, checkfrag!!)
+        fragmentTransactionSub!!.show(checkfrag!!)
+        fragmentTransactionSub!!.commit()
+
+
+        //뷰를 선로드 및 재활용을 통해서 빠른 화면전환 기대할 수 있음
+        fragmentTransaction!!.add(R.id.mL01, oderfrag!!)
+        fragmentTransaction!!.add(R.id.mL01, mapfrag!!)
+        fragmentTransaction!!.hide(oderfrag!!)
+        fragmentTransaction!!.show(mapfrag!!)
+        fragmentTransaction!!.commit()
+
         viewModel = ViewModelProvider(this).get(MainsViewModel::class.java)
         binding!!.lifecycleOwner = this
         binding!!.viewModel = viewModel
-
-        setFragment()
-
-        fragmentTransaction = supportFragmentManager.beginTransaction()
-        checkfrag = CheckListFragment()
-        fr = checkfrag
-        fragmentTransaction!!.replace(R.id.mL02, fr!!)
-        fragmentTransaction!!.show(fr!!)
-        fragmentTransaction!!.commitAllowingStateLoss()
 
         getDeviceSize()
     }
@@ -65,24 +85,32 @@ class Mains : AppCompatActivity(), MainsFun {
         super.onStart()
     }
 
+    override fun onBackPressed() {
+
+        val tempTime = System.currentTimeMillis()
+        val intervalTime: Long = tempTime - backPressedTime
+        if (intervalTime in 0..FINISH_INTERVAL_TIME) {
+            moveTaskToBack(true);						// 태스크를 백그라운드로 이동
+            finishAndRemoveTask();						// 액티비티 종료 + 태스크 리스트에서 지우기
+            android.os.Process.killProcess(android.os.Process.myPid());	// 앱 프로세스 종료
+        } else {
+            backPressedTime = tempTime
+            Toast.makeText(applicationContext, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun setFragment() {
         if(viewModel!!.layer.value == Finals.SELECT_MAP)
         {
-            fragmentTransaction = supportFragmentManager.beginTransaction()
-            mapfrag = RiderFragment()
-            fr = mapfrag
-            fragmentTransaction!!.replace(R.id.mL01, fr!!)
-            fragmentTransaction!!.show(fr!!)
-            fragmentTransaction!!.commitAllowingStateLoss()
+            val ft = supportFragmentManager.beginTransaction()
+            ft!!.hide(oderfrag!!)
+            ft!!.show(mapfrag!!).commit()
         }
         else if(viewModel!!.layer.value == Finals.SELECT_ORDER)
         {
-            fragmentTransaction = supportFragmentManager.beginTransaction()
-            oderfrag = OrderFragment()
-            fr = oderfrag
-            fragmentTransaction!!.replace(R.id.mL01, fr!!)
-            fragmentTransaction!!.show(fr!!)
-            fragmentTransaction!!.commitAllowingStateLoss()
+            val ft = supportFragmentManager.beginTransaction()
+            ft!!.hide(mapfrag!!)
+            ft!!.show(oderfrag!!).commit()
         }
     }
 
@@ -128,13 +156,35 @@ class Mains : AppCompatActivity(), MainsFun {
         }
     }
 
-    override fun showDialog() {
+   override fun showDialogBrief() {
         runOnUiThread {
             if (dialog != null) {
                 dialog!!.dismiss()
                 dialog = null
             }
-            dialog = SelectDialog()
+            dialog = BriefDialog()
+            dialog!!.show(supportFragmentManager, "dialog")
+        }
+    }
+
+    override fun showDialogStore() {
+        runOnUiThread {
+            if (dialog != null) {
+                dialog!!.dismiss()
+                dialog = null
+            }
+            dialog = StoreDialog()
+            dialog!!.show(supportFragmentManager, "dialog")
+        }
+    }
+
+    override fun showDialogRider() {
+        runOnUiThread {
+            if (dialog != null) {
+                dialog!!.dismiss()
+                dialog = null
+            }
+            dialog = RiderDialog()
             dialog!!.show(supportFragmentManager, "dialog")
         }
     }

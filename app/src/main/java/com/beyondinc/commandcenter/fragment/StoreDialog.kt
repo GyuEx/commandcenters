@@ -1,4 +1,4 @@
-package com.beyondinc.commandcenter.fragment
+import com.beyondinc.commandcenter.fragment.StoreFragment
 
 import android.os.Bundle
 import android.view.*
@@ -8,18 +8,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.R
-import com.beyondinc.commandcenter.databinding.DetailsPopupBinding
+import com.beyondinc.commandcenter.databinding.DialogPopupBinding
 import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 
-class HistoryDialog : DialogFragment() {
+class StoreDialog : DialogFragment() {
 
-    var binding: DetailsPopupBinding? = null
+    var binding: DialogPopupBinding? = null
     var viewModel: MainsViewModel? = null
 
     companion object {
         var fr: Fragment? = null
-        var historyFragment: Fragment? = null
+        var selectFragment: Fragment? = null
         var fragmentTransaction: FragmentTransaction? = null
     }
 
@@ -31,7 +31,7 @@ class HistoryDialog : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.details_popup, container, false)
+        return inflater.inflate(R.layout.dialog_popup, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,9 +42,9 @@ class HistoryDialog : DialogFragment() {
         binding!!.lifecycleOwner = requireActivity()
 
         fragmentTransaction = childFragmentManager.beginTransaction()
-        historyFragment = HistoryFragment()
-        fr = historyFragment
-        fragmentTransaction!!.add(R.id.dpL01, fr!!)
+        selectFragment = StoreFragment()
+        fr = selectFragment
+        fragmentTransaction!!.replace(R.id.dpL01, fr!!)
         fragmentTransaction!!.commitAllowingStateLoss()
     }
 

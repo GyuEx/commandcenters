@@ -94,7 +94,7 @@ class CheckViewModel : ViewModel() {
     }
 
     fun setUse(pos: Int){
-        items!!.get(pos)?.use = items!!.get(pos)?.use != true
+        items!![pos]?.use = items!![pos]?.use != true
         onCreate()
     }
 
@@ -117,11 +117,17 @@ class CheckViewModel : ViewModel() {
 
     fun click_Success()
     {
-
+        Vars.f_center.clear()
+        for(i in 0 until items!!.size)
+        {
+            if(items!![i]!!.use == false) Vars.f_center.add(items!![i]!!.centerId.toString())
+        }
+        Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget() //리스트 새로그리고
+        Vars.MainsHandler!!.obtainMessage(Finals.ClOSE_CHECK).sendToTarget() //뷰 닫기
     }
 
     fun click_cancel()
     {
-        //Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_POPUP).sendToTarget()
+        Vars.MainsHandler!!.obtainMessage(Finals.ClOSE_CHECK).sendToTarget()
     }
 }

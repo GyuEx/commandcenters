@@ -51,7 +51,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="15dp"
                 android:gravity="left|center_vertical"
-                android:text="2021-04-14 (월)"
+                android:text="@{viewModel.getTime()}"
                 android:textColor="@color/white"
                 android:textSize="20dp"
                 android:textStyle="bold"/>
@@ -95,9 +95,10 @@
                     android:layout_height="match_parent"
                     android:text="  아이디 저장"
                     android:textSize="20dp"
-                    android:button="@drawable/k_login_check"
                     android:textColor="@color/black"
+                    android:onClick="@{v->viewModel.saveId()}"
                     android:gravity="center_vertical"
+                    app:custom_checkbox_login="@{viewModel.saveId}"
                     android:layout_weight="1"/>
 
                 <androidx.appcompat.widget.AppCompatCheckBox
@@ -106,8 +107,9 @@
                     android:text="  비밀번호 저장"
                     android:textSize="20dp"
                     android:gravity="center_vertical"
-                    android:button="@drawable/k_login_check"
+                    android:onClick="@{v->viewModel.savePw()}"
                     android:textColor="@color/black"
+                    app:custom_checkbox_login="@{viewModel.savePw}"
                     android:layout_weight="1"/>
 
             </LinearLayout>
