@@ -3,11 +3,16 @@ package com.beyondinc.commandcenter.activity
 import RiderDialog
 import StoreDialog
 import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
+import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -212,11 +217,9 @@ class Mains : AppCompatActivity(), MainsFun {
         }
     }
 
-    override fun showDrawer(){
-        binding!!.Mains!!.openDrawer(binding!!.mdL01)
-    }
-
-    override fun closeDrawer() {
-        binding!!.Mains!!.closeDrawer(binding!!.mdL01)
+    override fun dispatchTouchEvent() {
+        val focusView: View? = currentFocus
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+        imm?.hideSoftInputFromWindow(focusView?.windowToken, 0)
     }
 }

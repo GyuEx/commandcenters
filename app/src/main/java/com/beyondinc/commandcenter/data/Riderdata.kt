@@ -15,4 +15,5 @@ class Riderdata
     var ModDT : String? = "1900-01-01 00:00:00"
     var assignCount : String? = "0"
     var pickupCount : String? = "0"
+    var MakerID: String? = ""
 }

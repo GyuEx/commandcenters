@@ -154,8 +154,10 @@ object MainAdapter {
     fun setDrawer_Open(view: DrawerLayout, height: Boolean) {
         if (height == true) {
             view.openDrawer(Gravity.LEFT)
+            view.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN)
         } else {
             view.closeDrawer(Gravity.LEFT)
+            view.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
     }
 
@@ -207,22 +209,29 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("Main_title_font")
     fun main_title_font(view: TextView, height: Int) {
-        if(height == Finals.SELECT_MAP) view.text = "관제지도"
-        else if(height == Finals.SELECT_EMPTY) view.text = "오더현황 ▼"
-        else if(height == Finals.SELECT_CHECK) view.text = "오더현황 ▲"
+        if(height == Finals.SELECT_EMPTY) view.text = "▼"
+        else if(height == Finals.SELECT_CHECK) view.text = "▲"
     }
 
     @JvmStatic
     @BindingAdapter("Main_title_font2")
     fun main_title_font2(view: TextView, height: Int) {
         if(height == Finals.SELECT_MAP) view.text = "관제지도"
-        else if(height == Finals.SELECT_ORDER) view.text = "오더현황 ▼"
+        else if(height == Finals.SELECT_ORDER) view.text = "오더현황"
     }
 
     @JvmStatic
     @BindingAdapter("Slide_low_layer")
     fun setSlideLowLayer(view: SlidingUpPanelLayout, height: Boolean) {
-        if(height == true) view.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
-        else view.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+        if(height == true)
+        {
+            view.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+            view.isTouchEnabled = false // 이거 풀면 리스트뷰랑 터치공유를 하게되서 풀면안됨
+        }
+        else
+        {
+            view.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+            view.isTouchEnabled = false // 이거 풀면 리스트뷰랑 터치공유를 하게되서 풀면안됨
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.beyondinc.commandcenter.Interface
 
+import android.view.MotionEvent
+
 interface MainsFun {
 
     fun setFragment()
@@ -9,11 +11,11 @@ interface MainsFun {
     fun showDialogRider()
     fun showOderdetail()
     fun showHistory()
-    fun showDrawer()
 
     fun closeDialog()
     fun closeOderdetail()
     fun closeHistory()
-    fun closeDrawer()
+
+    fun dispatchTouchEvent()
 }
 

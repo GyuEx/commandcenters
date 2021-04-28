@@ -125,6 +125,8 @@ class CheckViewModel : ViewModel() {
             if(items!![i]!!.use == false) Vars.f_center.add(items!![i]!!.centerId.toString())
         }
         Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget() //리스트 새로그리고
+        Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget() //리스트 새로그리고
+        Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget() //리스트 새로그리고
         Vars.MainsHandler!!.obtainMessage(Finals.ClOSE_CHECK).sendToTarget() //뷰 닫기
     }
 

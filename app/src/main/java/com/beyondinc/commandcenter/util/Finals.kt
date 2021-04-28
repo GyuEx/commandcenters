@@ -42,16 +42,20 @@ object Finals {
     val RIDER_ITEM_SELECT : Int = 64
 
     val CREATE_RIDER_MARKER : Int = 71
+    val MAP_FOR_DOPEN : Int = 72
+    val MAP_FOR_DCLOSE : Int = 73
 
     val MAP_FOR_ORDER : Int = 81
     val MAP_FOR_STATE : Int = 82
-
-    val Map_FOR_DOPEN : Int = 86
-    val Map_FOR_DCLOSE : Int = 87
+    val MAP_FOR_REMOVE : Int = 83
+    val MAP_MOVE_FOCUS : Int = 84
+    val MAP_FOR_CALL_RIDER : Int = 85
 
     val LOGIN_SUCESS : Int = 101
     val LOGIN_FAIL : Int = 102
 
-    val HTTP_ERROR : Int = 110
+    val HTTP_ERROR : Int = 111
+
+    val CLOSE_KEYBOARD : Int = 121
 
 }

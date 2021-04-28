@@ -78,16 +78,16 @@ class ItemViewModel : ViewModel() {
                 else if (msg.what == Finals.SELECT_EMPTY)
                 {
                     select.postValue(Finals.SELECT_EMPTY)
-                    onCreate()
+                    Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
                 }
                 else if (msg.what == Finals.SELECT_BRIFE)
                 {
                     select.postValue(Finals.SELECT_BRIFE)
-                    onCreate()
+                    insertLogicBrief()
                 }
             }
         }
-        insertLogic()
+    //    insertLogic()
     }
 
     fun StartTimer()
@@ -110,8 +110,15 @@ class ItemViewModel : ViewModel() {
     {
         Vars.orderList!!.let { Realitems!!.putAll(it) }
         ////여기서 필터랑 전체 구현해야댐....///
+        Log.e("aaaaa2","" + select.value)
         if(select.value == Finals.SELECT_EMPTY)
         {
+            var cntbr : Int = 0
+            var cntre : Int = 0
+            var cntpi : Int = 0
+            var cntco : Int = 0
+            var cntca : Int = 0
+
             var it : Iterator<String> = Realitems!!.keys.iterator()
             var cnt = 0
             var itemp : ConcurrentHashMap<Int,Orderdata> = ConcurrentHashMap()
@@ -122,25 +129,30 @@ class ItemViewModel : ViewModel() {
                 while (rit.hasNext())
                 {
                     var rittemp = rit.next()
-//                    if(Vars.f_center.size > 0)
-//                    { // 속도차이가 날수있을것 같아서 차후에 검토
-                        if(Vars.f_center.contains(ctemp[rittemp]?.RcptCenterId) || Vars.f_five.contains(ctemp[rittemp]?.DeliveryStateName))
-                        {
-                            continue
-                        }
-                        else
-                        {
-                            itemp.put(cnt,ctemp[rittemp]!!)
-                            cnt++
-                        }
-//                    }
-//                    else
-//                    {
-//                        ctemp[rittemp]?.let { it1 -> itemp.put(cnt, it1) }
-//                        cnt++
-//                    }
+
+                    if (ctemp[rittemp]?.DeliveryStateName!! == "접수") cntbr++
+                    else if (ctemp[rittemp]?.DeliveryStateName!! == "배정") cntre++
+                    else if (ctemp[rittemp]?.DeliveryStateName!! == "픽업") cntpi++
+                    else if (ctemp[rittemp]?.DeliveryStateName!! == "완료") cntco++
+                    else if (ctemp[rittemp]?.DeliveryStateName!! == "취소") cntca++
+
+                    if(Vars.f_center.contains(ctemp[rittemp]?.RcptCenterId) || Vars.f_five.contains(ctemp[rittemp]?.DeliveryStateName))
+                    {
+                        continue
+                    }
+                    else
+                    {
+                        itemp.put(cnt,ctemp[rittemp]!!)
+                        cnt++
+                    }
                 }
             }
+
+            count_briefes.postValue(cntbr)
+            count_recive.postValue(cntre)
+            count_pikup.postValue(cntpi)
+            count_complete.postValue(cntco)
+            count_cancel.postValue(cntca)
 
             if(itemp.keys.size < items!!.keys.size)
             {
@@ -151,8 +163,49 @@ class ItemViewModel : ViewModel() {
             }
 
             itemp!!.let { items!!.putAll(it) }
+
             onCreate()
         }
+    }
+
+    fun insertLogicBrief()
+    {
+        Vars.orderList!!.let { Realitems!!.putAll(it) }
+
+        var it : Iterator<String> = Realitems!!.keys.iterator()
+        var cnt = 0
+        var itemp : ConcurrentHashMap<Int,Orderdata> = ConcurrentHashMap()
+        while (it.hasNext())
+        {
+            var ctemp = Realitems!![it.next()]
+            var rit : Iterator<String> = ctemp!!.keys.iterator()
+            while (rit.hasNext())
+            {
+                var rittemp = rit.next()
+
+                if(ctemp[rittemp]?.DeliveryStateName != "접수")
+                {
+                    continue
+                }
+                else
+                {
+                    itemp.put(cnt,ctemp[rittemp]!!)
+                    cnt++
+                }
+            }
+        }
+
+        if(itemp.keys.size < items!!.keys.size)
+        {
+            for(i in itemp.keys.size..items!!.keys.size)
+            {
+                items!!.remove(i)
+            }
+        }
+
+        itemp!!.let { items!!.putAll(it) }
+
+        onCreate()
     }
 
     fun ListClick(pos: Int) {
@@ -161,21 +214,7 @@ class ItemViewModel : ViewModel() {
 
     fun onCreate() {
 
-        var cntbr : Int = 0
-        var cntre : Int = 0
-        var cntpi : Int = 0
-        var cntco : Int = 0
-        var cntca : Int = 0
         var multi : Int = 0
-
-        for(i in 0 until items!!.keys.size)
-        {
-            if(items!![i]!!.DeliveryStateName!! == "접수") cntbr++
-            else if (items!![i]!!.DeliveryStateName!! == "배정") cntre++
-            else if (items!![i]!!.DeliveryStateName!! == "픽업") cntpi++
-            else if (items!![i]!!.DeliveryStateName!! == "완료") cntco++
-            else if (items!![i]!!.DeliveryStateName!! == "취소") cntca++
-        }
 
         for(i in 0 until items!!.keys.size)
         {
@@ -186,12 +225,6 @@ class ItemViewModel : ViewModel() {
                 multi = 0
             }
         }
-
-        count_briefes.postValue(cntbr)
-        count_recive.postValue(cntre)
-        count_pikup.postValue(cntpi)
-        count_complete.postValue(cntco)
-        count_cancel.postValue(cntca)
 
         Vars.multiSelectCnt = multi
 

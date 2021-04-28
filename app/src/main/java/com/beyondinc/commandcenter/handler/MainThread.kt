@@ -175,12 +175,15 @@ class MainThread() : Thread() , ThreadFun{
                                     val dateform = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale("ko","KR"))
                                     var longTime = dateform.parse(Vars.riderList[rits]?.get(ritsrr)?.ModDT).time
                                     var sysTime : Long = System.currentTimeMillis()
-                                    if((sysTime - longTime) > 60) Vars.riderList[rits]?.get(ritsrr)?.workingStateCode = Codes.RIDER_OFF_WORK
+                                    if((sysTime - longTime) > 60)
+                                    {
+                                        Vars.riderList[rits]?.get(ritsrr)?.workingStateCode = Codes.RIDER_OFF_WORK
+                                        Vars.riderList[rits]?.get(ritsrr)?.MakerID = ""
+                                    }
                                 }
                             }
                         }
                         Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget()
-                        Vars.SubRiderHandler!!.obtainMessage(Finals.INSERT_RIDER).sendToTarget()
                     }
                 }
                 Thread.sleep(200)

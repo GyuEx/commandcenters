@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Message
 import android.util.Log
+import android.view.Gravity
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,13 +23,15 @@ class MainsViewModel : ViewModel() {
     var select = MutableLiveData<Int>()
     var popuptitle = MutableLiveData<String>()
     var checkview = MutableLiveData<Int>()
+    var drawer = MutableLiveData<Boolean>()
 
-    var Item = MutableLiveData(Orderdata())
+    var Item : MutableLiveData<Orderdata> = MutableLiveData()
 
     init {
         Log.e(Tag, "ViewModel Enable Mains")
         layer.postValue(Finals.SELECT_ORDER)
         select.postValue(Finals.SELECT_EMPTY)
+        drawer.postValue(false)
 
         Vars.MainsHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
@@ -40,6 +43,7 @@ class MainsViewModel : ViewModel() {
                 else if(msg.what == Finals.ClOSE_CHECK) checkview.postValue(Finals.SELECT_EMPTY)
                 else if(msg.what == Finals.ORDER_ITEM_SELECT) showOrderDetail(msg.obj)
                 else if(msg.what == Finals.HTTP_ERROR) HttpError()
+                else if(msg.what == Finals.CLOSE_KEYBOARD) closeKeyBoard()
             }
         }
     }
@@ -51,6 +55,8 @@ class MainsViewModel : ViewModel() {
 
     fun insertRider()
     {
+        getRiderGPS()
+
         if(!Logindata.RiderList)
         {
             Vars.MainsHandler!!.obtainMessage(Finals.CALL_ORDER).sendToTarget()
@@ -126,7 +132,11 @@ class MainsViewModel : ViewModel() {
     }
 
     fun MapDrOpen(){
-        Vars.MapHandler!!.obtainMessage(Finals.Map_FOR_DOPEN).sendToTarget()
+        Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_DOPEN).sendToTarget()
+    }
+
+    fun MapOrderOpen(){
+        Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_REMOVE).sendToTarget()
     }
 
     fun getItemPaymonet() : String?{
@@ -190,21 +200,25 @@ class MainsViewModel : ViewModel() {
         {
             layer.postValue(Finals.SELECT_MAP)
             select.postValue(Finals.SELECT_EMPTY)
-
         }
         else
         {
             layer.postValue(Finals.SELECT_ORDER)
+            Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_DCLOSE).sendToTarget()
         }
     }
 
     fun click_breifing() {
-        if(Vars.multiSelectCnt == 0) Toast.makeText(Vars.mContext,"선택된 오더가 없습니다.", Toast.LENGTH_SHORT).show()
+        if(Vars.multiSelectCnt == 0){
+            var toast : Toast = Toast.makeText(Vars.mContext,"선택된 오더가 없습니다.", Toast.LENGTH_SHORT)
+            toast.setGravity(Gravity.TOP,0,300)
+            toast.show()
+        }
         else showDialog(1)
     }
 
     fun click_check() {
-        if (layer.value == Finals.SELECT_ORDER && select.value != Finals.SELECT_BRIFE) {
+        if ((layer.value == Finals.SELECT_ORDER || layer.value == Finals.SELECT_MAP) && select.value != Finals.SELECT_BRIFE) {
             if (checkview.value == Finals.SELECT_CHECK) {
                 checkview.postValue(Finals.SELECT_EMPTY)
             } else {
@@ -252,10 +266,11 @@ class MainsViewModel : ViewModel() {
     }
 
     fun showDrawer(){
-        (Vars.mContext as MainsFun).showDrawer()
+        if(drawer.value == false) drawer.postValue(true)
+        else drawer.postValue(false)
     }
 
-    fun closeDrawer(){
-        (Vars.mContext as MainsFun).closeDrawer()
+    fun closeKeyBoard(){
+        (Vars.mContext as MainsFun).dispatchTouchEvent()
     }
 }

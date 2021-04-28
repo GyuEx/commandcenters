@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Message
 import android.util.Log
+import android.view.Gravity
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.adapter.RecyclerAdapterSub
@@ -21,8 +23,12 @@ class SubItemViewModel : ViewModel() {
     var items: ConcurrentHashMap<Int,Orderdata>? = null
     var adapter: RecyclerAdapterSub? = null
 
+    var select = MutableLiveData<Int>()
+
     init {
         Log.e("Memo", "Memo call")
+
+        select.postValue(Finals.SELECT_EMPTY)
 
         if (items == null) {
             items = ConcurrentHashMap(Collections.synchronizedMap(HashMap<Int,Orderdata>()))
@@ -39,6 +45,8 @@ class SubItemViewModel : ViewModel() {
             override fun handleMessage(msg: Message) {
                 Log.e("MMMMMM",msg.what.toString())
                 if (msg.what == Finals.INSERT_ORDER) insertLogic()
+                else if(msg.what == Finals.SELECT_ORDER) select.postValue(Finals.SELECT_ORDER)
+                else if(msg.what == Finals.SELECT_EMPTY) select.postValue(Finals.SELECT_EMPTY)
             }
         }
         insertLogic()
@@ -48,50 +56,41 @@ class SubItemViewModel : ViewModel() {
     {
         Vars.orderList!!.let { Realitems!!.putAll(it) }
 
-        var it : Iterator<String> = Realitems!!.keys.iterator()
-        var cnt = 0
-        var itemp : ConcurrentHashMap<Int,Orderdata> = ConcurrentHashMap()
-        while (it.hasNext())
+        if(select.value == Finals.SELECT_EMPTY)
         {
-            var ctemp = Realitems!![it.next()]
-            var rit : Iterator<String> = ctemp!!.keys.iterator()
-            while (rit.hasNext())
-            {
-                var rittemp = rit.next()
-//                    if(Vars.f_center.size > 0)
-//                    { // 속도차이가 날수있을것 같아서 차후에 검토
-                    if(Vars.f_center.contains(ctemp[rittemp]?.RcptCenterId) || ctemp[rittemp]?.DeliveryStateName != "접수")
-                    {
+            var it: Iterator<String> = Realitems!!.keys.iterator()
+            var cnt = 0
+            var itemp: ConcurrentHashMap<Int, Orderdata> = ConcurrentHashMap()
+            while (it.hasNext()) {
+                var ctemp = Realitems!![it.next()]
+                var rit: Iterator<String> = ctemp!!.keys.iterator()
+                while (rit.hasNext()) {
+                    var rittemp = rit.next()
+
+                    if (Vars.f_center.contains(ctemp[rittemp]?.RcptCenterId) || ctemp[rittemp]?.DeliveryStateName != "접수") {
                         continue
-                    }
-                    else
-                    {
-                        itemp.put(cnt,ctemp[rittemp]!!)
+                    } else {
+                        itemp.put(cnt, ctemp[rittemp]!!)
                         cnt++
                     }
-//                    }
-//                    else
-//                    {
-//                        ctemp[rittemp]?.let { it1 -> itemp.put(cnt, it1) }
-//                        cnt++
-//                    }
+                }
             }
-        }
 
-        if(itemp.keys.size < items!!.keys.size)
-        {
-            for(i in itemp.keys.size..items!!.keys.size)
-            {
-                items!!.remove(i)
+            if (itemp.keys.size < items!!.keys.size) {
+                for (i in itemp.keys.size..items!!.keys.size) {
+                    items!!.remove(i)
+                }
             }
-        }
 
-        itemp!!.let { items!!.putAll(it) }
-        onCreate()
+            itemp!!.let { items!!.putAll(it) }
+            onCreate()
+        }
     }
 
     fun ListClick(pos: Int) {
-
+        var toast : Toast = Toast.makeText(Vars.mContext, "선택된 라이더가 없습니다.", Toast.LENGTH_SHORT)
+        toast.setGravity(Gravity.BOTTOM,0,600)
+        toast.show()
     }
 
     fun onCreate() {

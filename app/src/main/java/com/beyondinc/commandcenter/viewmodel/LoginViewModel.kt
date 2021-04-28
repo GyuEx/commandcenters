@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Message
 import android.preference.PreferenceManager
 import android.util.Log
+import android.view.Gravity
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -48,8 +49,18 @@ class LoginViewModel() : ViewModel() {
                 }
                 else if (msg.what == Finals.LOGIN_FAIL)
                 {
-                    if(Logindata.MSG == null) Toast.makeText(Vars.mContext, "서버접속실패, 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
-                    else Toast.makeText(Vars.mContext, Logindata.MSG, Toast.LENGTH_SHORT).show()
+                    if(Logindata.MSG == null)
+                    {
+                        var toast : Toast = Toast.makeText(Vars.mContext, "서버접속실패, 다시 시도해주세요.", Toast.LENGTH_SHORT)
+                            toast.setGravity(Gravity.TOP,0,300)
+                            toast.show()
+                    }
+                    else
+                    {
+                        var toast : Toast = Toast.makeText(Vars.mContext, Logindata.MSG, Toast.LENGTH_SHORT)
+                        toast.setGravity(Gravity.TOP,0,300)
+                        toast.show()
+                    }
                     (Vars.mContext as LoginsFun).LoginFail()
                 }
             }

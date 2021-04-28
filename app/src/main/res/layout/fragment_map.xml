@@ -15,7 +15,8 @@
         android:layout_height="match_parent"
         android:gravity="bottom"
         app:umanoPanelHeight="10dp"
-        app:umanoOverlay="false"
+        app:umanoFadeColor="#00000000"
+        app:umanoOverlay="true"
         app:umanoParallaxOffset="0dp"
         app:umanoShadowHeight="10dp"
         app:Slide_low_layer="@{viewModel.lrawer}"
@@ -25,7 +26,7 @@
             android:id="@+id/mapdL01"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:drawer_open="@{mapdL01.isDrawerOpen()}">
+            app:drawer_open="@{viewModel.drawer}">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -36,7 +37,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:onClick="@{v->viewModel.AllroundClick()}"
                     android:background="@color/purple_200"
                     android:orientation="horizontal">
                 </LinearLayout>
@@ -52,6 +52,17 @@
                         android:background="@color/trans_black"
                         app:layout="@{viewModel.Olayer == viewModel.getMapforOrder ? 1 : 0}"
                         android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/white"
+                            android:gravity="center"
+                            android:text="@{viewModel.riderTitle}"
+                            android:textSize="20dp"
+                            android:textStyle="bold">
+                        </TextView>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -88,8 +99,6 @@
                 android:layout_height="match_parent"
                 android:background="@color/trans_black"
                 android:layout_gravity="start"
-                android:clickable="true"
-                android:focusable="true"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:gravity="center">
@@ -137,7 +146,9 @@
             <LinearLayout
                 android:id="@+id/subL01"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="180dp"
+                android:focusableInTouchMode="true"
+                android:focusable="true"
                 android:background="@color/black"
                 android:orientation="horizontal">
             </LinearLayout>

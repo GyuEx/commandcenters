@@ -12,6 +12,7 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:windowSoftInputMode="adjustResize"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity android:windowSoftInputMode="adjustNothing" android:name=".activity.Logins">
             <intent-filter>

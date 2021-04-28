@@ -22,10 +22,11 @@
             android:layout_weight="1">
 
             <EditText
+                android:id="@+id/rlS01"
                 android:layout_width="0dp"
                 android:background="@color/white"
                 android:layout_height="match_parent"
-                android:hint="라이더명 검색"
+                android:hint="  라이더명 검색"
                 android:textColorHint="@color/gray"
                 android:layout_weight="5">
 
@@ -40,6 +41,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="@{v->viewModel.clickClose()}"
                 android:background="@drawable/exit_b_btn"
                 android:gravity="left">
 

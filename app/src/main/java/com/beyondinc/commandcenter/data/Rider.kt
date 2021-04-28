@@ -11,4 +11,5 @@ data class Rider(
         var isEatTime: Boolean = false,
         var latitude: Double? = null,
         var longitude: Double? = null,
+        var MakerID: String? = null
 )
