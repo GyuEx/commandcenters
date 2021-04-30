@@ -16,6 +16,7 @@ import com.beyondinc.commandcenter.Interface.LoginsFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.databinding.ActivityLoginsBinding
+import com.beyondinc.commandcenter.handler.AlarmThread
 import com.beyondinc.commandcenter.handler.MainThread
 import com.beyondinc.commandcenter.net.HttpConn
 import com.beyondinc.commandcenter.util.MakeJsonParam
@@ -44,6 +45,11 @@ class Logins : AppCompatActivity() , LoginsFun {
         {
             Vars.HttpThread = HttpConn()
             Vars.HttpThread!!.start()
+        }
+        if(Vars.AlarmThread == null)
+        {
+            Vars.AlarmThread = AlarmThread()
+            Vars.AlarmThread!!.start()
         }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_logins)

@@ -1,11 +1,8 @@
 package com.beyondinc.commandcenter.adapter
 
-import android.graphics.Color
-import android.provider.SyncStateContract
 import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.widget.Button
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -19,7 +16,6 @@ import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import org.w3c.dom.Text
 
 object MainAdapter {
 
@@ -164,7 +160,7 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("filter_breifes")
     fun filter_breifes(view: TextView, height: Boolean) {
-        Log.e("aa","" + height)
+        Log.e("aa", "" + height)
         if(height)view.setBackgroundResource(R.drawable.state1_p)
         else view.setBackgroundResource(R.drawable.state1_n)
     }
@@ -209,15 +205,15 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("Main_title_font")
     fun main_title_font(view: TextView, height: Int) {
-        if(height == Finals.SELECT_EMPTY) view.text = "▼"
-        else if(height == Finals.SELECT_CHECK) view.text = "▲"
+        if(height == Finals.SELECT_EMPTY) view.text = " ▼"
+        else if(height == Finals.SELECT_CHECK) view.text = " ▲"
     }
 
     @JvmStatic
     @BindingAdapter("Main_title_font2")
     fun main_title_font2(view: TextView, height: Int) {
-        if(height == Finals.SELECT_MAP) view.text = "관제지도"
-        else if(height == Finals.SELECT_ORDER) view.text = "오더현황"
+        if(height == Finals.SELECT_MAP) view.text = "관제지도 "
+        else if(height == Finals.SELECT_ORDER) view.text = "오더현황 "
     }
 
     @JvmStatic
@@ -233,5 +229,51 @@ object MainAdapter {
             view.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
             view.isTouchEnabled = false // 이거 풀면 리스트뷰랑 터치공유를 하게되서 풀면안됨
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("select_item_backcolor")
+    fun setitembackcolor(view: LinearLayout, height: Boolean) {
+        if (height == false) view.setBackgroundColor(Vars.mContext!!.getColor(R.color.lightgray))
+        else view.setBackgroundColor(Vars.mContext!!.getColor(R.color.orange))
+    }
+
+    @JvmStatic
+    @BindingAdapter("Main_Bright")
+    fun setBright(view: LinearLayout, height: Int) {
+        if (height == 1) view.setBackgroundColor(-0x38000000) //200
+        else if (height == 2) view.setBackgroundColor(-0x4c000000) //180
+        else if (height == 3) view.setBackgroundColor(-0x60000000) //160
+        else if (height == 4) view.setBackgroundColor(-0x74000000) //140
+        else if (height == 5) view.setBackgroundColor(0x78000000) //120
+        else if (height == 6) view.setBackgroundColor(0x64000000) //100
+        else if (height == 7) view.setBackgroundColor(0x50000000) //80
+        else if (height == 8) view.setBackgroundColor(0x3C000000) //60
+        else if (height == 9) view.setBackgroundColor(0x28000000) //40
+        else view.setBackgroundColor(0x00000000)
+    }
+
+    @JvmStatic
+    @BindingAdapter("sub_item_size")
+    fun setSubItemSize(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height > 2)
+        {
+            layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
+            layoutParams.height = 180
+            view.layoutParams = layoutParams
+        }
+        else
+        {
+            layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
+            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("maquee")
+    fun setMaquee(view: TextView, height: Int) {
+        if(height == True) view.isSelected = true
     }
 }

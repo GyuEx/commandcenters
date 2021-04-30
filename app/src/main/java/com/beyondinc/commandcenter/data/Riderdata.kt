@@ -13,7 +13,8 @@ class Riderdata
     var latitude: String? = "0.0"
     var longitude: String? = "0.0"
     var ModDT : String? = "1900-01-01 00:00:00"
-    var assignCount : String? = "0"
-    var pickupCount : String? = "0"
+    var assignCount : Int = 0
+    var pickupCount : Int = 0
+    var completeCount : Int = 0
     var MakerID: String? = ""
 }

@@ -3,15 +3,19 @@ package com.beyondinc.commandcenter.viewmodel
 import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Message
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Gravity
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.Interface.MainsFun
+import com.beyondinc.commandcenter.data.Alarmdata
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
+import com.beyondinc.commandcenter.net.DACallerInterface
 import com.beyondinc.commandcenter.util.*
+import com.vasone.deliveryalarm.DAClient
 import org.json.simple.JSONArray
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -24,11 +28,35 @@ class MainsViewModel : ViewModel() {
     var popuptitle = MutableLiveData<String>()
     var checkview = MutableLiveData<Int>()
     var drawer = MutableLiveData<Boolean>()
+    var briteLayer = MutableLiveData<Int>()
 
     var Item : MutableLiveData<Orderdata> = MutableLiveData()
 
+    var order_count : MutableLiveData<String> = MutableLiveData()
+    var rider_count : MutableLiveData<String> = MutableLiveData()
+
+    private lateinit var alarmCallback: (ArrayList<Alarmdata>)-> Unit?
+
     init {
         Log.e(Tag, "ViewModel Enable Mains")
+
+        val pref = PreferenceManager.getDefaultSharedPreferences(Vars.mContext)
+        Vars.Usenick = pref.getBoolean("usenick",  false)
+        Vars.UseTime = pref.getBoolean("useTime",  false)
+        Vars.UseGana = pref.getBoolean("useGana",  false)
+        Vars.UseTTS = pref.getBoolean("useTTS",  false)
+        Vars.UseJ = pref.getBoolean("useJ",  false)
+        Vars.UseB = pref.getBoolean("useB",  false)
+        Vars.UseW = pref.getBoolean("useW",  false)
+        Vars.UseC = pref.getBoolean("useC",  false)
+        Vars.Bright = pref.getInt("bright", 10)
+
+        briteLayer.postValue(Vars.Bright)
+
+        val instanceDACallerInterface = makeDACallerInterfaceInstance(Logindata.LoginId!!, this::alarmCallback)
+        DAClient.Initialize(instanceDACallerInterface)
+        DAClient.Start()
+
         layer.postValue(Finals.SELECT_ORDER)
         select.postValue(Finals.SELECT_EMPTY)
         drawer.postValue(false)
@@ -44,13 +72,46 @@ class MainsViewModel : ViewModel() {
                 else if(msg.what == Finals.ORDER_ITEM_SELECT) showOrderDetail(msg.obj)
                 else if(msg.what == Finals.HTTP_ERROR) HttpError()
                 else if(msg.what == Finals.CLOSE_KEYBOARD) closeKeyBoard()
+                else if(msg.what == Finals.INSERT_ORDER_COUNT) order_count.postValue(msg.obj as String?)
+                else if(msg.what == Finals.INSERT_RIDER_COUNT) rider_count.postValue(msg.obj as String?)
+                else if(msg.what == Finals.SET_BRIGHT) setBright()
             }
+        }
+    }
+
+    private fun proceedAlarmCallback(alarmList: ArrayList<Alarmdata>) {
+        alarmCallback(alarmList)
+    }
+
+    fun makeDACallerInterfaceInstance(loginID: String, callback: (ArrayList<Alarmdata>) -> Unit?
+    ): DACallerInterface {
+        alarmCallback = callback
+        return DACallerInterface(
+                Logindata.appID,
+                loginID,
+                "tcp:dev.stds.co.kr:27070",
+                3,
+                30,
+                this::proceedAlarmCallback,
+        )
+    }
+
+    private fun alarmCallback(arAlarmInfo: ArrayList<Alarmdata>) {
+        for (index in 0 until arAlarmInfo.size) {
+            Vars.alarmList.add(arAlarmInfo[index])
         }
     }
 
     fun HttpError()
     {
         Toast.makeText(Vars.mContext,"서버접속실패",Toast.LENGTH_SHORT).show()
+    }
+
+    fun setBright(){
+        briteLayer.postValue(Vars.Bright)
+        Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+        Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+        Vars.MapHandler!!.obtainMessage(Finals.INSERT_RIDER).sendToTarget()
     }
 
     fun insertRider()
@@ -82,8 +143,6 @@ class MainsViewModel : ViewModel() {
         var temp : HashMap<String, JSONArray> =  HashMap()
         temp.put(Procedures.ORDER_LIST_IN_CENTER, MakeJsonParam().makeFullOrderListParameter(Logindata.LoginId!!,ids))
         Vars.sendList.add(temp)
-
-        getRiderGPS()
     }
 
     fun getRiderGPS()
@@ -225,6 +284,23 @@ class MainsViewModel : ViewModel() {
                 checkview.postValue(Finals.SELECT_CHECK)
             }
         }
+    }
+
+    fun click_exit(){
+        (Vars.mContext as MainsFun).exit()
+    }
+
+    fun click_notice(){
+    }
+
+    fun click_setting(){
+        (Vars.mContext as MainsFun).setting()
+    }
+
+    fun click_center_call(){
+    }
+
+    fun click_kakao_call(){
     }
 
     fun showDialog(txt : Int){

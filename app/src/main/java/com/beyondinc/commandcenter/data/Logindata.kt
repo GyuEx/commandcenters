@@ -18,4 +18,10 @@ object Logindata {
     var CenterList : Boolean = false
     var RiderList : Boolean = false
     var OrderList : Boolean = false
+
+    val appID: String = "7"
+    val appVersionName: String = ""
+    val deviceModelNumber: String = ""
+    val deviceID: String = ""
+    val devicePhoneNumber: String = ""
 }

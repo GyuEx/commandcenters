@@ -12,16 +12,21 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:windowSoftInputMode="adjustResize"
-        android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:windowSoftInputMode="adjustNothing" android:name=".activity.Logins">
+        android:theme="@style/Theme.AppCompat.NoActionBar"
+        android:windowSoftInputMode="adjustResize">
+        <activity android:launchMode="singleInstance" android:name=".activity.Setting"></activity>
+        <activity
+            android:name=".activity.Logins"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:windowSoftInputMode="adjustNothing" android:name=".activity.Mains"></activity>
+        <activity
+            android:name=".activity.Mains"
+            android:windowSoftInputMode="adjustNothing" />
     </application>
 
 </manifest>

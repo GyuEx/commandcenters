@@ -4,25 +4,23 @@ import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Message
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.adapter.RecyclerAdapter
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.util.Finals
-import com.beyondinc.commandcenter.util.MakeJsonParam
-import com.beyondinc.commandcenter.util.Procedures
 import com.beyondinc.commandcenter.util.Vars
-import org.json.simple.JSONArray
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.HashMap
 import kotlin.concurrent.timer
 
 class ItemViewModel : ViewModel() {
-    var Realitems: ConcurrentHashMap<String,ConcurrentHashMap<String,Orderdata>>? = null
-    var items: ConcurrentHashMap<Int,Orderdata>? = null
+    var Realitems: ConcurrentHashMap<String, Orderdata>? = null
+    var items: ConcurrentHashMap<Int, Orderdata>? = null
+    var passList : ConcurrentHashMap<String, Orderdata> = ConcurrentHashMap()
     var adapter: RecyclerAdapter? = null
 
     var state_brifes = MutableLiveData<Boolean>()
@@ -59,7 +57,7 @@ class ItemViewModel : ViewModel() {
         count_cancel.postValue(0)
 
         if (items == null) {
-            items = ConcurrentHashMap(Collections.synchronizedMap(HashMap<Int,Orderdata>()))
+            items = ConcurrentHashMap(Collections.synchronizedMap(HashMap<Int, Orderdata>()))
         }
         if (Realitems == null)
         {
@@ -73,7 +71,7 @@ class ItemViewModel : ViewModel() {
 
         Vars.ItemHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
-                Log.e("MMMMMM",msg.what.toString())
+                Log.e("MMMMMM", msg.what.toString())
                 if (msg.what == Finals.INSERT_ORDER) insertLogic()
                 else if (msg.what == Finals.SELECT_EMPTY)
                 {
@@ -83,7 +81,7 @@ class ItemViewModel : ViewModel() {
                 else if (msg.what == Finals.SELECT_BRIFE)
                 {
                     select.postValue(Finals.SELECT_BRIFE)
-                    insertLogicBrief()
+                    Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
                 }
             }
         }
@@ -96,7 +94,7 @@ class ItemViewModel : ViewModel() {
         {
             if(time == Vars.timecnt)
             {
-                Vars.MainsHandler!!.obtainMessage(Finals.CALL_ORDER).sendToTarget()
+                Vars.MainsHandler!!.obtainMessage(Finals.CALL_RIDER).sendToTarget()
                 time = 0
             }
             else
@@ -110,106 +108,91 @@ class ItemViewModel : ViewModel() {
     {
         Vars.orderList!!.let { Realitems!!.putAll(it) }
         ////여기서 필터랑 전체 구현해야댐....///
-        Log.e("aaaaa2","" + select.value)
-        if(select.value == Finals.SELECT_EMPTY)
-        {
-            var cntbr : Int = 0
-            var cntre : Int = 0
-            var cntpi : Int = 0
-            var cntco : Int = 0
-            var cntca : Int = 0
 
-            var it : Iterator<String> = Realitems!!.keys.iterator()
-            var cnt = 0
-            var itemp : ConcurrentHashMap<Int,Orderdata> = ConcurrentHashMap()
-            while (it.hasNext())
-            {
-                var ctemp = Realitems!![it.next()]
-                var rit : Iterator<String> = ctemp!!.keys.iterator()
-                while (rit.hasNext())
-                {
-                    var rittemp = rit.next()
-
-                    if (ctemp[rittemp]?.DeliveryStateName!! == "접수") cntbr++
-                    else if (ctemp[rittemp]?.DeliveryStateName!! == "배정") cntre++
-                    else if (ctemp[rittemp]?.DeliveryStateName!! == "픽업") cntpi++
-                    else if (ctemp[rittemp]?.DeliveryStateName!! == "완료") cntco++
-                    else if (ctemp[rittemp]?.DeliveryStateName!! == "취소") cntca++
-
-                    if(Vars.f_center.contains(ctemp[rittemp]?.RcptCenterId) || Vars.f_five.contains(ctemp[rittemp]?.DeliveryStateName))
-                    {
-                        continue
-                    }
-                    else
-                    {
-                        itemp.put(cnt,ctemp[rittemp]!!)
-                        cnt++
-                    }
-                }
-            }
-
-            count_briefes.postValue(cntbr)
-            count_recive.postValue(cntre)
-            count_pikup.postValue(cntpi)
-            count_complete.postValue(cntco)
-            count_cancel.postValue(cntca)
-
-            if(itemp.keys.size < items!!.keys.size)
-            {
-                for(i in itemp.keys.size..items!!.keys.size)
-                {
-                    items!!.remove(i)
-                }
-            }
-
-            itemp!!.let { items!!.putAll(it) }
-
-            onCreate()
-        }
-    }
-
-    fun insertLogicBrief()
-    {
-        Vars.orderList!!.let { Realitems!!.putAll(it) }
+        var cntbr : Int = 0
+        var cntre : Int = 0
+        var cntpi : Int = 0
+        var cntco : Int = 0
+        var cntca : Int = 0
 
         var it : Iterator<String> = Realitems!!.keys.iterator()
         var cnt = 0
         var itemp : ConcurrentHashMap<Int,Orderdata> = ConcurrentHashMap()
         while (it.hasNext())
         {
-            var ctemp = Realitems!![it.next()]
-            var rit : Iterator<String> = ctemp!!.keys.iterator()
-            while (rit.hasNext())
-            {
-                var rittemp = rit.next()
+            var ctemp = it.next()
 
-                if(ctemp[rittemp]?.DeliveryStateName != "접수")
+            if (Realitems!![ctemp]?.DeliveryStateName!! == "접수") cntbr++
+            else if (Realitems!![ctemp]?.DeliveryStateName!! == "배정") cntre++
+            else if (Realitems!![ctemp]?.DeliveryStateName!! == "픽업") cntpi++
+            else if (Realitems!![ctemp]?.DeliveryStateName!! == "완료") cntco++
+            else if (Realitems!![ctemp]?.DeliveryStateName!! == "취소") cntca++
+
+            if(select.value == Finals.SELECT_BRIFE)
+            {
+                if(Vars.f_center.contains(Realitems!![ctemp]?.RcptCenterId) || Realitems!![ctemp]?.DeliveryStateName != "접수")
                 {
                     continue
                 }
                 else
                 {
-                    itemp.put(cnt,ctemp[rittemp]!!)
-                    cnt++
+                    Log.e("ID", "" + Realitems!![ctemp]!!.OrderId + " // " + Realitems!![ctemp]!!.AgencyName)
+                    itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
+                }
+
+            }
+            else
+            {
+                if (Vars.f_center.contains(Realitems!![ctemp]?.RcptCenterId) || Vars.f_five.contains(Realitems!![ctemp]?.DeliveryStateName))
+                {
+                    continue
+                }
+                else
+                {
+                    Log.e("ID","" + Realitems!![ctemp]!!.OrderId + " // " + Realitems!![ctemp]!!.AgencyName)
+                    itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
                 }
             }
         }
 
-        if(itemp.keys.size < items!!.keys.size)
+        var shorttmp : SortedMap<Int, Orderdata>
+        if(Vars.UseTime) shorttmp = itemp.toSortedMap()
+        else shorttmp = itemp.toSortedMap(reverseOrder())
+
+        var finalMap : ConcurrentHashMap<Int, Orderdata> = ConcurrentHashMap()
+        var shit : Iterator<Int> = shorttmp.keys.iterator()
+        while(shit.hasNext())
         {
-            for(i in itemp.keys.size..items!!.keys.size)
+            var shitt = shit.next()
+            finalMap[cnt] = shorttmp[shitt]!!
+            cnt++
+        }
+
+        count_briefes.postValue(cntbr)
+        count_recive.postValue(cntre)
+        count_pikup.postValue(cntpi)
+        count_complete.postValue(cntco)
+        count_cancel.postValue(cntca)
+
+        var forstr = "배:${cntre} 픽:${cntpi} 완:${cntco}"
+
+        Vars.MainsHandler!!.obtainMessage(Finals.INSERT_ORDER_COUNT, forstr).sendToTarget()
+
+        if(finalMap.keys.size < items!!.keys.size)
+        {
+            for(i in finalMap.keys.size..items!!.keys.size)
             {
                 items!!.remove(i)
             }
         }
 
-        itemp!!.let { items!!.putAll(it) }
+        finalMap!!.let { items!!.putAll(it) }
 
         onCreate()
     }
 
     fun ListClick(pos: Int) {
-        Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ITEM_SELECT, items?.get(pos)).sendToTarget()
+        items!![pos]!!.use = items!![pos]!!.use != true
     }
 
     fun onCreate() {
@@ -281,7 +264,7 @@ class ItemViewModel : ViewModel() {
     }
 
     fun setUse(pos: Int){
-        Log.e("UsePos","" + pos + " // " + items!![pos]!!.use)
+        Log.e("UsePos", "" + pos + " // " + items!![pos]!!.use)
         items!![pos]!!.use = items!![pos]!!.use != true
         onCreate()
     }
@@ -359,5 +342,10 @@ class ItemViewModel : ViewModel() {
             Vars.f_five.remove("취소")
             insertLogic()
         }
+    }
+
+    fun onLongClickOnHeading(v: View?,pos:Int): Boolean {
+        Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ITEM_SELECT, items?.get(pos)).sendToTarget()
+        return true
     }
 }

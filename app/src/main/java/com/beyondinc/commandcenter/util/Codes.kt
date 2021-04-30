@@ -30,6 +30,7 @@ object Codes {
     // 라이더 근무상태 관련
     const val RIDER_ON_WORK = "1301"
     const val RIDER_OFF_WORK = "1302"
+    const val RIDER_ON_EAT = "1303"
 
     // 지불방법 관련
     const val PAYMENT_MONEY = "2701"

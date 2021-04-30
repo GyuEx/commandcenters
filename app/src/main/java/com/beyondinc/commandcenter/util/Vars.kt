@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
 import android.os.Handler
+import com.beyondinc.commandcenter.data.Alarmdata
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.repository.database.entity.Centerdata
 import com.beyondinc.commandcenter.repository.database.entity.Riderdata
@@ -17,6 +18,8 @@ import kotlin.collections.HashMap
 object Vars {
 
     var mContext: Context? = null
+    var sContext: Context? = null // 안쓰고싶었는데 방법이 없네.
+
     var mWorkState = 0
     var multiSelectCnt = 0
     var LoginResult : String? = null
@@ -27,10 +30,11 @@ object Vars {
 
     var sendList: ArrayList<HashMap<String,JSONArray>> = ArrayList(Collections.synchronizedList(ArrayList()))
     var receiveList: ArrayList<HashMap<String,ArrayList<HashMap<String, String>>>> = ArrayList(Collections.synchronizedList(ArrayList()))
+    var alarmList : LinkedList<Alarmdata> = LinkedList(Collections.synchronizedList(LinkedList()))
 
     var centerList: ConcurrentHashMap<String,Centerdata> = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
-    var riderList: ConcurrentHashMap<String,ConcurrentHashMap<String,Riderdata>> = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
-    var orderList: ConcurrentHashMap<String,ConcurrentHashMap<String,Orderdata>> = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
+    var riderList: ConcurrentHashMap<String,Riderdata> = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
+    var orderList: ConcurrentHashMap<String,Orderdata> = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
 
     var MainsHandler : Handler? = null
     var ItemHandler : Handler? = null
@@ -44,6 +48,18 @@ object Vars {
 
     var MainThread : Thread? = null
     var HttpThread : Thread? = null
+    var AlarmThread : Thread? = null
+
+    /*setting */
+    var Usenick : Boolean = false
+    var UseTime : Boolean = false
+    var UseGana : Boolean = false
+    var UseTTS : Boolean = false
+    var UseJ : Boolean = false
+    var UseB : Boolean = false
+    var UseW : Boolean = false
+    var UseC : Boolean = false
+    var Bright : Int = 10
 
     /*usefiler */
     var f_center : ArrayList<String> = ArrayList()

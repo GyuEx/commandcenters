@@ -19,7 +19,7 @@ import kotlin.collections.HashMap
 import kotlin.concurrent.timer
 
 class SubItemViewModel : ViewModel() {
-    var Realitems: ConcurrentHashMap<String,ConcurrentHashMap<String,Orderdata>>? = null
+    var Realitems: ConcurrentHashMap<String,Orderdata>? = null
     var items: ConcurrentHashMap<Int,Orderdata>? = null
     var adapter: RecyclerAdapterSub? = null
 
@@ -56,46 +56,62 @@ class SubItemViewModel : ViewModel() {
     {
         Vars.orderList!!.let { Realitems!!.putAll(it) }
 
-        if(select.value == Finals.SELECT_EMPTY)
+        var it : Iterator<String> = Realitems!!.keys.iterator()
+        var cnt = 0
+        var itemp : ConcurrentHashMap<Int,Orderdata> = ConcurrentHashMap()
+        while (it.hasNext())
         {
-            var it: Iterator<String> = Realitems!!.keys.iterator()
-            var cnt = 0
-            var itemp: ConcurrentHashMap<Int, Orderdata> = ConcurrentHashMap()
-            while (it.hasNext()) {
-                var ctemp = Realitems!![it.next()]
-                var rit: Iterator<String> = ctemp!!.keys.iterator()
-                while (rit.hasNext()) {
-                    var rittemp = rit.next()
+            var ctemp = it.next()
 
-                    if (Vars.f_center.contains(ctemp[rittemp]?.RcptCenterId) || ctemp[rittemp]?.DeliveryStateName != "접수") {
-                        continue
-                    } else {
-                        itemp.put(cnt, ctemp[rittemp]!!)
-                        cnt++
-                    }
-                }
+            if(Vars.f_center.contains(Realitems!![ctemp]?.RcptCenterId) || Realitems!![ctemp]?.DeliveryStateName != "접수")
+            {
+                continue
             }
-
-            if (itemp.keys.size < items!!.keys.size) {
-                for (i in itemp.keys.size..items!!.keys.size) {
-                    items!!.remove(i)
-                }
+            else
+            {
+                Log.e("ID", "" + Realitems!![ctemp]!!.OrderId + " // " + Realitems!![ctemp]!!.AgencyName)
+                itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
             }
-
-            itemp!!.let { items!!.putAll(it) }
-            onCreate()
         }
+
+        var shorttmp : SortedMap<Int, Orderdata>
+        if(Vars.UseTime) shorttmp = itemp.toSortedMap()
+        else shorttmp = itemp.toSortedMap(reverseOrder())
+
+        var finalMap : ConcurrentHashMap<Int,Orderdata> = ConcurrentHashMap()
+        var shit : Iterator<Int> = shorttmp.keys.iterator()
+        while(shit.hasNext())
+        {
+            var shitt = shit.next()
+            finalMap[cnt] = shorttmp[shitt]!!
+            cnt++
+        }
+
+        if(finalMap.keys.size < items!!.keys.size)
+        {
+            for(i in finalMap.keys.size..items!!.keys.size)
+            {
+                items!!.remove(i)
+            }
+        }
+
+        finalMap!!.let { items!!.putAll(it) }
+
+        onCreate()
     }
 
     fun ListClick(pos: Int) {
-        var toast : Toast = Toast.makeText(Vars.mContext, "선택된 라이더가 없습니다.", Toast.LENGTH_SHORT)
-        toast.setGravity(Gravity.BOTTOM,0,600)
-        toast.show()
+
+        Log.e("UsePos", "" + pos + " // " + items!![pos]!!.use)
+        items!![pos]!!.use = items!![pos]!!.use != true
+        onCreate()
+//        var toast : Toast = Toast.makeText(Vars.mContext, "선택된 라이더가 없습니다.", Toast.LENGTH_SHORT)
+//        toast.setGravity(Gravity.BOTTOM,0,600)
+//        toast.show()
     }
 
     fun onCreate() {
         adapter!!.notifyDataSetChanged()
-
     }
 
     fun getSelectBrife(): Int{

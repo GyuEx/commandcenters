@@ -1,23 +1,11 @@
 package com.beyondinc.commandcenter.viewmodel
 
-import android.annotation.SuppressLint
-import android.os.Handler
-import android.os.Message
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.beyondinc.commandcenter.Interface.MainsFun
-import com.beyondinc.commandcenter.adapter.RecyclerAdapterPopup
 import com.beyondinc.commandcenter.adapter.RecyclerAdapterRider
-import com.beyondinc.commandcenter.data.Checkdata
 import com.beyondinc.commandcenter.data.Dialogdata
-import com.beyondinc.commandcenter.data.Historydata
-import com.beyondinc.commandcenter.data.Orderdata
-import com.beyondinc.commandcenter.repository.database.entity.Rider
-import com.beyondinc.commandcenter.repository.database.entity.Riderdata
-import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.collections.ArrayList
 
 class RiderViewModel : ViewModel() {
     var items: ConcurrentHashMap<Int, Dialogdata>? = null
@@ -40,21 +28,16 @@ class RiderViewModel : ViewModel() {
         var cnt = 0
         while (it.hasNext())
         {
-            var ctemp = Vars.riderList!![it.next()]
-            var rit : Iterator<String> = ctemp!!.keys.iterator()
-            while (rit.hasNext())
-            {
-                var rittemp = rit.next()
-                val memo = Dialogdata()
-                Log.e("aaaaaaaaaaa", "" + ctemp[rittemp]!!.centerID + " // " + ctemp[rittemp]!!.name)
-                memo.id = cnt
-                memo.name = ctemp[rittemp]!!.name
-                memo.velue1 = "1"
-                memo.velue2 = "2"
-                memo.velue3 = "3"
-                items!![cnt] = memo
-                cnt++
-            }
+            var rittemp = it.next()
+            val memo = Dialogdata()
+            Log.e("aaaaaaaaaaa", "" + Vars.riderList[rittemp]!!.centerID + " // " + Vars.riderList[rittemp]!!.name)
+            memo.id = cnt
+            memo.name = Vars.riderList[rittemp]!!.name
+            memo.velue1 = "1"
+            memo.velue2 = "2"
+            memo.velue3 = "3"
+            items!![cnt] = memo
+            cnt++
         }
         onCreate()
     }

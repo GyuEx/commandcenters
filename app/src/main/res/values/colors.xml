@@ -28,5 +28,6 @@
 
     <color name="trans_black">#B3000000</color>
     <color name="trans_white">#B3FFFFFF</color>
+    <color name="trans_green">#B31C8B00</color>
 
 </resources>

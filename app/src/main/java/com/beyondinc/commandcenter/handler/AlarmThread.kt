@@ -4,15 +4,12 @@ import android.util.Log
 import com.beyondinc.commandcenter.Interface.ThreadFun
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
-import com.beyondinc.commandcenter.repository.database.entity.Centerdata
-import com.beyondinc.commandcenter.repository.database.entity.Riderdata
-import com.beyondinc.commandcenter.util.Codes
-import com.beyondinc.commandcenter.util.Finals
-import com.beyondinc.commandcenter.util.Procedures
-import com.beyondinc.commandcenter.util.Vars
+import com.beyondinc.commandcenter.util.*
+import org.json.simple.JSONArray
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class MainThread() : Thread() , ThreadFun{
+class AlarmThread() : Thread() , ThreadFun{
 
     var isKeep : Boolean = false
 
@@ -28,95 +25,53 @@ class MainThread() : Thread() , ThreadFun{
         while (isKeep) {
 //            try {
 
-                if (Vars.receiveList != null && Vars.receiveList.isNotEmpty()) {
+                if (Vars.alarmList != null && Vars.alarmList.isNotEmpty()) {
 
-                    var rdata = Vars.receiveList.removeAt(0)
+                    var rdata = Vars.alarmList.removeAt(0)
 
-                    val code = rdata.keys.iterator().next()
-                    val data = rdata[code]
+                    Log.e("Alram" , "" + rdata.mnAlarmType + " // " + rdata.mnOrderId)
 
-                    Log.e("Recive", "" + code)
-                    Log.e("Recive", "" + data + " // " + data!!.size + " // " )
-
-                    if(code == Procedures.LOGIN)
+                    if(rdata.mnAlarmType == AlarmCodes.ALARM_TYPE_ORDER)
                     {
-                        //로그인은 반드시 0번지여야함
-                        if(data!![0]["MSG"] == "로그인 성공!")
-                        {
-                            Logindata.CenterId=data!![0]["CenterId"]
-                            Logindata.CenterName=data!![0]["CenterName"]
-                            Logindata.CompanyId=data!![0]["CompanyId"]
-                            Logindata.CompanyName=data!![0]["CompanyName"]
-                            Logindata.UserDesc=data!![0]["UserDesc"]
-                            Logindata.LastLoginDT=data!![0]["LastLoginDT"]
-                            Logindata.MSG=data!![0]["MSG"]
-                            Vars.LoginHandler!!.obtainMessage(Finals.LOGIN_SUCESS).sendToTarget()
-                        }
-                        else
-                        {
-                            Logindata.MSG = data!![0]["MSG"]
-                            Vars.LoginHandler!!.obtainMessage(Finals.LOGIN_FAIL).sendToTarget()
-                        }
+                        var list : ArrayList<String> = ArrayList()
+                        list.add(rdata.mnOrderId.toString())
+                        var temp : HashMap<String, JSONArray> =  HashMap()
+                        temp.put(Procedures.ORDER_DETAIL,MakeJsonParam().makeOrderDetailParameter(Logindata.LoginId!!,list))
+                        Vars.sendList.add(temp)
                     }
-                    else if(code == Procedures.CENTER_LIST)
+                    else if(rdata.mnAlarmType == AlarmCodes.ALARM_TYPE_DEPOSIT)
                     {
-                        for(i in 0 until data!!.size)
+
+                    }
+                    else if(rdata.mnAlarmType == AlarmCodes.ALARM_TYPE_NOTICE)
+                    {
+
+                    }
+                    else if(rdata.mnAlarmType == AlarmCodes.ALARM_TYPE_ORDER_WORKENV)
+                    {
+
+                    }
+                    else if(rdata.mnAlarmType == AlarmCodes.ALARM_TYPE_MESSAGE)
+                    {
+
+                    }
+                    else if(rdata.mnAlarmType == AlarmCodes.ALARM_TYPE_RIDER_WORK_STATE)
+                    {
+                        if(Vars.riderList.containsKey(rdata.mnOrderId.toString()))
                         {
-                            if(data!![i]["MSG"] == "성공")
+                            when (rdata.mnDeliveryState)
                             {
-                                val ct = Centerdata()
-                                ct.companyName = data[i]["CompanyName"].toString()
-                                ct.centerName = data[i]["CenterName"].toString()
-                                ct.companyId = data[i]["CompanyId"].toString()
-                                ct.centerId = data[i]["CenterId"].toString()
-                                Vars.centerList[ct.centerId!!] = ct
+                                1 -> Vars.riderList[rdata.mnOrderId.toString()]!!.workingStateCode = Codes.RIDER_ON_WORK
+                                2 -> Vars.riderList[rdata.mnOrderId.toString()]!!.workingStateCode = Codes.RIDER_OFF_WORK
+                                3 -> Vars.riderList[rdata.mnOrderId.toString()]!!.workingStateCode = Codes.RIDER_ON_EAT
+                                4 -> Vars.riderList[rdata.mnOrderId.toString()]!!.workingStateCode = Codes.RIDER_ON_WORK
                             }
+                            Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget()
                         }
-                        Vars.CheckHandler!!.obtainMessage(Finals.INSERT_STORE).sendToTarget()
                     }
-                    else if(code == Procedures.RIDER_LIST_IN_CENTER)
+                    else if(rdata.mnAlarmType == AlarmCodes.ALARM_TYPE_CHATTING)
                     {
-                        var ridertemp : HashMap<String,Riderdata> = HashMap()
-                        for (i in 0 until data!!.size) {
-                            val ri = Riderdata()
-                            ri.id = data[i]["RiderId"].toString()
-                            ri.centerID = data[i]["CenterId"].toString()
-                            ri.name = data[i]["RiderName"].toString()
-                            ri.isEatTime = data[i]["EatTimeYn"].toString()
-                            ri.workingStateCode = data[i]["RunningState"].toString()
-                            ridertemp[ri.id!!] = ri
-                        }
 
-                        Vars.riderList.putAll(ridertemp)
-                        Vars.MainsHandler!!.obtainMessage(Finals.INSERT_RIDER).sendToTarget()
-                    }
-                    else if(code == Procedures.ORDER_LIST_IN_CENTER)
-                    {
-                        var centertemp : HashMap<String,Orderdata> = HashMap()
-                        for (i in 0 until data!!.size) {
-                            val or = passing(data[i]) // 너무길어서 따로 메소드 처리
-                            centertemp[or.OrderId] = or
-                        }
-                        Vars.orderList.putAll(centertemp)
-                        Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
-                        Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
-                        Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget()
-                    }
-                    else if(code == Procedures.RIDER_LOCATION_IN_CENTER)
-                    {
-                        for (i in 0 until data!!.size) {
-
-                            var id = data[i]["DriverId"].toString()
-                            var rx = data[i]["LastLocationLongitude"].toString()
-                            var ry = data[i]["LastLocationLatitude"].toString()
-                            var rt = data[i]["LastLocationModDT"].toString()
-
-                            Vars.riderList?.get(id)?.latitude = ry
-                            Vars.riderList?.get(id)?.longitude = rx
-                            Vars.riderList?.get(id)?.ModDT = rt
-                            Vars.riderList?.get(id)?.workingStateCode = Codes.RIDER_ON_WORK
-                        }
-                        Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget()
                     }
                 }
                 Thread.sleep(200)

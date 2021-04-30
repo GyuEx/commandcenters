@@ -1,7 +1,5 @@
 package com.beyondinc.commandcenter.data
 
-import com.beyondinc.commandcenter.util.Codes
-
 class Orderdata {
     var id = 0                                              // 리스트뷰 ID
     var use: Boolean = false                                // 멀티배차 사용여부

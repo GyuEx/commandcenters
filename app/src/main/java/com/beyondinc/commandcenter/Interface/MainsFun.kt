@@ -17,5 +17,7 @@ interface MainsFun {
     fun closeHistory()
 
     fun dispatchTouchEvent()
+    fun setting()
+    fun exit()
 }
 

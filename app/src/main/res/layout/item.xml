@@ -38,32 +38,15 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:gravity="center"
-                android:paddingLeft="15dp"
-                android:onClick="@{v->viewModel.setUse(pos)}"
-                app:layout="@{viewModel.select == viewModel.getSelectBrife ? 1 : 0}"
-                android:orientation="vertical">
-
-                    <View
-                        android:id="@+id/ciV01"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:background="@drawable/checkbox_nor"
-                        app:custom_checkbox="@{viewModel.items.get(pos).use}"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_weight="10"
                 android:orientation="horizontal"
                 android:background="@color/lightgray"
+                app:select_item_backcolor="@{viewModel.items.get(pos).use}"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:paddingRight="15dp"
-                android:onClick="@{v->viewModel.ListClick(pos)}">
+                android:onClick="@{v->viewModel.setUse(pos)}"
+                android:onLongClick="@{(view) -> viewModel.onLongClickOnHeading(view,pos)}">
 
                 <LinearLayout
                     android:layout_width="0dp"

@@ -44,6 +44,7 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:paddingRight="15dp"
+                app:select_item_backcolor="@{viewModel.items.get(pos).use}"
                 android:onClick="@{v->viewModel.ListClick(pos)}">
 
                 <LinearLayout

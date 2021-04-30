@@ -74,20 +74,46 @@ class SubRiderViewModel : ViewModel() {
         var it: Iterator<String> = list.keys.iterator()
         var cnt = 0
         var itemp: ConcurrentHashMap<Int, Riderdata> = ConcurrentHashMap()
+
         while (it.hasNext()) {
             var ctemp = it.next()
-            itemp[cnt] = list[ctemp]!!
+            itemp[list[ctemp]!!.completeCount] = list[ctemp]!!
+        }
+
+        var shorttmp : SortedMap<Int, Riderdata>
+        if(Vars.UseGana) shorttmp = itemp.toSortedMap()
+        else shorttmp = itemp.toSortedMap(reverseOrder())
+
+        var finalMap : ConcurrentHashMap<Int, Riderdata> = ConcurrentHashMap()
+        var shit : Iterator<Int> = shorttmp.keys.iterator()
+
+        while(shit.hasNext())
+        {
+            var shitt = shit.next()
+            finalMap[cnt] = shorttmp[shitt]!!
             cnt++
         }
 
-        if (itemp.keys.size < items!!.keys.size) {
-            for (i in itemp.keys.size..items!!.keys.size) {
+        if(finalMap.keys.size < items!!.keys.size)
+        {
+            for(i in finalMap.keys.size..items!!.keys.size)
+            {
                 items!!.remove(i)
             }
         }
 
-        itemp!!.let { items!!.putAll(it) }
+        finalMap!!.let { items!!.putAll(it) }
+
         onCreate()
+
+//        if (itemp.keys.size < items!!.keys.size) {
+//            for (i in itemp.keys.size..items!!.keys.size) {
+//                items!!.remove(i)
+//            }
+//        }
+//
+//        itemp!!.let { items!!.putAll(it) }
+//        onCreate()
     }
 
     fun ListClick(pos: Int) {
@@ -113,7 +139,7 @@ class SubRiderViewModel : ViewModel() {
     }
 
     fun getCnt(pos: Int): String? {
-        return items!![pos]?.assignCount
+        return "${items!![pos]?.assignCount} / ${items!![pos]?.pickupCount}"
     }
 
     fun getTitle(pos: Int): String? {

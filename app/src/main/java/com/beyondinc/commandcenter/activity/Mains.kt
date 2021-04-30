@@ -3,6 +3,8 @@ package com.beyondinc.commandcenter.activity
 import RiderDialog
 import StoreDialog
 import android.content.Context
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
@@ -91,7 +93,6 @@ class Mains : AppCompatActivity(), MainsFun {
     }
 
     override fun onBackPressed() {
-
         val tempTime = System.currentTimeMillis()
         val intervalTime: Long = tempTime - backPressedTime
         if (intervalTime in 0..FINISH_INTERVAL_TIME) {
@@ -102,6 +103,12 @@ class Mains : AppCompatActivity(), MainsFun {
             backPressedTime = tempTime
             Toast.makeText(applicationContext, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun exit(){
+        moveTaskToBack(true);						// 태스크를 백그라운드로 이동
+        finishAndRemoveTask();						// 액티비티 종료 + 태스크 리스트에서 지우기
+        android.os.Process.killProcess(android.os.Process.myPid());	// 앱 프로세스 종료
     }
 
     override fun setFragment() {
@@ -215,6 +222,10 @@ class Mains : AppCompatActivity(), MainsFun {
             history = HistoryDialog()
             history!!.show(supportFragmentManager, "History")
         }
+    }
+
+    override fun setting(){
+        startActivity(Intent(Vars.mContext, Setting::class.java))
     }
 
     override fun dispatchTouchEvent() {

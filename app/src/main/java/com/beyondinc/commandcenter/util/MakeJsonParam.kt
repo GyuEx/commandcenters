@@ -152,23 +152,23 @@ class MakeJsonParam {
 //        return parameterArray
 //    }
 
-//    fun makeOrderDetailParameter(loginID: String, orderIDs: List<String>): JSONArray {
-//        val parameterArray = JSONArray()
-//
-//        val parameterJSON = makeBaseParameter(loginID)
-//        parameterJSON["ReqType"] = "1"
-//        val orderIDSet = StringBuilder()
-//        for (index in orderIDs.indices) {
-//            if (orderIDSet.isNotEmpty() || index > 0) {
-//                orderIDSet.append(",")
-//            }
-//            orderIDSet.append(orderIDs[index])
-//        }
-//        parameterJSON["InputData"] = orderIDSet.toString()
-//        parameterArray.add(parameterJSON)
-//
-//        return parameterArray
-//    }
+    fun makeOrderDetailParameter(loginID: String, orderIDs: List<String>): JSONArray {
+        val parameterArray = JSONArray()
+
+        val parameterJSON = makeBaseParameter(loginID)
+        parameterJSON["ReqType"] = "1"
+        val orderIDSet = StringBuilder()
+        for (index in orderIDs.indices) {
+            if (orderIDSet.isNotEmpty() || index > 0) {
+                orderIDSet.append(",")
+            }
+            orderIDSet.append(orderIDs[index])
+        }
+        parameterJSON["InputData"] = orderIDSet.toString()
+        parameterArray.add(parameterJSON)
+
+        return parameterArray
+    }
 
 //    fun makeAssignOrderParameter(loginID: String, riderID: String,
 //                                 assignSet: ArrayList<AssignInfo>): JSONArray {
@@ -184,6 +184,7 @@ class MakeJsonParam {
 //
 //        return parameterArray
 //    }
+// 오더 배정 파라미터 인것 같음
 
 //    fun makeChangeOrderStatusParameter(loginID: String, orderID: String, newStatusCode: String,
 //                                       riderID: String, endApproval: String?): JSONArray {

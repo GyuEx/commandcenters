@@ -36,6 +36,9 @@ object Finals {
     val INSERT_RIDER : Int = 53
     val INSERT_ORDER : Int = 54
 
+    val INSERT_ORDER_COUNT : Int = 55
+    val INSERT_RIDER_COUNT : Int = 56
+
     val ORDER_ITEM_SELECT : Int = 61
     val BRIEF_ITEM_SELECT : Int = 62
     val STORE_ITEM_SELECT : Int = 63
@@ -50,6 +53,7 @@ object Finals {
     val MAP_FOR_REMOVE : Int = 83
     val MAP_MOVE_FOCUS : Int = 84
     val MAP_FOR_CALL_RIDER : Int = 85
+    val MAP_FOR_LIVE_DATA : Int = 86
 
     val LOGIN_SUCESS : Int = 101
     val LOGIN_FAIL : Int = 102
@@ -57,5 +61,6 @@ object Finals {
     val HTTP_ERROR : Int = 111
 
     val CLOSE_KEYBOARD : Int = 121
+    val SET_BRIGHT : Int = 122
 
 }
