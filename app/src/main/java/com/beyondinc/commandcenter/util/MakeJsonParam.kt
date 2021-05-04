@@ -170,46 +170,41 @@ class MakeJsonParam {
         return parameterArray
     }
 
-//    fun makeAssignOrderParameter(loginID: String, riderID: String,
-//                                 assignSet: ArrayList<AssignInfo>): JSONArray {
-//        val parameterArray = JSONArray()
-//
-//        for (assignInfo in assignSet) {
-//            val parameterJSON = makeBaseParameter(loginID)
-//            parameterJSON["OrderId"] = assignInfo.orderID
-//            parameterJSON["RiderId"] = riderID
-//            parameterJSON["ReqType"] = assignInfo.assignType
-//            parameterArray.add(parameterJSON)
-//        }
-//
-//        return parameterArray
-//    }
-// 오더 배정 파라미터 인것 같음
+    fun makeAssignOrderParameter(loginID: String, orderID: String, assignType: String, riderID: String): JSONArray {
+        val parameterArray = JSONArray()
+            val parameterJSON = makeBaseParameter(loginID)
+            parameterJSON["OrderId"] = orderID
+            parameterJSON["RiderId"] = riderID
+            parameterJSON["ReqType"] = assignType
+            parameterArray.add(parameterJSON)
+        return parameterArray
+    }
 
-//    fun makeChangeOrderStatusParameter(loginID: String, orderID: String, newStatusCode: String,
-//                                       riderID: String, endApproval: String?): JSONArray {
-//        val parameterArray = JSONArray()
-//
-//        val parameterJSON = makeBaseParameter(loginID)
-//        parameterJSON["OrderId"] = orderID
-//        parameterJSON["ReqType"] = newStatusCode
-//        if (newStatusCode == Procedures.ChangeStatusType.ORDER_FORCE_COMPLETE
-//                && riderID.isNotEmpty() && endApproval != null) {
-//            parameterJSON["RiderId"] = riderID
-//            parameterJSON["EndApproval"] = endApproval
-//        }
-//        parameterArray.add(parameterJSON)
-//
-//        return parameterArray
-//    }
 
-//    private fun makeEditInfoParameter(loginID: String, editInfoType: String, editOrderID: String): JSONObject {
-//        val parameterJSON = makeBaseParameter(loginID)
-//        parameterJSON["ReqType"] = editInfoType
-//        parameterJSON["OrderId"] = editOrderID
-//
-//        return parameterJSON
-//    }
+    fun makeChangeOrderStatusParameter(loginID: String, orderID: String, newStatusCode: String,
+                                       riderID: String, endApproval: String?): JSONArray {
+        val parameterArray = JSONArray()
+
+        val parameterJSON = makeBaseParameter(loginID)
+        parameterJSON["OrderId"] = orderID
+        parameterJSON["ReqType"] = newStatusCode
+        if (newStatusCode == Procedures.ChangeStatusType.ORDER_FORCE_COMPLETE
+                && riderID.isNotEmpty() && endApproval != null) {
+            parameterJSON["RiderId"] = riderID
+            parameterJSON["EndApproval"] = endApproval
+        }
+        parameterArray.add(parameterJSON)
+
+        return parameterArray
+    }
+
+    private fun makeEditInfoParameter(loginID: String, editInfoType: String, editOrderID: String): JSONObject {
+        val parameterJSON = makeBaseParameter(loginID)
+        parameterJSON["ReqType"] = editInfoType
+        parameterJSON["OrderId"] = editOrderID
+
+        return parameterJSON
+    }
 
 //    fun makeAgencyTownListParameter(loginID: String, editOrderID: String,
 //                                    centerID: String, agencyID: String): JSONArray {
@@ -262,14 +257,14 @@ class MakeJsonParam {
 //        return parameterArray
 //    }
 
-//    fun makeOnPickupReadyParameter(loginID: String, editOrderID: String): JSONArray {
-//        val parameterArray = JSONArray()
-//
-//        val parameterJSON = makeEditInfoParameter(loginID, Procedures.EditInfoType.ORDER_PACKING_COMPLETE, editOrderID)
-//        parameterArray.add(parameterJSON)
-//
-//        return parameterArray
-//    }
+    fun makeOnPickupReadyParameter(loginID: String, editOrderID: String): JSONArray {
+        val parameterArray = JSONArray()
+
+        val parameterJSON = makeEditInfoParameter(loginID, Procedures.EditInfoType.ORDER_PACKING_COMPLETE, editOrderID)
+        parameterArray.add(parameterJSON)
+
+        return parameterArray
+    }
 
 //    fun makeChangeSalesPriceParameter(loginID: String, editOrderID: String, newPrice: String): JSONArray {
 //        val parameterArray = JSONArray()

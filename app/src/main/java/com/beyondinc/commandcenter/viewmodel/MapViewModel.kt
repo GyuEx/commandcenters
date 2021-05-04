@@ -13,6 +13,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Orderdata
+import com.beyondinc.commandcenter.net.httpSub
 import com.beyondinc.commandcenter.repository.database.entity.Riderdata
 import com.beyondinc.commandcenter.util.Codes
 import com.beyondinc.commandcenter.util.Finals
@@ -84,16 +85,23 @@ class MapViewModel : ViewModel()
                 }
                 else if(msg.what == Finals.MAP_MOVE_FOCUS) MapFocusSet(msg.obj)
                 else if(msg.what == Finals.MAP_FOR_REMOVE) CancelRider()
-                else if(msg.what == Finals.MAP_FOR_LIVE_DATA) {
-                    createPikup()
-                    createAccept()
-                }
             }
         }
     }
 
     fun MapFocusSet(obj: Any){
-        Item.value = obj as Riderdata
+
+        if(Item.value == obj as Riderdata) return
+        Item.value = obj
+
+        removeOrderMaker()
+
+        for (marker in markerList) {
+            if (Item!!.value!!.MakerID != marker.icon.id) marker.map = null
+        }
+
+        //전체 마커 초기화, 라이더 마커는 다 지웟다 그릴필요없이 선택된것이 아닌것만 삭제함
+
         val position = LatLng(
             Item?.value!!.latitude!!.toDouble(),
             Item?.value!!.longitude!!.toDouble()
@@ -137,18 +145,20 @@ class MapViewModel : ViewModel()
             }
         }
 
-        createAccept()
-        createPikup()
-
-        PcSize.postValue(pcnt)
-        AcSize.postValue(acnt)
-        // 거지같은 라이브데이터 리스트안에 값만 바꾸는걸론 호출이 안됨... 배열도 못잡고 별쌩쇼를 다했지만 안되서 한개씩 선언함....
-        // 픽업3개, 배정5개 더는 늘리지 말자..
-
         if(first == false)
         {
             CancelRider()
             first = true
+        }
+        else
+        {
+            createAccept()
+            createPikup()
+
+            PcSize.postValue(pcnt)
+            AcSize.postValue(acnt)
+            // 거지같은 라이브데이터 리스트안에 값만 바꾸는걸론 호출이 안됨... 배열도 못잡고 별쌩쇼를 다했지만 안되서 한개씩 선언함....
+            // 픽업3개, 배정5개 더는 늘리지 말자..
         }
     }
 
@@ -170,6 +180,7 @@ class MapViewModel : ViewModel()
         Olayer.postValue(Finals.MAP_FOR_REMOVE)
         Slayer.postValue(Finals.MAP_FOR_REMOVE)
         Item.value = Riderdata()
+        createRider()
     }
 
     fun removeOrderMaker()
@@ -319,15 +330,6 @@ class MapViewModel : ViewModel()
             }
         }
 
-        var sub : Iterator<String> = passList.keys.iterator()
-        var i = 0
-        while (sub.hasNext())
-        {
-            var subi = sub.next()
-            if(passList[subi]!!.name!! == Item?.value?.name) i++
-        }
-        if(i < 1) CancelRider()
-
         var forstr = "전:${cntj} 운:${cntu} 대:${cntd} 식:${cnts} 퇴:${cntt}"
         Vars.MainsHandler!!.obtainMessage(Finals.INSERT_RIDER_COUNT, forstr).sendToTarget()
         Vars.SubRiderHandler!!.obtainMessage(Finals.INSERT_RIDER, passList).sendToTarget()
@@ -369,7 +371,8 @@ class MapViewModel : ViewModel()
                     markerPikupList.add(customerMarker)
 
                     val path = PathOverlay()
-                    path.coords = listOf(agencyPosition, customerPosition)
+                    var task = httpSub()
+                    path.coords = task.execute(agencyPosition,customerPosition).get()
                     path.width = 5
                     path.outlineColor = Color.GREEN
                     path.color = Color.GREEN
@@ -382,22 +385,17 @@ class MapViewModel : ViewModel()
 
     fun createAccept()
     {
-        Log.e("CreateLine" , "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1")
         for (marker in markerAccesList) {
             marker.map = null
         }
-        Log.e("CreateLine" , "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2")
         markerAccesList.clear()
-        Log.e("CreateLine" , "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa3 " + ItemAc.keys.size)
 
         var it : Iterator<Int> = ItemAc.keys.iterator()
         while (it.hasNext()) {
             var itk = it.next()
             val agencylatitude = ItemAc[itk]?.AgencyLatitude?.toDouble()
             val agencylongitude = ItemAc[itk]?.AgencyLongitude?.toDouble()
-            Log.e("CreateLine" , "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa4")
             if (agencylatitude != null && agencylongitude != null) {
-                Log.e("CreateLine" , "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa5")
                 val agencyPosition = LatLng(agencylatitude, agencylongitude)
                 val agencyMarker = Marker()
                 agencyMarker.icon = OverlayImage.fromView(FixedMarkerView(Vars.mContext!!, true))
@@ -407,7 +405,6 @@ class MapViewModel : ViewModel()
                 agencyMarker.map = mapInstance
                 markerAccesList.add(agencyMarker)
 
-                Log.e("CreateLine" , "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa6")
                 val customerLatitude = ItemAc[itk]!!.CustomerLatitude?.toDouble()
                 val customerLongitude = ItemAc[itk]!!.CustomerLongitude?.toDouble()
                 if (customerLatitude != null && customerLongitude != null) {
@@ -422,7 +419,8 @@ class MapViewModel : ViewModel()
                     markerAccesList.add(customerMarker)
 
                     val path = PathOverlay()
-                    path.coords = listOf(agencyPosition, customerPosition)
+                    var task = httpSub()
+                    path.coords = task.execute(agencyPosition,customerPosition).get()
                     path.width = 5
                     path.outlineColor = Color.RED
                     path.color = Color.RED
@@ -431,7 +429,6 @@ class MapViewModel : ViewModel()
                 }
             }
         }
-        Log.e("CreateLine" , "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa7")
     }
 
     class RiderMarketView(
@@ -464,7 +461,6 @@ class MapViewModel : ViewModel()
     }
 
     class FixedMarkerView(context: Context, isStartPosition: Boolean = false) : ConstraintLayout(context) {
-
         init {
             val view: View = View.inflate(context, R.layout.view_fixed_marker, this)
             val backgroundResourceID: Int =

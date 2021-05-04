@@ -19,6 +19,7 @@ object Vars {
 
     var mContext: Context? = null
     var sContext: Context? = null // 안쓰고싶었는데 방법이 없네.
+    var dContext: Context? = null
 
     var mWorkState = 0
     var multiSelectCnt = 0
@@ -33,6 +34,7 @@ object Vars {
     var alarmList : LinkedList<Alarmdata> = LinkedList(Collections.synchronizedList(LinkedList()))
 
     var centerList: ConcurrentHashMap<String,Centerdata> = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
+    var centerNick: ConcurrentHashMap<String,String> = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
     var riderList: ConcurrentHashMap<String,Riderdata> = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
     var orderList: ConcurrentHashMap<String,Orderdata> = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
 
@@ -45,6 +47,7 @@ object Vars {
     var SubRiderHandler : Handler? = null
     var DialogHandler : Handler? = null
     var HistoryHandler : Handler? = null
+    var MessageHandler : Handler? = null
 
     var MainThread : Thread? = null
     var HttpThread : Thread? = null

@@ -4,17 +4,18 @@ import RiderDialog
 import StoreDialog
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
-import android.graphics.Rect
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.util.Base64.NO_WRAP
+import android.util.Base64.encodeToString
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -24,12 +25,24 @@ import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.databinding.ActivityMainBinding
 import com.beyondinc.commandcenter.fragment.*
+import com.beyondinc.commandcenter.net.httpSub
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
+import com.kakao.sdk.newtoneapi.TextToSpeechClient
+import com.kakao.sdk.newtoneapi.TextToSpeechListener
+import com.kakao.sdk.newtoneapi.TextToSpeechManager
+import com.kakao.util.helper.Utility.getPackageInfo
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+import java.util.*
 
 
-class Mains : AppCompatActivity(), MainsFun {
+class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
     var binding: ActivityMainBinding? = null
     var viewModel: MainsViewModel? = null
     private val Tag = "Mains Activity"
@@ -44,6 +57,8 @@ class Mains : AppCompatActivity(), MainsFun {
         var dialog:DialogFragment? = null
         var detail:DetailDialog? = null
         var history:HistoryDialog? = null
+        var message:MessageDialog? = null
+        var ttsClient: TextToSpeechClient? = null
 
         val FINISH_INTERVAL_TIME: Long = 2000
         var backPressedTime: Long = 0
@@ -85,11 +100,22 @@ class Mains : AppCompatActivity(), MainsFun {
         binding!!.lifecycleOwner = this
         binding!!.viewModel = viewModel
 
+        TextToSpeechManager.getInstance().initializeLibrary(Vars.mContext) //카카오 음성합성
+        getKeyHash(this)
+        TTS()
         getDeviceSize()
     }
 
-    override fun onStart() {
-        super.onStart()
+    fun getKeyHash(context: Context) {
+        val packageInfo: PackageInfo = getPackageInfo(this, PackageManager.GET_SIGNATURES)
+        for (signature in packageInfo.signatures) {
+            try {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                Log.e("MAIN", "HASHKEY :: *" + encodeToString(md.digest(), NO_WRAP) + "*")
+            } catch (e: NoSuchAlgorithmException) {
+            }
+        }
     }
 
     override fun onBackPressed() {
@@ -168,7 +194,20 @@ class Mains : AppCompatActivity(), MainsFun {
         }
     }
 
-   override fun showDialogBrief() {
+    override fun closeMessage()
+    {
+        try {
+            if (message != null) {
+                message!!.dismiss()
+                message = null
+            }
+        } catch (e: Exception) {
+            Log.e("MAIN", Log.getStackTraceString(e))
+        }
+    }
+
+
+    override fun showDialogBrief() {
         runOnUiThread {
             if (dialog != null) {
                 dialog!!.dismiss()
@@ -224,6 +263,17 @@ class Mains : AppCompatActivity(), MainsFun {
         }
     }
 
+    override fun showMessage(msg: String) {
+        runOnUiThread {
+            if (message != null) {
+                message!!.dismiss()
+                message = null
+            }
+            message = MessageDialog()
+            message!!.show(supportFragmentManager, msg)
+        }
+    }
+
     override fun setting(){
         startActivity(Intent(Vars.mContext, Setting::class.java))
     }
@@ -232,5 +282,42 @@ class Mains : AppCompatActivity(), MainsFun {
         val focusView: View? = currentFocus
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
         imm?.hideSoftInputFromWindow(focusView?.windowToken, 0)
+    }
+
+    override fun detail_Fragment(i: Int){
+        detail!!.setFragment(i)
+    }
+
+    override fun send_call(tel: String) {
+        var intent = Intent(Intent.ACTION_CALL)
+        intent.data = Uri.parse("tel:${tel}")
+        if(intent.resolveActivity(packageManager) != null){
+            startActivity(intent)
+        }
+    }
+
+    override fun TTS() {
+
+//        ttsClient = TextToSpeechClient.Builder()
+//                .setSpeechMode(TextToSpeechClient.NEWTONE_TALK_1)
+//                .setSpeechMode("1")
+//                .setSpeechVoice(TextToSpeechClient.VOICE_WOMAN_READ_CALM)
+//                .setListener(this)
+//                .setSampleRate(22050)
+//                .build()
+
+//        runOnUiThread {
+//            Log.e("aaaa", "get TTs Service")
+//            ttsClient!!.speechText = "전초전 용답점 오더 접수"
+//            ttsClient!!.play()
+//        }
+    }
+
+    override fun onFinished() {
+        Log.e("Arlam", "Finishd")
+    }
+
+    override fun onError(code: Int, message: String?) {
+        Log.e("Errorr", "$code // $message")
     }
 }

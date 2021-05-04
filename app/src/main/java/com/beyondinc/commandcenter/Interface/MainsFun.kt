@@ -11,10 +11,17 @@ interface MainsFun {
     fun showDialogRider()
     fun showOderdetail()
     fun showHistory()
+    fun showMessage(msg:String)
 
     fun closeDialog()
     fun closeOderdetail()
     fun closeHistory()
+    fun closeMessage()
+
+    fun detail_Fragment(i : Int)
+
+    fun send_call(tel : String)
+    fun TTS()
 
     fun dispatchTouchEvent()
     fun setting()

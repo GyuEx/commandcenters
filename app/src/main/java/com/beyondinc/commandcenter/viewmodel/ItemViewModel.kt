@@ -1,6 +1,8 @@
 package com.beyondinc.commandcenter.viewmodel
 
 import android.annotation.SuppressLint
+import android.os.AsyncTask
+import android.os.Build
 import android.os.Handler
 import android.os.Message
 import android.util.Log
@@ -16,6 +18,7 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.HashMap
 import kotlin.concurrent.timer
+
 
 class ItemViewModel : ViewModel() {
     var Realitems: ConcurrentHashMap<String, Orderdata>? = null
@@ -36,6 +39,7 @@ class ItemViewModel : ViewModel() {
     var count_cancel = MutableLiveData<Int>()
 
     var select = MutableLiveData<Int>()
+    var sendedItem : Orderdata? = null
 
     var time = 0
     var timerTask : Timer? = null
@@ -83,6 +87,8 @@ class ItemViewModel : ViewModel() {
                     select.postValue(Finals.SELECT_BRIFE)
                     Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
                 }
+                else if(msg.what == Finals.ORDER_ASSIGN) OrderAssign(msg.obj as String)
+                else if(msg.what == Finals.ORDER_DETAIL_CLOSE) maincloseDetail()
             }
         }
     //    insertLogic()
@@ -117,7 +123,7 @@ class ItemViewModel : ViewModel() {
 
         var it : Iterator<String> = Realitems!!.keys.iterator()
         var cnt = 0
-        var itemp : ConcurrentHashMap<Int,Orderdata> = ConcurrentHashMap()
+        var itemp : ConcurrentHashMap<Int, Orderdata> = ConcurrentHashMap()
         while (it.hasNext())
         {
             var ctemp = it.next()
@@ -136,20 +142,28 @@ class ItemViewModel : ViewModel() {
                 }
                 else
                 {
-                    Log.e("ID", "" + Realitems!![ctemp]!!.OrderId + " // " + Realitems!![ctemp]!!.AgencyName)
+                    Log.e(
+                            "ID",
+                            "" + Realitems!![ctemp]!!.OrderId + " // " + Realitems!![ctemp]!!.AgencyName
+                    )
                     itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
                 }
 
             }
             else
             {
-                if (Vars.f_center.contains(Realitems!![ctemp]?.RcptCenterId) || Vars.f_five.contains(Realitems!![ctemp]?.DeliveryStateName))
+                if (Vars.f_center.contains(Realitems!![ctemp]?.RcptCenterId) || Vars.f_five.contains(
+                                Realitems!![ctemp]?.DeliveryStateName
+                        ))
                 {
                     continue
                 }
                 else
                 {
-                    Log.e("ID","" + Realitems!![ctemp]!!.OrderId + " // " + Realitems!![ctemp]!!.AgencyName)
+                    Log.e(
+                            "ID",
+                            "" + Realitems!![ctemp]!!.OrderId + " // " + Realitems!![ctemp]!!.AgencyName
+                    )
                     itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
                 }
             }
@@ -201,6 +215,12 @@ class ItemViewModel : ViewModel() {
 
         for(i in 0 until items!!.keys.size)
         {
+            if(sendedItem?.OrderId == items!![i]?.OrderId)
+            {
+                sendedItem = items!![i]
+                Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ITEM_SELECT, sendedItem).sendToTarget()
+            }
+
             if(items!![i]!!.use!! && select.value == Finals.SELECT_BRIFE) multi++
             else if(select.value != Finals.SELECT_BRIFE)
             {
@@ -212,7 +232,6 @@ class ItemViewModel : ViewModel() {
         Vars.multiSelectCnt = multi
 
         adapter!!.notifyDataSetChanged()
-
 
         //로그인 프로세스 마지막, 타이머를 켬
         if(!Logindata.OrderList)
@@ -239,7 +258,10 @@ class ItemViewModel : ViewModel() {
     }
 
     fun getTitle(pos: Int): String? {
-        return items!![pos]?.AgencyName
+        var s : String = ""
+        if(Vars.Usenick) s = Vars.centerNick[items!![pos]?.CenterName] + "] " + items!![pos]?.AgencyName
+        else s = items!![pos]?.CenterName + "] " + items!![pos]?.AgencyName
+        return s
     }
 
     fun getAdress(pos: Int): String? {
@@ -344,8 +366,24 @@ class ItemViewModel : ViewModel() {
         }
     }
 
-    fun onLongClickOnHeading(v: View?,pos:Int): Boolean {
+    fun onLongClickOnHeading(v: View?, pos: Int): Boolean {
         Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ITEM_SELECT, items?.get(pos)).sendToTarget()
+        sendedItem = items?.get(pos)
         return true
+    }
+
+    fun maincloseDetail(){
+        sendedItem = null
+    }
+
+    fun OrderAssign(s: String){
+        if (select.value == Finals.SELECT_EMPTY)
+        {
+            Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ASSIGN, s).sendToTarget()
+        }
+        else if (select.value == Finals.SELECT_BRIFE)
+        {
+
+        }
     }
 }

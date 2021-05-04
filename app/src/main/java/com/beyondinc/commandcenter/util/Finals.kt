@@ -1,7 +1,5 @@
 package com.beyondinc.commandcenter.util
 
-import androidx.lifecycle.ViewModel
-
 object Finals {
 
     //View Codes
@@ -20,7 +18,16 @@ object Finals {
     val SELECT_ORDER : Int = 15
     val SELECT_CHECK : Int = 16
 
-    val ClOSE_CHECK : Int = 21
+    val DETAIL_MAP : Int = 17
+    val DETAIL_DETAIL : Int = 18
+
+    val CLOSE_CHECK : Int = 21
+    val SUCCESS_MESSAGE : Int = 22
+    val CANCEL_MESSAGE : Int = 23
+
+    val ORDER_ASSIGN : Int = 26
+    val ORDER_TOAST_SHOW : Int = 27
+    val ORDER_DETAIL_CLOSE : Int = 28
 
     val breiftitle = "라이더 배정"
     val storetitle = "가맹점 기준 조회"
@@ -62,5 +69,8 @@ object Finals {
 
     val CLOSE_KEYBOARD : Int = 121
     val SET_BRIGHT : Int = 122
+
+    const val REQUEST_PERMISSION = 10001
+    const val KAKAO_KEY = "c5a3395640f428b7cd90ea429d902c8d"
 
 }

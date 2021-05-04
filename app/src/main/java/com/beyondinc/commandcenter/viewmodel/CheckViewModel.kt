@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Handler
 import android.os.Message
+import android.preference.PreferenceManager
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
@@ -64,6 +65,15 @@ class CheckViewModel : ViewModel() {
         //최초1회 센터리스트가 완료되었다.
         if(!Logindata.CenterList)
         {
+            val pref = PreferenceManager.getDefaultSharedPreferences(Vars.mContext)
+            var it : Iterator<String> = Vars.centerList.keys.iterator()
+            while(it.hasNext())
+            {
+                var itt = it.next()
+                var str = pref.getString(Vars.centerList[itt]!!.centerName,"")
+                Vars.centerNick[Vars.centerList[itt]!!.centerName!!] = str.toString()
+            }
+
             Vars.MainsHandler!!.obtainMessage(Finals.CALL_RIDER).sendToTarget()
             Logindata.CenterList = true
         }
@@ -127,11 +137,11 @@ class CheckViewModel : ViewModel() {
         Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget() //리스트 새로그리고
         Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget() //리스트 새로그리고
         Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget() //리스트 새로그리고
-        Vars.MainsHandler!!.obtainMessage(Finals.ClOSE_CHECK).sendToTarget() //뷰 닫기
+        Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_CHECK).sendToTarget() //뷰 닫기
     }
 
     fun click_cancel()
     {
-        Vars.MainsHandler!!.obtainMessage(Finals.ClOSE_CHECK).sendToTarget()
+        Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_CHECK).sendToTarget()
     }
 }

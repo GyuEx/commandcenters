@@ -3,6 +3,7 @@ package com.beyondinc.commandcenter.adapter
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -275,5 +276,77 @@ object MainAdapter {
     @BindingAdapter("maquee")
     fun setMaquee(view: TextView, height: Int) {
         if(height == True) view.isSelected = true
+    }
+
+    @JvmStatic
+    @BindingAdapter("detail1")
+    fun setDetailBackColor1(view: TextView, height: String) {
+        if(height == "접수")
+        {
+            view.isClickable = true
+            view.setBackgroundColor(Vars.mContext!!.getColor(R.color.black))
+        }
+        else
+        {
+            view.isClickable = false
+            view.setBackgroundColor(Vars.mContext!!.getColor(R.color.gray))
+        }
+    }
+    @JvmStatic
+    @BindingAdapter("detail2")
+    fun setDetailBackColor2(view: TextView, height: String) {
+        if(height == "배정")
+        {
+            view.isClickable = true
+            view.setBackgroundColor(Vars.mContext!!.getColor(R.color.black))
+        }
+        else
+        {
+            view.isClickable = false
+            view.setBackgroundColor(Vars.mContext!!.getColor(R.color.gray))
+        }
+    }
+    @JvmStatic
+    @BindingAdapter("detail3")
+    fun setDetailBackColor3(view: TextView, height: String) {
+        if(height == "완료" || height == "취소")
+        {
+            view.setBackgroundColor(Vars.mContext!!.getColor(R.color.gray))
+            view.isClickable = false
+        }
+        else
+        {
+            view.setBackgroundColor(Vars.mContext!!.getColor(R.color.black))
+            view.isClickable = true
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("detail4")
+    fun setDetailBackColor4(view: TextView, height: String) {
+        if(height == "취소" || height == "완료")
+        {
+            view.setBackgroundColor(Vars.mContext!!.getColor(R.color.gray))
+            view.isClickable = false
+        }
+        else
+        {
+            view.setBackgroundColor(Vars.mContext!!.getColor(R.color.black))
+            view.isClickable = true
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("detail_title")
+    fun setDetailBackTitle(view: TextView, height: Int) {
+        if(height == Finals.DETAIL_MAP) view.text = "지도보기"
+        else view.text = "오더상세"
+    }
+
+    @JvmStatic
+    @BindingAdapter("detail_back")
+    fun setDetailBack(view: TextView, height: Int) {
+        if(height == Finals.DETAIL_MAP) view.setBackgroundResource(R.drawable.abc_vector_test)
+        else view.setBackgroundResource(R.drawable.refrash_btn)
     }
 }

@@ -175,6 +175,68 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:text="약칭설정"
+                        android:textColor="@color/white"
+                        android:textSize="25dp"
+                        android:textStyle="bold"
+                        android:gravity="center_vertical|left">
+                    </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="10">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:onClick="@{v->viewModel.click_nick_setting()}"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="설정 입력 하기"
+                            android:background="@color/gray"
+                            android:textColor="@drawable/click_text_color"
+                            android:textSize="20dp"
+                            android:textStyle="bold"></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/white">
+
+            </TextView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_weight="5">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:text="오더정렬"
                         android:textColor="@color/white"
                         android:textSize="25dp"
@@ -696,15 +758,6 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                 android:background="@color/white">
 
             </TextView>
-
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

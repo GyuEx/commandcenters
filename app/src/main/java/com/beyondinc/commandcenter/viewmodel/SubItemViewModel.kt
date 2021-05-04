@@ -131,7 +131,10 @@ class SubItemViewModel : ViewModel() {
     }
 
     fun getTitle(pos: Int): String? {
-        return items!![pos]?.AgencyName
+        var s : String = ""
+        if(Vars.Usenick) s = Vars.centerNick[items!![pos]?.CenterName] + "] " + items!![pos]?.AgencyName
+        else s = items!![pos]?.CenterName + "] " + items!![pos]?.AgencyName
+        return s
     }
 
     fun getAdress(pos: Int): String? {

@@ -20,6 +20,7 @@ class SettingViewModel : ViewModel() {
     var useW : MutableLiveData<Boolean> = MutableLiveData()
     var useC : MutableLiveData<Boolean> = MutableLiveData()
     var bright : MutableLiveData<Int> = MutableLiveData()
+    var nick : MutableLiveData<HashMap<String,String>> = MutableLiveData()
 
     init
     {
@@ -62,6 +63,14 @@ class SettingViewModel : ViewModel() {
         Vars.MainsHandler!!.obtainMessage(Finals.SET_BRIGHT).sendToTarget()
 
         exit()
+    }
+
+    fun click_nick_setting(){
+        (Vars.sContext as SettingFun).showDialog()
+    }
+
+    fun click_close_pop(){
+        (Vars.sContext as SettingFun).closeDialog()
     }
 
     fun click_cancel(){

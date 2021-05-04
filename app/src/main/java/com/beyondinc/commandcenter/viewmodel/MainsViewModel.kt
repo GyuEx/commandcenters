@@ -1,20 +1,34 @@
 package com.beyondinc.commandcenter.viewmodel
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Handler
 import android.os.Message
 import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Gravity
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.Interface.MainsFun
+import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Alarmdata
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.net.DACallerInterface
 import com.beyondinc.commandcenter.util.*
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.overlay.Align
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import com.vasone.deliveryalarm.DAClient
 import org.json.simple.JSONArray
 import kotlin.collections.ArrayList
@@ -22,6 +36,7 @@ import kotlin.collections.HashMap
 
 class MainsViewModel : ViewModel() {
     var Tag = "MainsViewModel"
+    var mapInstance: NaverMap? = null
 
     var layer = MutableLiveData<Int>()
     var select = MutableLiveData<Int>()
@@ -31,6 +46,9 @@ class MainsViewModel : ViewModel() {
     var briteLayer = MutableLiveData<Int>()
 
     var Item : MutableLiveData<Orderdata> = MutableLiveData()
+    var showDetail : Boolean = false
+
+    var DetailsSelect = MutableLiveData(Finals.DETAIL_DETAIL)
 
     var order_count : MutableLiveData<String> = MutableLiveData()
     var rider_count : MutableLiveData<String> = MutableLiveData()
@@ -51,6 +69,8 @@ class MainsViewModel : ViewModel() {
         Vars.UseC = pref.getBoolean("useC",  false)
         Vars.Bright = pref.getInt("bright", 10)
 
+        Log.e("bbbbbbbbbb", "" + pref.all)
+
         briteLayer.postValue(Vars.Bright)
 
         val instanceDACallerInterface = makeDACallerInterfaceInstance(Logindata.LoginId!!, this::alarmCallback)
@@ -68,15 +88,29 @@ class MainsViewModel : ViewModel() {
                 else if(msg.what == Finals.INSERT_RIDER) insertRider()
                 else if(msg.what == Finals.CALL_CENTER) getCenterList()
                 else if(msg.what == Finals.CALL_ORDER) getOrderList()
-                else if(msg.what == Finals.ClOSE_CHECK) checkview.postValue(Finals.SELECT_EMPTY)
-                else if(msg.what == Finals.ORDER_ITEM_SELECT) showOrderDetail(msg.obj)
+                else if(msg.what == Finals.CLOSE_CHECK) checkview.postValue(Finals.SELECT_EMPTY)
+                else if(msg.what == Finals.ORDER_ITEM_SELECT)
+                {
+                    Item.postValue(msg.obj as Orderdata?)
+                    if(!showDetail) showOrderDetail()
+                }
                 else if(msg.what == Finals.HTTP_ERROR) HttpError()
                 else if(msg.what == Finals.CLOSE_KEYBOARD) closeKeyBoard()
                 else if(msg.what == Finals.INSERT_ORDER_COUNT) order_count.postValue(msg.obj as String?)
                 else if(msg.what == Finals.INSERT_RIDER_COUNT) rider_count.postValue(msg.obj as String?)
                 else if(msg.what == Finals.SET_BRIGHT) setBright()
+                else if(msg.what == Finals.CANCEL_MESSAGE) closeMessage()
+                else if(msg.what == Finals.SUCCESS_MESSAGE) successMessage(msg.obj as String)
+                else if(msg.what == Finals.ORDER_ASSIGN) orderAssign(msg.obj as String)
+                else if(msg.what == Finals.ORDER_TOAST_SHOW) showToast(msg.obj as String)
             }
         }
+    }
+
+    fun showToast(msg: String){
+        closeDialog()
+        closeMessage()
+        Toast.makeText(Vars.mContext,msg,Toast.LENGTH_LONG).show()
     }
 
     private fun proceedAlarmCallback(alarmList: ArrayList<Alarmdata>) {
@@ -154,7 +188,8 @@ class MainsViewModel : ViewModel() {
             ids.add(Vars.centerList[it.next()]!!.centerId)
         }
         var temp : HashMap<String, JSONArray> =  HashMap()
-        temp.put(Procedures.RIDER_LOCATION_IN_CENTER, MakeJsonParam().makeRidersLocationParameter(Logindata.LoginId!!,ids))
+        temp[Procedures.RIDER_LOCATION_IN_CENTER] =
+            MakeJsonParam().makeRidersLocationParameter(Logindata.LoginId!!,ids)
         Vars.sendList.add(temp)
     }
 
@@ -167,7 +202,38 @@ class MainsViewModel : ViewModel() {
             ids.add(Vars.centerList[it.next()]!!.centerId)
         }
         var temp : HashMap<String,JSONArray> =  HashMap()
-        temp.put(Procedures.RIDER_LIST_IN_CENTER,MakeJsonParam().makeRiderListParameter(Logindata.LoginId!!,ids))
+        temp[Procedures.RIDER_LIST_IN_CENTER] =
+            MakeJsonParam().makeRiderListParameter(Logindata.LoginId!!,ids)
+        Vars.sendList.add(temp)
+    }
+
+    fun orderAssign(id:String){
+        var temp : HashMap<String,JSONArray> =  HashMap()
+        temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeAssignOrderParameter(Logindata.LoginId!!,Item.value!!.OrderId,Procedures.ChangeStatusType.ASSIGN_RIDER,id)
+        Vars.sendList.add(temp)
+    }
+
+    fun orderAssingCancel(){
+        var temp : HashMap<String,JSONArray> =  HashMap()
+        temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeChangeOrderStatusParameter(Logindata.LoginId!!,Item.value!!.OrderId,Procedures.ChangeStatusType.ORDER_ASSIGN_CANCEL,"",Item.value!!.ApprovalType)
+        Vars.sendList.add(temp)
+    }
+
+    fun orderComplete(){
+        var temp : HashMap<String,JSONArray> =  HashMap()
+        temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeChangeOrderStatusParameter(Logindata.LoginId!!,Item.value!!.OrderId,Procedures.ChangeStatusType.ORDER_FORCE_COMPLETE,Item.value!!.RiderId,Item.value!!.ApprovalType)
+        Vars.sendList.add(temp)
+    }
+
+    fun orderCancel(){
+        var temp : HashMap<String,JSONArray> =  HashMap()
+        temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeChangeOrderStatusParameter(Logindata.LoginId!!,Item.value!!.OrderId,Procedures.ChangeStatusType.ORDER_CANCEL,Item.value!!.RiderId,Item.value!!.ApprovalType)
+        Vars.sendList.add(temp)
+    }
+
+    fun orderPaking(){
+        var temp : HashMap<String,JSONArray> =  HashMap()
+        temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeOnPickupReadyParameter(Logindata.LoginId!!,Item.value!!.OrderId)
         Vars.sendList.add(temp)
     }
 
@@ -219,6 +285,7 @@ class MainsViewModel : ViewModel() {
         if (select.value == Finals.SELECT_BRIFE) {
             select.postValue(Finals.SELECT_EMPTY)
             Vars.ItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
+            (Vars.mContext as MainsFun).TTS()
         } else {
             select.postValue(Finals.SELECT_BRIFE)
             Vars.ItemHandler!!.obtainMessage(Finals.SELECT_BRIFE).sendToTarget()
@@ -320,8 +387,8 @@ class MainsViewModel : ViewModel() {
         }
     }
 
-    fun showOrderDetail(obj: Any) {
-        Item.postValue(obj as Orderdata?)
+    fun showOrderDetail() {
+        showDetail = true
         (Vars.mContext as MainsFun).showOderdetail()
     }
 
@@ -331,14 +398,97 @@ class MainsViewModel : ViewModel() {
 
     fun closeDetail(){
         (Vars.mContext as MainsFun).closeOderdetail()
+        Item.value = null
+        showDetail = false
+        Vars.ItemHandler!!.obtainMessage(Finals.ORDER_DETAIL_CLOSE).sendToTarget()
     }
 
     fun closeHistory(){
         (Vars.mContext as MainsFun).closeHistory()
     }
 
+    fun closeMessage(){
+        (Vars.mContext as MainsFun).closeMessage()
+    }
+
+    fun click_Agent_poi(){
+        DetailsSelect.value = Finals.DETAIL_MAP
+        (Vars.mContext as MainsFun).detail_Fragment(1)
+    }
+
+    fun click_Cust_poi(){
+        DetailsSelect.value = Finals.DETAIL_MAP
+        (Vars.mContext as MainsFun).detail_Fragment(2)
+    }
+
+    fun click_send_agency(){
+        (Vars.mContext as MainsFun).send_call(Item.value!!.AgencyPhoneNo)
+    }
+
+    fun click_send_cust(){
+        (Vars.mContext as MainsFun).send_call(Item.value!!.CustomerPhone)
+    }
+
+    fun click_send_rider(){
+        (Vars.mContext as MainsFun).send_call(Item.value!!.RiderPhoneNo)
+    }
+
+    fun makeMarker(i : Int) {
+        if (i == 1) {
+            val agencylatitude = Item.value?.AgencyLatitude?.toDouble()
+            val agencylongitude = Item.value?.AgencyLongitude?.toDouble()
+            if (agencylatitude != null && agencylongitude != null) {
+                val agencyPosition = LatLng(agencylatitude, agencylongitude)
+                val agencyMarker = Marker()
+                agencyMarker.icon = OverlayImage.fromView(
+                    FixedMarkerView(
+                        Vars.mContext!!,
+                        true
+                    )
+                )
+                agencyMarker.position = agencyPosition
+                agencyMarker.captionText = Item.value?.AgencyName.toString()
+                agencyMarker.setCaptionAligns(Align.Top)
+                agencyMarker.map = mapInstance
+                mapInstance!!.moveCamera(CameraUpdate.scrollTo(agencyPosition))
+            }
+        }
+        else if(i == 2)
+        {
+            val agencylatitude = Item.value?.CustomerLatitude?.toDouble()
+            val agencylongitude = Item.value?.CustomerLongitude?.toDouble()
+            if (agencylatitude != null && agencylongitude != null) {
+                val agencyPosition = LatLng(agencylatitude, agencylongitude)
+                val agencyMarker = Marker()
+                agencyMarker.icon = OverlayImage.fromView(
+                    FixedMarkerView(
+                        Vars.mContext!!,
+                        false
+                    )
+                )
+                agencyMarker.position = agencyPosition
+                agencyMarker.captionText = Item.value?.CustomerShortAddr.toString()
+                agencyMarker.setCaptionAligns(Align.Top)
+                agencyMarker.map = mapInstance
+                mapInstance!!.moveCamera(CameraUpdate.scrollTo(agencyPosition))
+            }
+        }
+    }
+
     fun showHistory(){
-        (Vars.mContext as MainsFun).showHistory()
+        if(DetailsSelect.value == Finals.DETAIL_DETAIL)
+        {
+            (Vars.mContext as MainsFun).showHistory()
+        }
+        else if(DetailsSelect.value == Finals.DETAIL_MAP)
+        {
+            DetailsSelect.value = Finals.DETAIL_DETAIL
+            (Vars.mContext as MainsFun).detail_Fragment(0)
+        }
+    }
+
+    fun showMessage(msg : String){
+        (Vars.mContext as MainsFun).showMessage(msg)
     }
 
     fun showDrawer(){
@@ -348,5 +498,29 @@ class MainsViewModel : ViewModel() {
 
     fun closeKeyBoard(){
         (Vars.mContext as MainsFun).dispatchTouchEvent()
+    }
+
+    fun successMessage(msg: String)
+    {
+        if(msg == "배정취소") orderAssingCancel()
+        else if(msg == "오더완료") orderComplete()
+        else if(msg == "오더취소") orderCancel()
+        else if(msg == "포장상태변경") orderPaking()
+    }
+
+    class FixedMarkerView(context: Context, isStartPosition: Boolean = false) : ConstraintLayout(context) {
+        init {
+            val view: View = View.inflate(context, R.layout.view_fixed_marker, this)
+            val backgroundResourceID: Int =
+                if (isStartPosition) R.drawable.ic_marker_delivery_start
+                else R.drawable.ic_marker_delivery_dest
+            view.setBackgroundResource(backgroundResourceID)
+
+            val titleField: TextView = findViewById(R.id.positionName)
+            val titleResourceID: Int =
+                if (isStartPosition) R.string.text_start
+                else R.string.text_arrival
+            titleField.setText(titleResourceID)
+        }
     }
 }

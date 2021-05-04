@@ -132,6 +132,8 @@ dependencies {
 
     // Naver map
     implementation 'com.naver.maps:map-sdk:3.11.0'
+    implementation 'com.kakao.sdk:newtone:6.1.4'
+
 
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:\$lifecycle_version"

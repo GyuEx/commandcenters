@@ -36,7 +36,7 @@ class AlarmThread() : Thread() , ThreadFun{
                         var list : ArrayList<String> = ArrayList()
                         list.add(rdata.mnOrderId.toString())
                         var temp : HashMap<String, JSONArray> =  HashMap()
-                        temp.put(Procedures.ORDER_DETAIL,MakeJsonParam().makeOrderDetailParameter(Logindata.LoginId!!,list))
+                        temp[Procedures.ORDER_DETAIL] = MakeJsonParam().makeOrderDetailParameter(Logindata.LoginId!!,list)
                         Vars.sendList.add(temp)
                     }
                     else if(rdata.mnAlarmType == AlarmCodes.ALARM_TYPE_DEPOSIT)

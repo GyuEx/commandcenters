@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.adapter.RecyclerAdapterPopup
 import com.beyondinc.commandcenter.data.Dialogdata
+import com.beyondinc.commandcenter.util.Codes
+import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import java.util.concurrent.ConcurrentHashMap
 
@@ -29,21 +31,25 @@ class BriefViewModel : ViewModel() {
         while (it.hasNext())
         {
             var rittemp = it.next()
-            val memo = Dialogdata()
-            Log.e("aaaaaaaaaaa", "" + Vars.riderList[rittemp]!!.centerID + " // " + Vars.riderList[rittemp]!!.name)
-            memo.id = cnt
-            memo.name = Vars.riderList[rittemp]!!.name
-            memo.velue1 = "1"
-            memo.velue2 = "2"
-            memo.velue3 = "3"
-            items!![cnt] = memo
-            cnt++
+            if(Vars.riderList[rittemp]!!.workingStateCode == Codes.RIDER_ON_WORK)
+            {
+                val memo = Dialogdata()
+                memo.id = cnt
+                memo.name = Vars.riderList[rittemp]!!.name
+                memo.realId = Vars.riderList[rittemp]!!.id
+                memo.velue1 = Vars.riderList[rittemp]!!.assignCount.toString()
+                memo.velue2 = Vars.riderList[rittemp]!!.pickupCount.toString()
+                memo.velue3 = Vars.riderList[rittemp]!!.completeCount.toString()
+                items!![cnt] = memo
+                cnt++
+            }
         }
         onCreate()
     }
 
     fun onClick(pos: Int){
-        Log.e("PopUp","click event" + items!!.get(pos)!!.name)
+        Log.e("PopUp","click event" + items!![pos]!!.name)
+        Vars.ItemHandler!!.obtainMessage(Finals.ORDER_ASSIGN, items!![pos]!!.realId).sendToTarget()
     }
 
     fun onCreate() {

@@ -118,6 +118,22 @@ class MainThread() : Thread() , ThreadFun{
                         }
                         Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget()
                     }
+                    else if(code == Procedures.CHANGE_DELIVERY_STATUS)
+                    {
+                        var msg : String = ""
+                        for(i in 0 until data!!.size) {
+                            msg = data!![i]["MSG"].toString()
+                        }
+                        Vars.MainsHandler!!.obtainMessage(Finals.ORDER_TOAST_SHOW,msg).sendToTarget()
+                    }
+                    else if(code == Procedures.EDIT_ORDER_INFO)
+                    {
+                        var msg : String = ""
+                        for(i in 0 until data!!.size) {
+                            msg = data!![i]["MSG"].toString()
+                        }
+                        Vars.MainsHandler!!.obtainMessage(Finals.ORDER_TOAST_SHOW,msg).sendToTarget()
+                    }
                 }
                 Thread.sleep(200)
 //            } catch (e: Exception) {
