@@ -180,6 +180,20 @@ class MakeJsonParam {
         return parameterArray
     }
 
+    fun makeAssignOrderListParameter(loginID: String, assignSet: ArrayList<String>, assignType: String, riderID: String): JSONArray {
+        val parameterArray = JSONArray()
+
+        for (assignInfo in assignSet) {
+            val parameterJSON = makeBaseParameter(loginID)
+            parameterJSON["OrderId"] = assignInfo
+            parameterJSON["RiderId"] = riderID
+            parameterJSON["ReqType"] = assignType
+            parameterArray.add(parameterJSON)
+        }
+
+        return parameterArray
+    }
+
 
     fun makeChangeOrderStatusParameter(loginID: String, orderID: String, newStatusCode: String,
                                        riderID: String, endApproval: String?): JSONArray {

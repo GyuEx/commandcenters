@@ -14,8 +14,11 @@ import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
+import java.text.SimpleDateFormat
+import java.time.LocalDate.now
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.concurrent.timer
 
@@ -40,8 +43,12 @@ class ItemViewModel : ViewModel() {
 
     var select = MutableLiveData<Int>()
     var sendedItem : Orderdata? = null
+    var setAgencyfilter : String = ""
+    var setRiderfilter : String = ""
 
     var time = 0
+    var refrash = 0
+    var assignTime = 0
     var timerTask : Timer? = null
 
     init {
@@ -75,7 +82,7 @@ class ItemViewModel : ViewModel() {
 
         Vars.ItemHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
-                Log.e("MMMMMM", msg.what.toString())
+                Log.e("ItemHandler", msg.what.toString())
                 if (msg.what == Finals.INSERT_ORDER) insertLogic()
                 else if (msg.what == Finals.SELECT_EMPTY)
                 {
@@ -89,9 +96,28 @@ class ItemViewModel : ViewModel() {
                 }
                 else if(msg.what == Finals.ORDER_ASSIGN) OrderAssign(msg.obj as String)
                 else if(msg.what == Finals.ORDER_DETAIL_CLOSE) maincloseDetail()
+                else if(msg.what == Finals.STORE_ITEM_SELECT) storeSelect(msg.obj as String)
+                else if(msg.what == Finals.RIDER_ITEM_SELECT) riderSelect(msg.obj as String)
+                else if(msg.what == Finals.DESABLE_SELECT) desableSelect()
             }
         }
     //    insertLogic()
+    }
+
+    fun desableSelect(){
+        setAgencyfilter = ""
+        setRiderfilter = ""
+        Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+    }
+    fun storeSelect(t : String){
+        setAgencyfilter = t
+        Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_POPUP).sendToTarget()
+        Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+    }
+    fun riderSelect(t : String){
+        setRiderfilter = t
+        Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_POPUP).sendToTarget()
+        Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
     }
 
     fun StartTimer()
@@ -106,6 +132,15 @@ class ItemViewModel : ViewModel() {
             else
             {
                 time++
+            }
+            if(refrash == 60)
+            {
+                Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+                refrash = 0
+            }
+            else
+            {
+                refrash++
             }
         }
     }
@@ -142,29 +177,44 @@ class ItemViewModel : ViewModel() {
                 }
                 else
                 {
-                    Log.e(
-                            "ID",
-                            "" + Realitems!![ctemp]!!.OrderId + " // " + Realitems!![ctemp]!!.AgencyName
-                    )
                     itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
                 }
 
             }
             else
             {
-                if (Vars.f_center.contains(Realitems!![ctemp]?.RcptCenterId) || Vars.f_five.contains(
-                                Realitems!![ctemp]?.DeliveryStateName
-                        ))
+                if(setAgencyfilter != "")
                 {
-                    continue
+                    if (setAgencyfilter != Realitems!![ctemp]?.AgencyName)
+                    {
+                        continue
+                    }
+                    else
+                    {
+                        itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
+                    }
+                }
+                else if(setRiderfilter != "")
+                {
+                    if (setRiderfilter != Realitems!![ctemp]?.RiderName)
+                    {
+                        continue
+                    }
+                    else
+                    {
+                        itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
+                    }
                 }
                 else
                 {
-                    Log.e(
-                            "ID",
-                            "" + Realitems!![ctemp]!!.OrderId + " // " + Realitems!![ctemp]!!.AgencyName
-                    )
-                    itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
+                    if (Vars.f_center.contains(Realitems!![ctemp]?.RcptCenterId) || Vars.f_five.contains(Realitems!![ctemp]?.DeliveryStateName))
+                    {
+                        continue
+                    }
+                    else
+                    {
+                        itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
+                    }
                 }
             }
         }
@@ -239,6 +289,10 @@ class ItemViewModel : ViewModel() {
             Logindata.OrderList = true
             StartTimer()
         }
+        else
+        {
+            Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget()
+        }
     }
 
     fun getSelectBrife(): Int{
@@ -250,7 +304,26 @@ class ItemViewModel : ViewModel() {
     }
 
     fun getResttime(pos: Int): String? {
-        return items!![pos]?.AgencyRequestTime
+        //오더시간을 계산해보자
+        var a : String = "0"
+        if(items!![pos]!!.DeliveryStateName == "배정") {
+            var ft = SimpleDateFormat("HH:mm:ss")
+            var now = ft.parse(ft.format(Date()))
+            var nt = ft.parse(ft.format(ft.parse(items!![pos]!!.DriverAssignDT)))
+            a = ((now.time - nt.time)/60000).toString()
+        }
+        else if(items!![pos]!!.DeliveryStateName == "접수")
+        {
+            a = "0"
+        }
+        else if(items!![pos]!!.DeliveryStateName == "픽업")
+        {
+            var ft = SimpleDateFormat("HH:mm:ss")
+            var nt = ft.parse(ft.format(ft.parse(items!![pos]!!.DriverAssignDT)))
+            var pt = ft.parse(ft.format(ft.parse(items!![pos]!!.PickupDT)))
+            a = ((pt.time - nt.time)/60000).toString()
+        }
+        return a
     }
 
     fun getPay(pos: Int): String? {
@@ -287,8 +360,16 @@ class ItemViewModel : ViewModel() {
 
     fun setUse(pos: Int){
         Log.e("UsePos", "" + pos + " // " + items!![pos]!!.use)
-        items!![pos]!!.use = items!![pos]!!.use != true
-        onCreate()
+        if(select.value == Finals.SELECT_BRIFE)
+        {
+            items!![pos]!!.use = items!![pos]!!.use != true
+            onCreate()
+        }
+        else
+        {
+            Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ITEM_SELECT, items?.get(pos)).sendToTarget()
+            sendedItem = items?.get(pos)
+        }
     }
 
     fun click_brief_filter(){
@@ -366,11 +447,11 @@ class ItemViewModel : ViewModel() {
         }
     }
 
-    fun onLongClickOnHeading(v: View?, pos: Int): Boolean {
-        Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ITEM_SELECT, items?.get(pos)).sendToTarget()
-        sendedItem = items?.get(pos)
-        return true
-    }
+//    fun onLongClickOnHeading(v: View?, pos: Int): Boolean {
+//        Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ITEM_SELECT, items?.get(pos)).sendToTarget()
+//        sendedItem = items?.get(pos)
+//        return true
+//    }
 
     fun maincloseDetail(){
         sendedItem = null
@@ -383,7 +464,17 @@ class ItemViewModel : ViewModel() {
         }
         else if (select.value == Finals.SELECT_BRIFE)
         {
-
+            var makeHash = HashMap<String,ArrayList<String>>()
+            var makeArray = ArrayList<String>()
+            for(i in 0 until items!!.keys.size)
+            {
+                if(items!![i]!!.use)
+                {
+                    makeArray.add(items!![i]!!.OrderId)
+                }
+            }
+            makeHash[s] = makeArray
+            Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ASSIGN_LIST, makeHash).sendToTarget()
         }
     }
 }

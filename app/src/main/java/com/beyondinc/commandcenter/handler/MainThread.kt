@@ -100,7 +100,6 @@ class MainThread() : Thread() , ThreadFun{
                         Vars.orderList.putAll(centertemp)
                         Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
                         Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
-                        Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget()
                     }
                     else if(code == Procedures.RIDER_LOCATION_IN_CENTER)
                     {

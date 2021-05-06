@@ -27,6 +27,7 @@ class SubRiderViewModel : ViewModel() {
     var first: Boolean = false
 
     var select = MutableLiveData<Int>()
+    var selectedRider : Riderdata? = null
 
     init {
         Log.e("Memo", "Memo call")
@@ -42,10 +43,14 @@ class SubRiderViewModel : ViewModel() {
 
         Vars.SubRiderHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
-                Log.e("MMMMMM",msg.what.toString())
+                Log.e("SubriderHandler",msg.what.toString())
                 if (msg.what == Finals.INSERT_RIDER) insertLogic(msg.obj)
                 else if(msg.what == Finals.SELECT_RIDER) select.postValue(Finals.SELECT_RIDER)
-                else if(msg.what == Finals.SELECT_EMPTY) select.postValue(Finals.SELECT_EMPTY)
+                else if(msg.what == Finals.SELECT_EMPTY)
+                {
+                    select.postValue(Finals.SELECT_EMPTY)
+                    selectedRider = null
+                }
                 else if(msg.what == Finals.MAP_FOR_CALL_RIDER) getRider(msg.obj)
             }
         }
@@ -61,7 +66,22 @@ class SubRiderViewModel : ViewModel() {
             if(items!![itt]!!.MakerID == Mid)
             {
                 Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS, items!![itt]!!).sendToTarget()
-                break
+                selectedRider = items!![itt]!!
+            }
+        }
+    }
+
+    fun refrashRider(obj:Any)
+    {
+        var Mid = obj
+        var it : Iterator<Int> = items?.keys!!.iterator()
+        while (it.hasNext())
+        {
+            var itt = it.next()
+            if(items!![itt]!!.id == Mid)
+            {
+                Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS, items!![itt]!!).sendToTarget()
+                selectedRider = items!![itt]!!
             }
         }
     }
@@ -131,6 +151,10 @@ class SubRiderViewModel : ViewModel() {
         {
             Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS, items?.get(0)).sendToTarget()
             first = true
+        }
+        else
+        {
+            if (selectedRider != null) refrashRider(selectedRider!!.id!!)
         }
     }
 

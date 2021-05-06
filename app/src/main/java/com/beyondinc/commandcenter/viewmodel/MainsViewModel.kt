@@ -102,7 +102,9 @@ class MainsViewModel : ViewModel() {
                 else if(msg.what == Finals.CANCEL_MESSAGE) closeMessage()
                 else if(msg.what == Finals.SUCCESS_MESSAGE) successMessage(msg.obj as String)
                 else if(msg.what == Finals.ORDER_ASSIGN) orderAssign(msg.obj as String)
+                else if(msg.what == Finals.ORDER_ASSIGN_LIST) orderAssignList(msg.obj as HashMap<String, ArrayList<String>>)
                 else if(msg.what == Finals.ORDER_TOAST_SHOW) showToast(msg.obj as String)
+                else if(msg.what == Finals.CLOSE_POPUP) closeDialogHidden()
             }
         }
     }
@@ -213,6 +215,14 @@ class MainsViewModel : ViewModel() {
         Vars.sendList.add(temp)
     }
 
+    fun orderAssignList(rec : HashMap<String,ArrayList<String>>){
+        var temp : HashMap<String,JSONArray> =  HashMap()
+        var id = rec.keys.iterator().next()
+        var order = rec[id]!!
+        temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeAssignOrderListParameter(Logindata.LoginId!!,order,Procedures.ChangeStatusType.ASSIGN_RIDER,id)
+        Vars.sendList.add(temp)
+    }
+
     fun orderAssingCancel(){
         var temp : HashMap<String,JSONArray> =  HashMap()
         temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeChangeOrderStatusParameter(Logindata.LoginId!!,Item.value!!.OrderId,Procedures.ChangeStatusType.ORDER_ASSIGN_CANCEL,"",Item.value!!.ApprovalType)
@@ -284,8 +294,8 @@ class MainsViewModel : ViewModel() {
     fun click_brife() {
         if (select.value == Finals.SELECT_BRIFE) {
             select.postValue(Finals.SELECT_EMPTY)
+            Vars.ItemHandler!!.obtainMessage(Finals.DESABLE_SELECT).sendToTarget()
             Vars.ItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
-            (Vars.mContext as MainsFun).TTS()
         } else {
             select.postValue(Finals.SELECT_BRIFE)
             Vars.ItemHandler!!.obtainMessage(Finals.SELECT_BRIFE).sendToTarget()
@@ -294,6 +304,7 @@ class MainsViewModel : ViewModel() {
 
     fun click_store() {
         if (select.value == Finals.SELECT_STORE) {
+            Vars.ItemHandler!!.obtainMessage(Finals.DESABLE_SELECT).sendToTarget()
             select.postValue(Finals.SELECT_EMPTY)
         }
         else if(select.value == Finals.SELECT_BRIFE) {
@@ -309,6 +320,7 @@ class MainsViewModel : ViewModel() {
 
     fun click_rider() {
         if (select.value == Finals.SELECT_RIDER) {
+            Vars.ItemHandler!!.obtainMessage(Finals.DESABLE_SELECT).sendToTarget()
             select.postValue(Finals.SELECT_EMPTY)
         }else if(select.value == Finals.SELECT_BRIFE) {
             Vars.ItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
@@ -393,6 +405,11 @@ class MainsViewModel : ViewModel() {
     }
 
     fun closeDialog(){
+        if(select.value != Finals.SELECT_BRIFE) select.value == Finals.SELECT_EMPTY
+        (Vars.mContext as MainsFun).closeDialog()
+    }
+
+    fun closeDialogHidden(){
         (Vars.mContext as MainsFun).closeDialog()
     }
 

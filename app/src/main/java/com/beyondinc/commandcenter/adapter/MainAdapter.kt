@@ -235,8 +235,8 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("select_item_backcolor")
     fun setitembackcolor(view: LinearLayout, height: Boolean) {
-        if (height == false) view.setBackgroundColor(Vars.mContext!!.getColor(R.color.lightgray))
-        else view.setBackgroundColor(Vars.mContext!!.getColor(R.color.orange))
+        if (height) view.setBackgroundColor(Vars.mContext!!.getColor(R.color.orange))
+        else view.setBackgroundColor(Vars.mContext!!.getColor(R.color.lightgray))
     }
 
     @JvmStatic
@@ -348,5 +348,21 @@ object MainAdapter {
     fun setDetailBack(view: TextView, height: Int) {
         if(height == Finals.DETAIL_MAP) view.setBackgroundResource(R.drawable.abc_vector_test)
         else view.setBackgroundResource(R.drawable.refrash_btn)
+    }
+
+    @JvmStatic
+    @BindingAdapter("map_assign_btn")
+    fun setMapassign(view: TextView, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == True)
+        {
+            layoutParams.weight = 3F
+            view.layoutParams = layoutParams
+        }
+        else
+        {
+            layoutParams.weight = 0f
+            view.layoutParams = layoutParams
+        }
     }
 }

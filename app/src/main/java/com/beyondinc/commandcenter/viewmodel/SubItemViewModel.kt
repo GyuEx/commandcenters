@@ -13,6 +13,7 @@ import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.HashMap
@@ -26,8 +27,7 @@ class SubItemViewModel : ViewModel() {
     var select = MutableLiveData<Int>()
 
     init {
-        Log.e("Memo", "Memo call")
-
+        Log.e("aaaa", "Sub Item view model Init")
         select.postValue(Finals.SELECT_EMPTY)
 
         if (items == null) {
@@ -43,13 +43,29 @@ class SubItemViewModel : ViewModel() {
 
         Vars.SubItemHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
-                Log.e("MMMMMM",msg.what.toString())
+                Log.e("SubItemHandler",msg.what.toString())
                 if (msg.what == Finals.INSERT_ORDER) insertLogic()
                 else if(msg.what == Finals.SELECT_ORDER) select.postValue(Finals.SELECT_ORDER)
-                else if(msg.what == Finals.SELECT_EMPTY) select.postValue(Finals.SELECT_EMPTY)
+                else if(msg.what == Finals.SELECT_EMPTY) selectEmpte()
+                else if(msg.what == Finals.ORDER_ASSIGN_LIST) orderassignlist(msg.obj as String)
             }
         }
-        insertLogic()
+        //insertLogic()
+    }
+
+    fun orderassignlist(id : String){
+        var makeHash = HashMap<String,ArrayList<String>>()
+        var makeArray = ArrayList<String>()
+        for(i in 0 until items!!.keys.size)
+        {
+            if(items!![i]!!.use)
+            {
+                makeArray.add(items!![i]!!.OrderId)
+            }
+        }
+        if(makeArray.size < 1) Vars.MainsHandler!!.obtainMessage(Finals.ORDER_TOAST_SHOW,"선택된 오더가 없습니다.").sendToTarget()
+        else makeHash[id] = makeArray
+        Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ASSIGN_LIST, makeHash).sendToTarget()
     }
 
     fun insertLogic()
@@ -69,7 +85,6 @@ class SubItemViewModel : ViewModel() {
             }
             else
             {
-                Log.e("ID", "" + Realitems!![ctemp]!!.OrderId + " // " + Realitems!![ctemp]!!.AgencyName)
                 itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
             }
         }
@@ -102,15 +117,22 @@ class SubItemViewModel : ViewModel() {
 
     fun ListClick(pos: Int) {
 
-        Log.e("UsePos", "" + pos + " // " + items!![pos]!!.use)
         items!![pos]!!.use = items!![pos]!!.use != true
+        Log.e("UsePos", "" + pos + " // " + items!![pos]!!.use)
         onCreate()
-//        var toast : Toast = Toast.makeText(Vars.mContext, "선택된 라이더가 없습니다.", Toast.LENGTH_SHORT)
-//        toast.setGravity(Gravity.BOTTOM,0,600)
-//        toast.show()
     }
 
     fun onCreate() {
+
+        var cnt = 0
+        for(i in 0 until items?.keys!!.size)
+        {
+            if(items!![i]!!.use)cnt++
+        }
+
+        if(cnt > 0) Vars.MapHandler!!.obtainMessage(Finals.SELECT_ORDER).sendToTarget()
+        else Vars.MapHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
+
         adapter!!.notifyDataSetChanged()
     }
 
@@ -118,12 +140,42 @@ class SubItemViewModel : ViewModel() {
         return Finals.SELECT_BRIFE
     }
 
+    fun selectEmpte()
+    {
+        select.value = Finals.SELECT_EMPTY
+        for(i in 0 until items?.keys!!.size)
+        {
+            items!![i]!!.use = false
+            Log.e("UsePos", "" + i + " // " + items!![i]!!.use)
+        }
+        onCreate()
+    }
+
     fun getUsetime(pos: Int): String? {
         return items!![pos]?.AgencyRequestTime
     }
 
     fun getResttime(pos: Int): String? {
-        return items!![pos]?.AgencyRequestTime
+        //오더시간을 계산해보자
+        var a : String = "0"
+        if(items!![pos]!!.DeliveryStateName == "배정") {
+            var ft = SimpleDateFormat("HH:mm:ss")
+            var now = ft.parse(ft.format(Date()))
+            var nt = ft.parse(ft.format(ft.parse(items!![pos]!!.DriverAssignDT)))
+            a = ((now.time - nt.time)/60000).toString()
+        }
+        else if(items!![pos]!!.DeliveryStateName == "접수")
+        {
+            a = "0"
+        }
+        else if(items!![pos]!!.DeliveryStateName == "픽업")
+        {
+            var ft = SimpleDateFormat("HH:mm:ss")
+            var nt = ft.parse(ft.format(ft.parse(items!![pos]!!.DriverAssignDT)))
+            var pt = ft.parse(ft.format(ft.parse(items!![pos]!!.PickupDT)))
+            a = ((pt.time - nt.time)/60000).toString()
+        }
+        return a
     }
 
     fun getPay(pos: Int): String? {

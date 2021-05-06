@@ -6,8 +6,10 @@ import android.graphics.Color
 import android.os.Handler
 import android.os.Message
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -58,6 +60,8 @@ class MapViewModel : ViewModel()
     var Lrawer : MutableLiveData<Boolean> = MutableLiveData(false)
 
     var riderTitle : MutableLiveData<String> = MutableLiveData()
+    var selectOr : MutableLiveData<Int> = MutableLiveData()
+    var selectRi : MutableLiveData<Int> = MutableLiveData()
 
     var markerList : ArrayList<Marker> = ArrayList()
     var markerPikupList : ArrayList<Marker> = ArrayList()
@@ -85,16 +89,48 @@ class MapViewModel : ViewModel()
                 }
                 else if(msg.what == Finals.MAP_MOVE_FOCUS) MapFocusSet(msg.obj)
                 else if(msg.what == Finals.MAP_FOR_REMOVE) CancelRider()
+                else if(msg.what == Finals.SELECT_ORDER) selectOr()
+                else if(msg.what == Finals.SELECT_EMPTY) emptyOr()
             }
+        }
+    }
+
+    fun selectOr(){
+        selectOr.value = Finals.SELECT_ORDER
+    }
+
+    fun emptyOr(){
+        selectOr.value = Finals.SELECT_EMPTY
+    }
+
+    fun getOr() : Int?{
+        return Finals.SELECT_ORDER
+    }
+
+    fun click_assign(){
+        if(Item.value != null)
+        {
+            Vars.SubItemHandler!!.obtainMessage(Finals.ORDER_ASSIGN_LIST, Item!!.value!!.id).sendToTarget()
+        }
+        else
+        {
+            var toast : Toast = Toast.makeText(Vars.mContext, "선택된 라이더가 없습니다.", Toast.LENGTH_SHORT)
+            toast.setGravity(Gravity.BOTTOM,0,600)
+            toast.show()
         }
     }
 
     fun MapFocusSet(obj: Any){
 
-        if(Item.value == obj as Riderdata) return
-        Item.value = obj
+        Log.e("SET Move" ," Focus Set on ")
+
+        //if(Item.value == obj as Riderdata) return
+        Item.value = obj as Riderdata
 
         removeOrderMaker()
+
+        PcSize.value = 0
+        AcSize.value = 0
 
         for (marker in markerList) {
             if (Item!!.value!!.MakerID != marker.icon.id) marker.map = null
@@ -120,6 +156,9 @@ class MapViewModel : ViewModel()
         var pcnt = 0
         var acnt = 0
 
+        ItemAc.clear()
+        ItemPc.clear()
+
         while (it.hasNext())
         {
             var itt = it.next()
@@ -127,19 +166,19 @@ class MapViewModel : ViewModel()
             {
                 if(Vars.orderList[itt]!!.DeliveryStateName == "배정") {
                     ItemAc[acnt] = Vars.orderList[itt]!!
-                    if(acnt == 0) Ac1.postValue("${ItemAc[acnt]!!.AgencyName}  >  ${ItemAc[acnt]!!.CustomerLongAddr}")
-                    else if(acnt == 1) Ac2.postValue("${ItemAc[acnt]!!.AgencyName}  >  ${ItemAc[acnt]!!.CustomerShortAddrNoRoad}")
-                    else if(acnt == 2) Ac3.postValue("${ItemAc[acnt]!!.AgencyName}  >  ${ItemAc[acnt]!!.CustomerShortAddrNoRoad}")
-                    else if(acnt == 1) Ac4.postValue("${ItemAc[acnt]!!.AgencyName}  >  ${ItemAc[acnt]!!.CustomerShortAddrNoRoad}")
-                    else if(acnt == 2) Ac5.postValue("${ItemAc[acnt]!!.AgencyName}  >  ${ItemAc[acnt]!!.CustomerShortAddrNoRoad}")
+                    if(acnt == 0) Ac1.value = ("${ItemAc[acnt]!!.AgencyName}  >  ${ItemAc[acnt]!!.CustomerLongAddr}")
+                    else if(acnt == 1) Ac2.value = ("${ItemAc[acnt]!!.AgencyName}  >  ${ItemAc[acnt]!!.CustomerShortAddrNoRoad}")
+                    else if(acnt == 2) Ac3.value = ("${ItemAc[acnt]!!.AgencyName}  >  ${ItemAc[acnt]!!.CustomerShortAddrNoRoad}")
+                    else if(acnt == 3) Ac4.value = ("${ItemAc[acnt]!!.AgencyName}  >  ${ItemAc[acnt]!!.CustomerShortAddrNoRoad}")
+                    else if(acnt == 4) Ac5.value = ("${ItemAc[acnt]!!.AgencyName}  >  ${ItemAc[acnt]!!.CustomerShortAddrNoRoad}")
                     acnt++
                 }
                 else if (Vars.orderList[itt]!!.DeliveryStateName == "픽업")
                 {
-                    ItemPc[acnt] = Vars.orderList[itt]!!
-                    if(pcnt == 0) Pc1.postValue("${ItemPc[acnt]!!.AgencyName}  >  ${ItemPc[pcnt]!!.CustomerShortAddrNoRoad}")
-                    else if(pcnt == 1) Pc2.postValue("${ItemPc[acnt]!!.AgencyName}  >  ${ItemPc[pcnt]!!.CustomerShortAddrNoRoad}")
-                    else if(pcnt == 2) Pc3.postValue("${ItemPc[acnt]!!.AgencyName}  >  ${ItemPc[pcnt]!!.CustomerShortAddrNoRoad}")
+                    ItemPc[pcnt] = Vars.orderList[itt]!!
+                    if(pcnt == 0) Pc1.value = ("${ItemPc[pcnt]!!.AgencyName}  >  ${ItemPc[pcnt]!!.CustomerShortAddrNoRoad}")
+                    else if(pcnt == 1) Pc2.value = ("${ItemPc[pcnt]!!.AgencyName}  >  ${ItemPc[pcnt]!!.CustomerShortAddrNoRoad}")
+                    else if(pcnt == 2) Pc3.value = ("${ItemPc[pcnt]!!.AgencyName}  >  ${ItemPc[pcnt]!!.CustomerShortAddrNoRoad}")
                     pcnt++
                 }
             }
@@ -154,9 +193,8 @@ class MapViewModel : ViewModel()
         {
             createAccept()
             createPikup()
-
-            PcSize.postValue(pcnt)
-            AcSize.postValue(acnt)
+            PcSize.value = (pcnt)
+            AcSize.value = (acnt)
             // 거지같은 라이브데이터 리스트안에 값만 바꾸는걸론 호출이 안됨... 배열도 못잡고 별쌩쇼를 다했지만 안되서 한개씩 선언함....
             // 픽업3개, 배정5개 더는 늘리지 말자..
         }
@@ -172,14 +210,15 @@ class MapViewModel : ViewModel()
     fun CancelRider()
     {
         Log.e("Called","Called Cancel Rider")
-        ItemPc.clear()
-        ItemAc.clear()
+
         removeOrderMaker()
-        PcSize.postValue(0)
-        AcSize.postValue(0)
+        PcSize.value = (0)
+        AcSize.value = (0)
         Olayer.postValue(Finals.MAP_FOR_REMOVE)
         Slayer.postValue(Finals.MAP_FOR_REMOVE)
-        Item.value = Riderdata()
+        Item.value = null
+        Vars.SubRiderHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
+        CloseLowLayer()
         createRider()
     }
 

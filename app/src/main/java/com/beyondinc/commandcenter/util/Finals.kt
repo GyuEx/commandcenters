@@ -28,6 +28,7 @@ object Finals {
     val ORDER_ASSIGN : Int = 26
     val ORDER_TOAST_SHOW : Int = 27
     val ORDER_DETAIL_CLOSE : Int = 28
+    val ORDER_ASSIGN_LIST : Int = 29
 
     val breiftitle = "라이더 배정"
     val storetitle = "가맹점 기준 조회"
@@ -50,6 +51,7 @@ object Finals {
     val BRIEF_ITEM_SELECT : Int = 62
     val STORE_ITEM_SELECT : Int = 63
     val RIDER_ITEM_SELECT : Int = 64
+    val DESABLE_SELECT : Int = 65
 
     val CREATE_RIDER_MARKER : Int = 71
     val MAP_FOR_DOPEN : Int = 72

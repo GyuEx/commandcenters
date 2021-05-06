@@ -72,15 +72,15 @@
                     android:id="@+id/dL01"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:includeFontPadding="false"
-                    android:textSize="20dp"
-                    android:gravity="center"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
+                    android:background="@color/recive"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
                     android:singleLine="true"
-                    android:background="@color/brief"
                     android:text="@{viewModel.getVelue1(pos)}"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="20dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -93,15 +93,15 @@
                     android:id="@+id/dL02"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:includeFontPadding="false"
-                    android:textSize="20dp"
-                    android:gravity="center"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:background="@color/brief"
+                    android:background="@color/pickup"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
                     android:singleLine="true"
                     android:text="@{viewModel.getVelue2(pos)}"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="20dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -114,15 +114,15 @@
                     android:id="@+id/dL03"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:includeFontPadding="false"
-                    android:textSize="20dp"
-                    android:gravity="center"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:background="@color/brief"
+                    android:background="@color/complite"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
                     android:singleLine="true"
                     android:text="@{viewModel.getVelue3(pos)}"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="20dp" />
             </LinearLayout>
 
         </LinearLayout>
