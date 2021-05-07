@@ -29,10 +29,15 @@ class SubRiderViewModel : ViewModel() {
     var select = MutableLiveData<Int>()
     var selectedRider : Riderdata? = null
 
+    var searchtxt = MutableLiveData<String>()
+
+    var list = ConcurrentHashMap<String,Riderdata>()
+
     init {
         Log.e("Memo", "Memo call")
 
         select.postValue(Finals.SELECT_EMPTY)
+        searchtxt.value = ""
 
         if (items == null) {
             items = ConcurrentHashMap(Collections.synchronizedMap(HashMap<Int,Riderdata>()))
@@ -71,6 +76,12 @@ class SubRiderViewModel : ViewModel() {
         }
     }
 
+    fun afterTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
+    {
+        searchtxt.value = s.toString()
+        insertLogic(list)
+    }
+
     fun refrashRider(obj:Any)
     {
         var Mid = obj
@@ -90,7 +101,8 @@ class SubRiderViewModel : ViewModel() {
     {
         items!!.clear()
 
-        var list = obj as ConcurrentHashMap<String,Riderdata>
+        list.putAll(obj as ConcurrentHashMap<String,Riderdata>)
+
         var it: Iterator<String> = list.keys.iterator()
         var cnt = 0
         var itemp: ConcurrentHashMap<Int, Riderdata> = ConcurrentHashMap()
@@ -110,8 +122,11 @@ class SubRiderViewModel : ViewModel() {
         while(shit.hasNext())
         {
             var shitt = shit.next()
-            finalMap[cnt] = shorttmp[shitt]!!
-            cnt++
+            if(searchtxt.value!!.isEmpty() || shorttmp[shitt]?.name!!.toLowerCase().contains(searchtxt.value!!))
+            {
+                finalMap[cnt] = shorttmp[shitt]!!
+                cnt++
+            }
         }
 
         if(finalMap.keys.size < items!!.keys.size)
@@ -125,15 +140,6 @@ class SubRiderViewModel : ViewModel() {
         finalMap!!.let { items!!.putAll(it) }
 
         onCreate()
-
-//        if (itemp.keys.size < items!!.keys.size) {
-//            for (i in itemp.keys.size..items!!.keys.size) {
-//                items!!.remove(i)
-//            }
-//        }
-//
-//        itemp!!.let { items!!.putAll(it) }
-//        onCreate()
     }
 
     fun ListClick(pos: Int) {

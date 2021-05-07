@@ -13,6 +13,7 @@ object Finals {
     val OPEN_POPUP_STORE : Int = 7
     val OPEN_POPUP_RIDER : Int = 8
     val CLOSE_POPUP : Int = 9
+    val CLOSE_DIALOG : Int = 10
 
     val SELECT_MAP : Int = 14
     val SELECT_ORDER : Int = 15
@@ -62,7 +63,7 @@ object Finals {
     val MAP_FOR_REMOVE : Int = 83
     val MAP_MOVE_FOCUS : Int = 84
     val MAP_FOR_CALL_RIDER : Int = 85
-    val MAP_FOR_LIVE_DATA : Int = 86
+    val MAP_FOR_ITEM_SIZE : Int = 86
 
     val LOGIN_SUCESS : Int = 101
     val LOGIN_FAIL : Int = 102

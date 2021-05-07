@@ -27,6 +27,9 @@
                 android:background="@color/white"
                 android:layout_height="match_parent"
                 android:hint="  라이더명 검색"
+                android:textColor="@color/black"
+                android:singleLine="true"
+                android:onTextChanged="@{viewModel::afterTextChanged}"
                 android:textColorHint="@color/gray"
                 android:layout_weight="5">
 

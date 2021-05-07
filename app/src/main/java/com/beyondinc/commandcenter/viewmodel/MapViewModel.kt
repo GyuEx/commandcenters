@@ -38,18 +38,6 @@ class MapViewModel : ViewModel()
     var ItemAc : HashMap<Int, Orderdata> = HashMap()
     var ItemPc : HashMap<Int, Orderdata> = HashMap()
 
-    var AcSize : MutableLiveData<Int> = MutableLiveData()
-    var Ac1 : MutableLiveData<String> = MutableLiveData()
-    var Ac2 : MutableLiveData<String> = MutableLiveData()
-    var Ac3 : MutableLiveData<String> = MutableLiveData()
-    var Ac4 : MutableLiveData<String> = MutableLiveData()
-    var Ac5 : MutableLiveData<String> = MutableLiveData()
-
-    var PcSize : MutableLiveData<Int> = MutableLiveData()
-    var Pc1 : MutableLiveData<String> = MutableLiveData()
-    var Pc2 : MutableLiveData<String> = MutableLiveData()
-    var Pc3 : MutableLiveData<String> = MutableLiveData()
-
     var Dselect : Boolean = false
     var Lselect : Boolean = false
 
@@ -70,6 +58,7 @@ class MapViewModel : ViewModel()
     var lineAcces : ArrayList<PathOverlay> = arrayListOf()
 
     var passList : ConcurrentHashMap<String, Riderdata> = ConcurrentHashMap()
+    var subitemsize : MutableLiveData<Int> = MutableLiveData()
 
     init
     {
@@ -96,7 +85,7 @@ class MapViewModel : ViewModel()
     }
 
     fun selectOr(){
-        selectOr.value = Finals.SELECT_ORDER
+        if(Lrawer.value!!) selectOr.value = Finals.SELECT_ORDER
     }
 
     fun emptyOr(){
@@ -129,9 +118,6 @@ class MapViewModel : ViewModel()
 
         removeOrderMaker()
 
-        PcSize.value = 0
-        AcSize.value = 0
-
         for (marker in markerList) {
             if (Item!!.value!!.MakerID != marker.icon.id) marker.map = null
         }
@@ -155,10 +141,11 @@ class MapViewModel : ViewModel()
         var it : Iterator<String> = Vars.orderList.keys.iterator()
         var pcnt = 0
         var acnt = 0
-
+        var tcnt = 0
         ItemAc.clear()
         ItemPc.clear()
 
+        var tempmap : HashMap<Int, Orderdata> = HashMap()
         while (it.hasNext())
         {
             var itt = it.next()
@@ -166,21 +153,16 @@ class MapViewModel : ViewModel()
             {
                 if(Vars.orderList[itt]!!.DeliveryStateName == "배정") {
                     ItemAc[acnt] = Vars.orderList[itt]!!
-                    if(acnt == 0) Ac1.value = ("${ItemAc[acnt]!!.AgencyName}  >  ${ItemAc[acnt]!!.CustomerLongAddr}")
-                    else if(acnt == 1) Ac2.value = ("${ItemAc[acnt]!!.AgencyName}  >  ${ItemAc[acnt]!!.CustomerShortAddrNoRoad}")
-                    else if(acnt == 2) Ac3.value = ("${ItemAc[acnt]!!.AgencyName}  >  ${ItemAc[acnt]!!.CustomerShortAddrNoRoad}")
-                    else if(acnt == 3) Ac4.value = ("${ItemAc[acnt]!!.AgencyName}  >  ${ItemAc[acnt]!!.CustomerShortAddrNoRoad}")
-                    else if(acnt == 4) Ac5.value = ("${ItemAc[acnt]!!.AgencyName}  >  ${ItemAc[acnt]!!.CustomerShortAddrNoRoad}")
+                    tempmap[tcnt] = Vars.orderList[itt]!!
                     acnt++
                 }
                 else if (Vars.orderList[itt]!!.DeliveryStateName == "픽업")
                 {
                     ItemPc[pcnt] = Vars.orderList[itt]!!
-                    if(pcnt == 0) Pc1.value = ("${ItemPc[pcnt]!!.AgencyName}  >  ${ItemPc[pcnt]!!.CustomerShortAddrNoRoad}")
-                    else if(pcnt == 1) Pc2.value = ("${ItemPc[pcnt]!!.AgencyName}  >  ${ItemPc[pcnt]!!.CustomerShortAddrNoRoad}")
-                    else if(pcnt == 2) Pc3.value = ("${ItemPc[pcnt]!!.AgencyName}  >  ${ItemPc[pcnt]!!.CustomerShortAddrNoRoad}")
+                    tempmap[tcnt] = Vars.orderList[itt]!!
                     pcnt++
                 }
+                tcnt++
             }
         }
 
@@ -193,10 +175,7 @@ class MapViewModel : ViewModel()
         {
             createAccept()
             createPikup()
-            PcSize.value = (pcnt)
-            AcSize.value = (acnt)
-            // 거지같은 라이브데이터 리스트안에 값만 바꾸는걸론 호출이 안됨... 배열도 못잡고 별쌩쇼를 다했지만 안되서 한개씩 선언함....
-            // 픽업3개, 배정5개 더는 늘리지 말자..
+            if(tempmap.keys.size > 0) Vars.AssignHandler!!.obtainMessage(Finals.INSERT_ORDER,tempmap).sendToTarget()
         }
     }
 
@@ -212,8 +191,6 @@ class MapViewModel : ViewModel()
         Log.e("Called","Called Cancel Rider")
 
         removeOrderMaker()
-        PcSize.value = (0)
-        AcSize.value = (0)
         Olayer.postValue(Finals.MAP_FOR_REMOVE)
         Slayer.postValue(Finals.MAP_FOR_REMOVE)
         Item.value = null
@@ -410,11 +387,12 @@ class MapViewModel : ViewModel()
                     markerPikupList.add(customerMarker)
 
                     val path = PathOverlay()
-                    var task = httpSub()
-                    path.coords = task.execute(agencyPosition,customerPosition).get()
+//                    var task = httpSub()
+//                    path.coords = task.execute(agencyPosition,customerPosition).get() // 실경로
+                    path.coords = listOf(agencyPosition,customerPosition)
                     path.width = 5
-                    path.outlineColor = Color.GREEN
-                    path.color = Color.GREEN
+                    path.outlineColor = Vars.mContext!!.getColor(R.color.pickup)
+                    path.color = Vars.mContext!!.getColor(R.color.pickup)
                     path.map = mapInstance
                     lineAcces.add(path)
                 }
@@ -458,11 +436,12 @@ class MapViewModel : ViewModel()
                     markerAccesList.add(customerMarker)
 
                     val path = PathOverlay()
-                    var task = httpSub()
-                    path.coords = task.execute(agencyPosition,customerPosition).get()
+                    //var task = httpSub()
+                    //path.coords = task.execute(agencyPosition,customerPosition).get()//실경로
+                    path.coords = listOf(agencyPosition,customerPosition)//직선경로
                     path.width = 5
-                    path.outlineColor = Color.RED
-                    path.color = Color.RED
+                    path.outlineColor = Vars.mContext!!.getColor(R.color.recive)
+                    path.color = Vars.mContext!!.getColor(R.color.recive)
                     path.map = mapInstance
                     lineAcces.add(path)
                 }

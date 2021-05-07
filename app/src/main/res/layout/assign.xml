@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="text_color" type="int"/>
+        <variable name="text_color_string" type="String"/>
+        <variable name="back_color" type="String"/>
+
+        <variable
+            name="viewModel"
+            type="com.beyondinc.commandcenter.viewmodel.AssignViewModel" />
+
+        <variable
+            name="pos"
+            type="Integer" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp">
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.getTitle(pos)}"
+                        android:textSize="20dp"
+                        android:ellipsize="marquee"
+                        android:singleLine="true"
+                        app:assign_back="@{viewModel.getState(pos)}"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        app:maquee="@{viewModel.getTitle(pos).length()>1? 1:0}"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp">
+        </TextView>
+
+    </LinearLayout>
+</layout>

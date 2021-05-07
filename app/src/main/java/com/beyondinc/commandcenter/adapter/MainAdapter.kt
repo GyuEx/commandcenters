@@ -257,11 +257,12 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("sub_item_size")
     fun setSubItemSize(view: LinearLayout, height: Int) {
+        Log.e("item_Size" , " //// $height")
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
         if (height > 2)
         {
             layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
-            layoutParams.height = 180
+            layoutParams.height = 500
             view.layoutParams = layoutParams
         }
         else
@@ -363,6 +364,19 @@ object MainAdapter {
         {
             layoutParams.weight = 0f
             view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("assign_back")
+    fun setAssign_Back(view: TextView, height: String) {
+        if(height == "배정")
+        {
+            view.setBackgroundColor(Vars.mContext!!.getColor(R.color.trans_recive))
+        }
+        else
+        {
+            view.setBackgroundColor(Vars.mContext!!.getColor(R.color.trans_pickup))
         }
     }
 }

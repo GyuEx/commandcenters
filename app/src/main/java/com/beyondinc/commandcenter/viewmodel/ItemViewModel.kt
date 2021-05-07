@@ -68,11 +68,11 @@ class ItemViewModel : ViewModel() {
         count_cancel.postValue(0)
 
         if (items == null) {
-            items = ConcurrentHashMap(Collections.synchronizedMap(HashMap<Int, Orderdata>()))
+            items = ConcurrentHashMap()
         }
         if (Realitems == null)
         {
-            Realitems = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
+            Realitems = ConcurrentHashMap()
         }
         if (adapter == null) {
             adapter = RecyclerAdapter(this)
@@ -86,12 +86,12 @@ class ItemViewModel : ViewModel() {
                 if (msg.what == Finals.INSERT_ORDER) insertLogic()
                 else if (msg.what == Finals.SELECT_EMPTY)
                 {
-                    select.postValue(Finals.SELECT_EMPTY)
+                    select.value = Finals.SELECT_EMPTY
                     Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
                 }
                 else if (msg.what == Finals.SELECT_BRIFE)
                 {
-                    select.postValue(Finals.SELECT_BRIFE)
+                    select.value = Finals.SELECT_BRIFE
                     Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
                 }
                 else if(msg.what == Finals.ORDER_ASSIGN) OrderAssign(msg.obj as String)
@@ -126,16 +126,17 @@ class ItemViewModel : ViewModel() {
         {
             if(time == Vars.timecnt)
             {
-                Vars.MainsHandler!!.obtainMessage(Finals.CALL_RIDER).sendToTarget()
+                //Vars.MainsHandler!!.obtainMessage(Finals.CALL_RIDER).sendToTarget()
                 time = 0
             }
             else
             {
                 time++
             }
-            if(refrash == 60)
+            if(refrash == 30)
             {
-                Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+                //Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+                //Vars.MainsHandler!!.obtainMessage(Finals.CALL_ORDER).sendToTarget()
                 refrash = 0
             }
             else
@@ -148,6 +149,17 @@ class ItemViewModel : ViewModel() {
     fun insertLogic()
     {
         Vars.orderList!!.let { Realitems!!.putAll(it) }
+
+        var rit : Iterator<Int> = items!!.keys.iterator()
+        while (rit.hasNext())
+        {
+            var ritt = rit.next()
+            if(items!![ritt]!!.use && Realitems!![items!![ritt]!!.OrderId]!!.DeliveryStateName == "접수")
+            {
+                Realitems!![items!![ritt]!!.OrderId]!!.use = true
+            }
+        }
+
         ////여기서 필터랑 전체 구현해야댐....///
 
         var cntbr : Int = 0
@@ -359,7 +371,7 @@ class ItemViewModel : ViewModel() {
     }
 
     fun setUse(pos: Int){
-        Log.e("UsePos", "" + pos + " // " + items!![pos]!!.use)
+        Log.e("UsePos", "" + pos + " // " + items!![pos]!!.use + " // " + select.value)
         if(select.value == Finals.SELECT_BRIFE)
         {
             items!![pos]!!.use = items!![pos]!!.use != true

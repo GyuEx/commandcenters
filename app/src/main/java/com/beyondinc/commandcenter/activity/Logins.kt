@@ -45,7 +45,7 @@ class Logins : AppCompatActivity() , LoginsFun {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Vars.mContext = this
+        Vars.lContext = this
 
         checkpermission()
 
@@ -92,7 +92,7 @@ class Logins : AppCompatActivity() , LoginsFun {
 
     override fun LoginSuccess() {
         Logindata.isLogin = isLogin
-        startActivity(Intent(Vars.mContext, Mains::class.java))
+        startActivity(Intent(Vars.lContext, Mains::class.java))
         finish()
     }
 

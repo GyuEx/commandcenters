@@ -11,7 +11,7 @@
 
         <variable
             name="viewModel"
-            type="com.beyondinc.commandcenter.viewmodel.MainsViewModel" />
+            type="com.beyondinc.commandcenter.viewmodel.BriefViewModel" />
     </data>
 
 <LinearLayout
@@ -51,7 +51,7 @@
                             android:id="@+id/dtV01"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@{viewModel.popuptitle}"
+                            android:text="라이더 배정"
                             android:gravity="center"
                             android:textStyle="bold"
                             android:textColor="@color/white"
@@ -81,7 +81,7 @@
                             <Button
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
-                                android:onClick="@{v->viewModel.closeDialog()}"
+                                android:onClick="@{v->viewModel.close()}"
                                 android:background="@drawable/exit_btn"
                                 android:gravity="center" />
                         </LinearLayout>
@@ -99,23 +99,6 @@
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">
-
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="검색어를 입력하세요"
-                            android:textColorHint="@color/whitegray"
-                            android:textColor="@color/black"
-                            android:textSize="20dp"
-                            android:gravity="left">
-                        </EditText>
-
-                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/dpL01"

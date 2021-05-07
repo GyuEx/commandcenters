@@ -29,7 +29,7 @@ class LoginViewModel() : ViewModel() {
         saveId.postValue(false)
         savePw.postValue(false)
 
-        val pref = PreferenceManager.getDefaultSharedPreferences(Vars.mContext)
+        val pref = PreferenceManager.getDefaultSharedPreferences(Vars.lContext)
         if(pref.getBoolean("saveid",false))
         {
             saveId.postValue(true)
@@ -45,23 +45,23 @@ class LoginViewModel() : ViewModel() {
             override fun handleMessage(msg: Message) {
                 if (msg.what == Finals.LOGIN_SUCESS)
                 {
-                    (Vars.mContext as LoginsFun).LoginSuccess()
+                    (Vars.lContext as LoginsFun).LoginSuccess()
                 }
                 else if (msg.what == Finals.LOGIN_FAIL)
                 {
                     if(Logindata.MSG == null)
                     {
-                        var toast : Toast = Toast.makeText(Vars.mContext, "서버접속실패, 다시 시도해주세요.", Toast.LENGTH_SHORT)
+                        var toast : Toast = Toast.makeText(Vars.lContext, "서버접속실패, 다시 시도해주세요.", Toast.LENGTH_SHORT)
                             toast.setGravity(Gravity.TOP,0,300)
                             toast.show()
                     }
                     else
                     {
-                        var toast : Toast = Toast.makeText(Vars.mContext, Logindata.MSG, Toast.LENGTH_SHORT)
+                        var toast : Toast = Toast.makeText(Vars.lContext, Logindata.MSG, Toast.LENGTH_SHORT)
                         toast.setGravity(Gravity.TOP,0,300)
                         toast.show()
                     }
-                    (Vars.mContext as LoginsFun).LoginFail()
+                    (Vars.lContext as LoginsFun).LoginFail()
                 }
             }
         }
@@ -69,12 +69,12 @@ class LoginViewModel() : ViewModel() {
 
     fun Login() {
         if(id.value.isNullOrEmpty()) Toast.makeText(
-            Vars.mContext,
+            Vars.lContext,
             "아이디를 입력해주세요.",
             Toast.LENGTH_SHORT
         ).show()
         else if(pw.value.isNullOrEmpty()) Toast.makeText(
-            Vars.mContext,
+            Vars.lContext,
             "비밀번호를 입력해주세요.",
             Toast.LENGTH_SHORT
         ).show()
@@ -83,16 +83,16 @@ class LoginViewModel() : ViewModel() {
             Logindata.LoginId = id.value
             Logindata.LoginPw = pw.value //굳이 비밀번호를 저장할 필요가 있을까?
 
-            (Vars.mContext as LoginsFun).Login(id.value!!, pw.value!!)
+            (Vars.lContext as LoginsFun).Login(id.value!!, pw.value!!)
             if(saveId.value == true) {
-                var pref = PreferenceManager.getDefaultSharedPreferences(Vars.mContext)
+                var pref = PreferenceManager.getDefaultSharedPreferences(Vars.lContext)
                 var ed = pref.edit()
                 ed.putString("id", id.value)
                 ed.putBoolean("saveid", saveId.value!!)
                 ed.apply()
             }
             if(savePw.value == true) {
-                var pref = PreferenceManager.getDefaultSharedPreferences(Vars.mContext)
+                var pref = PreferenceManager.getDefaultSharedPreferences(Vars.lContext)
                 var ed = pref.edit()
                 ed.putString("pw", pw.value)
                 ed.putBoolean("savepw", savePw.value!!)
@@ -110,7 +110,7 @@ class LoginViewModel() : ViewModel() {
 
     fun saveId(){
         saveId.value = saveId.value != true
-        var pref = PreferenceManager.getDefaultSharedPreferences(Vars.mContext)
+        var pref = PreferenceManager.getDefaultSharedPreferences(Vars.lContext)
         var ed = pref.edit()
         ed.putBoolean("saveid", saveId.value!!)
         ed.apply()
@@ -118,7 +118,7 @@ class LoginViewModel() : ViewModel() {
 
     fun savePw(){
         savePw.value = savePw.value != true
-        var pref = PreferenceManager.getDefaultSharedPreferences(Vars.mContext)
+        var pref = PreferenceManager.getDefaultSharedPreferences(Vars.lContext)
         var ed = pref.edit()
         ed.putBoolean("savepw", savePw.value!!)
         ed.apply()

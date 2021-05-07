@@ -1,12 +1,10 @@
 package com.beyondinc.commandcenter.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.adapter.RecyclerAdapterRider
-import com.beyondinc.commandcenter.data.Dialogdata
 import com.beyondinc.commandcenter.repository.database.entity.AgencyRiderdata
-import com.beyondinc.commandcenter.repository.database.entity.Agencydata
-import com.beyondinc.commandcenter.repository.database.entity.Riderdata
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import java.util.concurrent.ConcurrentHashMap
@@ -14,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap
 class RiderViewModel : ViewModel() {
     var items: ConcurrentHashMap<Int, AgencyRiderdata>? = null
     var adapter: RecyclerAdapterRider? = null
+    var searchtxt = MutableLiveData<String>()
 
     init {
         if (items == null) {
@@ -22,6 +21,13 @@ class RiderViewModel : ViewModel() {
         if (adapter == null) {
             adapter = RecyclerAdapterRider(this)
         }
+        searchtxt.value = ""
+        insertBrief()
+    }
+
+    fun afterTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
+    {
+        searchtxt.value = s.toString()
         insertBrief()
     }
 
@@ -33,27 +39,30 @@ class RiderViewModel : ViewModel() {
         {
             var rittemp = it.next()
 
-            if(tempmap.containsKey(Vars.orderList[rittemp]?.RiderName) || Vars.orderList[rittemp]?.RiderName == "")
-            else
-            {
+            if (tempmap.containsKey(Vars.orderList[rittemp]?.RiderName) || Vars.orderList[rittemp]?.RiderName == "")
+            else {
                 val memo = AgencyRiderdata()
                 memo.riderName = Vars.orderList[rittemp]!!.RiderName
                 tempmap[Vars.orderList[rittemp]!!.RiderName] = memo
             }
 
-            if(Vars.orderList[rittemp]?.DeliveryStateName == "배정") tempmap[Vars.orderList[rittemp]?.RiderName]!!.v1++
-            else if(Vars.orderList[rittemp]?.DeliveryStateName == "픽업") tempmap[Vars.orderList[rittemp]?.RiderName]!!.v2++
-            else if(Vars.orderList[rittemp]?.DeliveryStateName == "완료") tempmap[Vars.orderList[rittemp]?.RiderName]!!.v3++
+            if (Vars.orderList[rittemp]?.DeliveryStateName == "배정") tempmap[Vars.orderList[rittemp]?.RiderName]!!.v1++
+            else if (Vars.orderList[rittemp]?.DeliveryStateName == "픽업") tempmap[Vars.orderList[rittemp]?.RiderName]!!.v2++
+            else if (Vars.orderList[rittemp]?.DeliveryStateName == "완료") tempmap[Vars.orderList[rittemp]?.RiderName]!!.v3++
         }
 
         var ita : Iterator<String> = tempmap.keys.iterator()
         var cnt = 0
+        items!!.clear()
         while (ita.hasNext())
         {
             var itat = ita.next()
-            tempmap!![itat]!!.id = cnt
-            items!![cnt] = tempmap!![itat]!!
-            cnt++
+            if(searchtxt.value!!.isEmpty() || tempmap[itat]?.riderName!!.toLowerCase().contains(searchtxt.value!!))
+            {
+                tempmap!![itat]!!.id = cnt
+                items!![cnt] = tempmap!![itat]!!
+                cnt++
+            }
         }
 
         onCreate()
@@ -81,5 +90,9 @@ class RiderViewModel : ViewModel() {
 
     fun getVelue3(pos: Int): String? {
         return items!![pos]?.v3.toString()
+    }
+
+    fun close(){
+        Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_DIALOG).sendToTarget()
     }
 }

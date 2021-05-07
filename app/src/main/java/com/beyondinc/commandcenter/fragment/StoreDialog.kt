@@ -1,6 +1,9 @@
 import com.beyondinc.commandcenter.fragment.StoreFragment
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
@@ -8,14 +11,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.R
-import com.beyondinc.commandcenter.databinding.DialogPopupBinding
+import com.beyondinc.commandcenter.databinding.DialogPopupStoreBinding
 import com.beyondinc.commandcenter.util.Vars
-import com.beyondinc.commandcenter.viewmodel.MainsViewModel
+import com.beyondinc.commandcenter.viewmodel.StoreViewModel
 
 class StoreDialog : DialogFragment() {
 
-    var binding: DialogPopupBinding? = null
-    var viewModel: MainsViewModel? = null
+    var binding: DialogPopupStoreBinding? = null
+    var viewModel: StoreViewModel? = null
 
     companion object {
         var fr: Fragment? = null
@@ -31,13 +34,13 @@ class StoreDialog : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.dialog_popup, container, false)
+        return inflater.inflate(R.layout.dialog_popup_store, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DataBindingUtil.bind(view)
-        viewModel = ViewModelProvider(requireActivity()).get(MainsViewModel::class.java)
+        viewModel = StoreViewModel()
         binding!!.viewModel = viewModel
         binding!!.lifecycleOwner = requireActivity()
 

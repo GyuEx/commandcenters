@@ -24,6 +24,7 @@ class MapFragment : Fragment() , OnMapReadyCallback {
         var mapFragment: MapFragment? = null
         var sublistfragment : SubListFragment? = null
         var subriderlistfragment : SubRiderListFragment? = null
+        var assignfragment : AssignFragment? = null
         var fragmentTransaction: FragmentTransaction? = null
     }
 
@@ -60,6 +61,12 @@ class MapFragment : Fragment() , OnMapReadyCallback {
         subriderlistfragment = SubRiderListFragment()
         fragmentTransaction!!.add(R.id.subR01, subriderlistfragment!!)
         fragmentTransaction!!.show(subriderlistfragment!!)
+        fragmentTransaction!!.commitAllowingStateLoss()
+
+        fragmentTransaction = childFragmentManager.beginTransaction()
+        assignfragment = AssignFragment()
+        fragmentTransaction!!.add(R.id.mvL01, assignfragment!!)
+        fragmentTransaction!!.show(assignfragment!!)
         fragmentTransaction!!.commitAllowingStateLoss()
 
     }

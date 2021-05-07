@@ -105,6 +105,7 @@ class MainsViewModel : ViewModel() {
                 else if(msg.what == Finals.ORDER_ASSIGN_LIST) orderAssignList(msg.obj as HashMap<String, ArrayList<String>>)
                 else if(msg.what == Finals.ORDER_TOAST_SHOW) showToast(msg.obj as String)
                 else if(msg.what == Finals.CLOSE_POPUP) closeDialogHidden()
+                else if(msg.what == Finals.CLOSE_DIALOG) closeDialog()
             }
         }
     }
@@ -338,11 +339,13 @@ class MainsViewModel : ViewModel() {
         {
             layer.postValue(Finals.SELECT_MAP)
             select.postValue(Finals.SELECT_EMPTY)
+            Vars.ItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
         }
         else
         {
             layer.postValue(Finals.SELECT_ORDER)
             Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_DCLOSE).sendToTarget()
+            Vars.SubItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
         }
     }
 
@@ -384,17 +387,14 @@ class MainsViewModel : ViewModel() {
 
     fun showDialog(txt : Int){
         if(txt == 1) {
-            popuptitle.postValue(Finals.breiftitle)
             (Vars.mContext as MainsFun).showDialogBrief()
         }
         else if(txt == 2)
         {
-            popuptitle.postValue(Finals.storetitle)
             (Vars.mContext as MainsFun).showDialogStore()
         }
         else if(txt == 3)
         {
-            popuptitle.postValue(Finals.ridertitle)
             (Vars.mContext as MainsFun).showDialogRider()
         }
     }
@@ -405,7 +405,7 @@ class MainsViewModel : ViewModel() {
     }
 
     fun closeDialog(){
-        if(select.value != Finals.SELECT_BRIFE) select.value == Finals.SELECT_EMPTY
+        if(select.value != Finals.SELECT_BRIFE) select.postValue(Finals.SELECT_EMPTY)
         (Vars.mContext as MainsFun).closeDialog()
     }
 

@@ -31,11 +31,11 @@ class SubItemViewModel : ViewModel() {
         select.postValue(Finals.SELECT_EMPTY)
 
         if (items == null) {
-            items = ConcurrentHashMap(Collections.synchronizedMap(HashMap<Int,Orderdata>()))
+            items = ConcurrentHashMap()
         }
         if (Realitems == null)
         {
-            Realitems = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
+            Realitems = ConcurrentHashMap()
         }
         if (adapter == null) {
             adapter = RecyclerAdapterSub(this)
@@ -70,7 +70,19 @@ class SubItemViewModel : ViewModel() {
 
     fun insertLogic()
     {
-        Vars.orderList!!.let { Realitems!!.putAll(it) }
+        Realitems!!.putAll(Vars.orderList)
+
+        Log.e("aaaa","" + items!!.keys.size)
+
+        for(i in 0 until items!!.keys.size)
+        {
+            Log.e("aaaa111", "" + items!![i]!!.use)
+            if(items!![i]!!.use && Realitems!![items!![i]!!.OrderId]!!.DeliveryStateName == "접수")
+            {
+                Realitems!![items!![i]!!.OrderId]!!.use = true
+                Log.e("aaaa222", "" + items!![i]!!.use)
+            }
+        }
 
         var it : Iterator<String> = Realitems!!.keys.iterator()
         var cnt = 0

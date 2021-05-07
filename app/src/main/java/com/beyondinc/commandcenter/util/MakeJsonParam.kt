@@ -141,13 +141,20 @@ class MakeJsonParam {
 //            parameterJSON["InputData"] = centerInfo.latestModifyTimeString
 //            parameterJSON["ReqType"] = "2"
 //            parameterArray.add(parameterJSON)
-//
-//            val parameterCheckSize = makeBaseParameter(loginID)
-//            parameterCheckSize["CenterId"] = centerID
-////            parameterCheckSize["InputData"] = ""
-//            parameterCheckSize["ReqType"] = "3"
-//            parameterArray.add(parameterCheckSize)
 //        }
+//
+//        return parameterArray
+//    }
+//
+//    fun makeServerOrderListCountParameter(loginID: String, centerInfoSet: ArrayList<CenterInfoForOrderList>): JSONArray
+//    {
+//        val parameterArray = JSONArray()
+//
+//        val parameterCheckSize = makeBaseParameter(loginID)
+//        parameterCheckSize["CenterId"] = centerID
+////            parameterCheckSize["InputData"] = ""
+//        parameterCheckSize["ReqType"] = "3"
+//        parameterArray.add(parameterCheckSize)
 //
 //        return parameterArray
 //    }

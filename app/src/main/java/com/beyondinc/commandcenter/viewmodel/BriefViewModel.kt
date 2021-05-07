@@ -1,6 +1,7 @@
 package com.beyondinc.commandcenter.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.adapter.RecyclerAdapterPopup
 import com.beyondinc.commandcenter.data.Dialogdata
@@ -12,15 +13,22 @@ import java.util.concurrent.ConcurrentHashMap
 class BriefViewModel : ViewModel() {
     var items: ConcurrentHashMap<Int, Dialogdata>? = null
     var adapter: RecyclerAdapterPopup? = null
+    var searchtxt = MutableLiveData<String>()
 
     init {
-        Log.e("Dialogs", "Memo call")
         if (items == null) {
             items = ConcurrentHashMap()
         }
         if (adapter == null) {
             adapter = RecyclerAdapterPopup(this)
         }
+        searchtxt.value = ""
+        insertBrief()
+    }
+
+    fun afterTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
+    {
+        searchtxt.value = s.toString()
         insertBrief()
     }
 
@@ -28,24 +36,28 @@ class BriefViewModel : ViewModel() {
 
         var it : Iterator<String> = Vars.riderList!!.keys.iterator()
         var cnt = 0
+        items!!.clear()
         while (it.hasNext())
         {
             var rittemp = it.next()
-            if(Vars.riderList[rittemp]!!.workingStateCode == Codes.RIDER_ON_WORK)
+            if(searchtxt.value!!.isEmpty() || Vars.riderList[rittemp]?.name!!.toLowerCase().contains(searchtxt.value!!))
             {
-                val memo = Dialogdata()
-                memo.id = cnt
-                memo.name = Vars.riderList[rittemp]!!.name
-                memo.realId = Vars.riderList[rittemp]!!.id
-                memo.velue1 = Vars.riderList[rittemp]!!.assignCount.toString()
-                memo.velue2 = Vars.riderList[rittemp]!!.pickupCount.toString()
-                memo.velue3 = Vars.riderList[rittemp]!!.completeCount.toString()
-                items!![cnt] = memo
-                cnt++
+                if (Vars.riderList[rittemp]!!.workingStateCode == Codes.RIDER_ON_WORK) {
+                    val memo = Dialogdata()
+                    memo.id = cnt
+                    memo.name = Vars.riderList[rittemp]!!.name
+                    memo.realId = Vars.riderList[rittemp]!!.id
+                    memo.velue1 = Vars.riderList[rittemp]!!.assignCount.toString()
+                    memo.velue2 = Vars.riderList[rittemp]!!.pickupCount.toString()
+                    memo.velue3 = Vars.riderList[rittemp]!!.completeCount.toString()
+                    items!![cnt] = memo
+                    cnt++
+                }
             }
         }
         onCreate()
     }
+
 
     fun onClick(pos: Int){
         Log.e("PopUp","click event" + items!![pos]!!.name)
@@ -70,5 +82,9 @@ class BriefViewModel : ViewModel() {
 
     fun getVelue3(pos: Int): String? {
         return items!![pos]?.velue3
+    }
+
+    fun close(){
+        Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_DIALOG).sendToTarget()
     }
 }
