@@ -519,6 +519,7 @@
                         android:layout_weight="8"
                         android:textSize="20dp"
                         android:text="종료"
+                        android:textAlignment="gravity"
                         android:textColor="@drawable/click_text_color_black"
                         android:onClick="@{v->viewModel.click_exit()}"
                         android:textStyle="bold"

@@ -22,7 +22,7 @@ class SubItemViewModel : ViewModel() {
     var select = MutableLiveData<Int>()
 
     init {
-        Log.e("aaaa", "Sub Item view model Init")
+        //Log.e("aaaa", "Sub Item view model Init")
         select.value = Finals.SELECT_EMPTY
 
         if (itemss == null) {
@@ -37,7 +37,7 @@ class SubItemViewModel : ViewModel() {
 
         Vars.SubItemHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
-                Log.e("SubItemHandler",msg.what.toString())
+                //Log.e("SubItemHandler",msg.what.toString())
                 if (msg.what == Finals.INSERT_ORDER) insertLogic()
                 else if(msg.what == Finals.SELECT_ORDER) select.value = Finals.SELECT_ORDER
                 else if(msg.what == Finals.SELECT_EMPTY) selectEmpte()
@@ -149,7 +149,7 @@ class SubItemViewModel : ViewModel() {
 
     fun selectEmpte()
     {
-        Log.e("헛","설마 엠피티가 호출 되는감?!")
+        //Log.e("헛","설마 엠피티가 호출 되는감?!")
         select.value = Finals.SELECT_EMPTY
         for(i in 0 until itemss?.keys!!.size)
         {

@@ -35,7 +35,7 @@ class MapFragment : Fragment() , OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.e("MapFragment", "onCreate")
+        //Log.e("MapFragment", "onCreate")
         binding = DataBindingUtil.bind(view)
         viewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
         binding!!.viewModel = viewModel
@@ -72,7 +72,7 @@ class MapFragment : Fragment() , OnMapReadyCallback {
     }
 
     override fun onMapReady(p0: NaverMap) {
-        Log.e("MAP","On Map Ready?")
+        //Log.e("MAP","On Map Ready?")
         viewModel?.mapInstance = p0
         viewModel?.Mapclick()
     }

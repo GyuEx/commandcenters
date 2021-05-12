@@ -1,5 +1,6 @@
 package com.beyondinc.commandcenter.adapter
 
+import android.telephony.mbms.StreamingServiceInfo
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.R
+import com.beyondinc.commandcenter.util.Codes
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -161,7 +163,7 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("filter_breifes")
     fun filter_breifes(view: TextView, height: Boolean) {
-        Log.e("aa", "" + height)
+        //Log.e("aa", "" + height)
         if(height)view.setBackgroundResource(R.drawable.state1_p)
         else view.setBackgroundResource(R.drawable.state1_n)
     }
@@ -257,7 +259,7 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("sub_item_size")
     fun setSubItemSize(view: LinearLayout, height: Int) {
-        Log.e("item_Size" , " //// $height")
+        //Log.e("item_Size" , " //// $height")
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
         if (height > 2)
         {
@@ -310,7 +312,7 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("detail3")
     fun setDetailBackColor3(view: TextView, height: String) {
-        if(height == "완료" || height == "취소")
+        if(height == "완료" || height == "취소" || height == "접수")
         {
             view.setBackgroundColor(Vars.mContext!!.getColor(R.color.gray))
             view.isClickable = false
@@ -325,7 +327,7 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("detail4")
     fun setDetailBackColor4(view: TextView, height: String) {
-        if(height == "취소" || height == "완료")
+        if(height == "완료" || height == "취소")
         {
             view.setBackgroundColor(Vars.mContext!!.getColor(R.color.gray))
             view.isClickable = false

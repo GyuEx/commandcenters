@@ -60,7 +60,7 @@ class BriefViewModel : ViewModel() {
 
 
     fun onClick(pos: Int){
-        Log.e("PopUp","click event" + items!![pos]!!.name)
+        //Log.e("PopUp","click event" + items!![pos]!!.name)
         Vars.ItemHandler!!.obtainMessage(Finals.ORDER_ASSIGN, items!![pos]!!.realId).sendToTarget()
     }
 

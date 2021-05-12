@@ -8,8 +8,6 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.Base64.NO_WRAP
-import android.util.Base64.encodeToString
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -22,30 +20,27 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.Interface.MainsFun
+import com.beyondinc.commandcenter.Interface.ThreadFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.databinding.ActivityMainBinding
 import com.beyondinc.commandcenter.fragment.*
-import com.beyondinc.commandcenter.net.httpSub
+import com.beyondinc.commandcenter.service.AppActivateService
+import com.beyondinc.commandcenter.service.ForecdTerminationService
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 import com.kakao.sdk.newtoneapi.TextToSpeechClient
-import com.kakao.sdk.newtoneapi.TextToSpeechListener
-import com.kakao.sdk.newtoneapi.TextToSpeechManager
 import com.kakao.util.helper.Utility.getPackageInfo
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
-import java.util.*
+import kotlin.system.exitProcess
 
 
-class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
+class Mains : AppCompatActivity(), MainsFun {
     var binding: ActivityMainBinding? = null
     var viewModel: MainsViewModel? = null
     private val Tag = "Mains Activity"
+    private val serviceIntent = Intent(AppActivateService.ACTION_FOREGROUND)
 
     companion object {
         var fr: Fragment? = null
@@ -68,11 +63,50 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
     override fun onDestroy() {
         super.onDestroy()
         Log.e(Tag, "Destory")
+        exit()
+//        (Vars.MainThread as ThreadFun).stopThread()
+//        (Vars.AlarmThread as ThreadFun).stopThread()
+//        (Vars.MarkerThread as ThreadFun).stopThread()
+//        (Vars.HttpThread as ThreadFun).stopThread()
+//
+//        Vars.MainThread = null
+//        Vars.AlarmThread = null
+//        Vars.MarkerThread = null
+//        Vars.HttpThread = null
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.e(Tag, "Start")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.e(Tag, "Resume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.e(Tag, "Pause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.e(Tag, "Stop")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.e(Tag, "Restart")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Vars.mContext = this
+        Log.e(Tag, "Create")
+        //startService(Intent(this, ForecdTerminationService::class.java))
+        serviceIntent.setClass(this, AppActivateService::class.java)
+        startService(serviceIntent)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
@@ -101,7 +135,6 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
         binding!!.lifecycleOwner = this
         binding!!.viewModel = viewModel
 
-        TextToSpeechManager.getInstance().initializeLibrary(Vars.mContext) //카카오 음성합성
         getKeyHash(this)
         getDeviceSize()
     }
@@ -112,7 +145,7 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
             try {
                 val md = MessageDigest.getInstance("SHA")
                 md.update(signature.toByteArray())
-                Log.e("MAIN", "HASHKEY :: *" + encodeToString(md.digest(), NO_WRAP) + "*")
+                //Log.e("MAIN", "HASHKEY :: *" + encodeToString(md.digest(), NO_WRAP) + "*")
             } catch (e: NoSuchAlgorithmException) {
             }
         }
@@ -132,6 +165,7 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
     }
 
     override fun exit(){
+        stopService(serviceIntent)
         moveTaskToBack(true)						// 태스크를 백그라운드로 이동
         finishAndRemoveTask()						// 액티비티 종료 + 태스크 리스트에서 지우기
         android.os.Process.killProcess(android.os.Process.myPid())	// 앱 프로세스 종료
@@ -166,7 +200,7 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
                 dialog = null
             }
         } catch (e: Exception) {
-            Log.e("MAIN", Log.getStackTraceString(e))
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 
@@ -177,7 +211,7 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
                 detail = null
             }
         } catch (e: Exception) {
-            Log.e("MAIN", Log.getStackTraceString(e))
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 
@@ -188,7 +222,7 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
                 history = null
             }
         } catch (e: Exception) {
-            Log.e("MAIN", Log.getStackTraceString(e))
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 
@@ -200,7 +234,7 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
                 message = null
             }
         } catch (e: Exception) {
-            Log.e("MAIN", Log.getStackTraceString(e))
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 
@@ -212,7 +246,7 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
                 select = null
             }
         } catch (e: Exception) {
-            Log.e("MAIN", Log.getStackTraceString(e))
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 
@@ -273,7 +307,7 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
         }
     }
 
-    override fun showMessage(msg: String,num : String) {
+    override fun showMessage(msg: String, num: String) {
         runOnUiThread {
             if (message != null) {
                 message!!.dismiss()
@@ -315,30 +349,5 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
         if(intent.resolveActivity(packageManager) != null){
             startActivity(intent)
         }
-    }
-
-    override fun TTS() {
-
-//        ttsClient = TextToSpeechClient.Builder()
-//                .setSpeechMode(TextToSpeechClient.NEWTONE_TALK_1)
-//                .setSpeechMode("1")
-//                .setSpeechVoice(TextToSpeechClient.VOICE_WOMAN_READ_CALM)
-//                .setListener(this)
-//                .setSampleRate(22050)
-//                .build()
-
-//        runOnUiThread {
-//            Log.e("aaaa", "get TTs Service")
-//            ttsClient!!.speechText = "전초전 용답점 오더 접수"
-//            ttsClient!!.play()
-//        }
-    }
-
-    override fun onFinished() {
-        Log.e("Arlam", "Finishd")
-    }
-
-    override fun onError(code: Int, message: String?) {
-        Log.e("Errorr", "$code // $message")
     }
 }

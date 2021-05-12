@@ -47,7 +47,9 @@ class ItemViewModel : ViewModel() {
     var timerTask : Timer? = null
 
     init {
-        Log.e("Memo", "Memo call")
+        Log.e("ItemView", "Memo call")
+
+        //if(Vars.isForecd) insertLogic()
 
         //필터 초기값 설정
         state_brifes.value = true
@@ -81,7 +83,7 @@ class ItemViewModel : ViewModel() {
 
         Vars.ItemHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
-                Log.e("ItemHandler", msg.what.toString())
+                //Log.e("ItemHandler", msg.what.toString())
                 if (msg.what == Finals.INSERT_ORDER) insertLogic()
                 else if (msg.what == Finals.SELECT_EMPTY) select.value = Finals.SELECT_EMPTY
                 else if (msg.what == Finals.SELECT_BRIFE) select.value = Finals.SELECT_BRIFE
@@ -116,7 +118,7 @@ class ItemViewModel : ViewModel() {
         {
             if(time == Vars.timecnt)
             {
-                Vars.MainsHandler!!.obtainMessage(Finals.CALL_GPS).sendToTarget()
+                Vars.MainsHandler!!.obtainMessage(Finals.CALL_GPS).sendToTarget() // 라이더 위치정보 조회
                 time = 0
             }
             else
@@ -255,14 +257,14 @@ class ItemViewModel : ViewModel() {
 
         var multi : Int = 0
 
+        if(sendedItem != null)
+        {
+            sendedItem = Vars.orderList[sendedItem!!.OrderId]
+            Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ITEM_SELECT,sendedItem).sendToTarget()
+        }
+
         for(i in 0 until items!!.keys.size)
         {
-            if(sendedItem?.OrderId == items!![i]?.OrderId)
-            {
-                sendedItem = items!![i]
-                Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ITEM_SELECT, sendedItem).sendToTarget()
-            }
-
             if(items!![i]!!.use!! && select.value == Finals.SELECT_BRIFE) multi++
             else if(select.value != Finals.SELECT_BRIFE)
             {
@@ -319,10 +321,8 @@ class ItemViewModel : ViewModel() {
     }
 
     fun getTitle(pos: Int): String? {
-        var s : String = ""
-        if(Vars.Usenick) s = Vars.centerNick[items!![pos]?.CenterName] + "] " + items!![pos]?.AgencyName
-        else s = items!![pos]?.CenterName + "] " + items!![pos]?.AgencyName
-        return s
+        if(Vars.Usenick) return Vars.centerNick[items!![pos]?.CenterName] + "] " + items!![pos]?.AgencyName
+        else return items!![pos]?.CenterName + "] " + items!![pos]?.AgencyName
     }
 
     fun getAdress(pos: Int): String? {
@@ -347,7 +347,7 @@ class ItemViewModel : ViewModel() {
     }
 
     fun setUse(pos: Int){
-        Log.e("UsePos", "" + pos + " // " + items!![pos]!!.use + " // " + select.value)
+        //Log.e("UsePos", "" + pos + " // " + items!![pos]!!.use + " // " + select.value)
         if(select.value == Finals.SELECT_BRIFE)
         {
             items!![pos]!!.use = items!![pos]!!.use != true

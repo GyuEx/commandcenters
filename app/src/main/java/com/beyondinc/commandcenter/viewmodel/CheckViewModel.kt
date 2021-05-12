@@ -24,7 +24,7 @@ class CheckViewModel : ViewModel() {
     var allcheck = MutableLiveData<Boolean>()
 
     init {
-        Log.e("CheckView", "CheckView Enable")
+        //Log.e("CheckView", "CheckView Enable")
         allcheck.value = true
 
         if (items == null) {
@@ -49,7 +49,7 @@ class CheckViewModel : ViewModel() {
         while (it.hasNext())
         {
             var tmp = Vars.centerList[it.next()]
-            Log.e("insert", "" + tmp!!.centerName + "\n")
+            //Log.e("insert", "" + tmp!!.centerName + "\n")
             val memo = Checkdata()
             memo.id = cnt
             memo.centerId = tmp?.centerId

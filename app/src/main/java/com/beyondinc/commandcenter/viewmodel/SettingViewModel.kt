@@ -29,7 +29,7 @@ class SettingViewModel : ViewModel() {
         usenick.value = Vars.Usenick
         useTime.value = Vars.UseTime
         useGana.value = Vars.UseGana
-        useTTS.value = Vars.UseTime
+        useTTS.value = Vars.UseTTS
         useJ.value = Vars.UseJ
         useB.value = Vars.UseB
         useW.value = Vars.UseW

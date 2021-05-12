@@ -4,12 +4,15 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
 import android.os.Handler
+import android.speech.tts.TextToSpeech
 import com.beyondinc.commandcenter.data.Alarmdata
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.handler.MarkerThread
+import com.beyondinc.commandcenter.net.DACallerInterface
 import com.beyondinc.commandcenter.repository.database.entity.Centerdata
 import com.beyondinc.commandcenter.repository.database.entity.Riderdata
 import com.naver.maps.map.overlay.Marker
+import com.vasone.deliveryalarm.DAClient
 import org.json.simple.JSONArray
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -56,6 +59,10 @@ object Vars {
     var HttpThread : Thread? = null
     var AlarmThread : Thread? = null
     var MarkerThread : Thread? = null
+
+    var daclient : Boolean = false
+    var tts : TextToSpeech? = null
+    var isForecd : Boolean = false
 
     /*setting */
     var Usenick : Boolean = false

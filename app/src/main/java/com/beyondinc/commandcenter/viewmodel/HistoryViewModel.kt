@@ -16,7 +16,7 @@ class HistoryViewModel : ViewModel() {
     var adapter: RecyclerAdapterHistory? = null
 
     init {
-        Log.e("Memo", "Memo call")
+        //Log.e("Memo", "Memo call")
         if (items == null) {
             items = ArrayList()
         }
@@ -36,12 +36,12 @@ class HistoryViewModel : ViewModel() {
             memo.code = "000000000" + i
             items!!.add(memo)
         }
-        Log.e("insert", "data inserting")
+        //Log.e("insert", "data inserting")
         adapter!!.notifyDataSetChanged()
     }
 
     fun onClick(pos: Int){
-        Log.e("PopUp","click event" + items!!.get(pos)!!.name)
+        //Log.e("PopUp","click event" + items!!.get(pos)!!.name)
     }
 
     fun close() {

@@ -12,7 +12,7 @@ class MessageViewModel : ViewModel() {
     var num = ""
 
     init {
-        Log.e("Message","viewModel Init")
+        //Log.e("Message","viewModel Init")
     }
 
     fun click_ok(){

@@ -23,7 +23,6 @@ interface MainsFun {
     fun detail_Fragment(i : Int)
 
     fun send_call(tel : String)
-    fun TTS()
 
     fun dispatchTouchEvent()
     fun setting()

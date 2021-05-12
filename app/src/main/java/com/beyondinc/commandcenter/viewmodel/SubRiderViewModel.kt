@@ -35,7 +35,7 @@ class SubRiderViewModel : ViewModel() {
     var list = ConcurrentHashMap<String,Riderdata>()
 
     init {
-        Log.e("Memo", "Memo call")
+        //Log.e("Memo", "Memo call")
 
         select.value = Finals.SELECT_EMPTY
         searchtxt.value = ""
@@ -49,7 +49,7 @@ class SubRiderViewModel : ViewModel() {
 
         Vars.SubRiderHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
-                Log.e("SubriderHandler",msg.what.toString())
+                //Log.e("SubriderHandler",msg.what.toString())
                 if (msg.what == Finals.INSERT_RIDER) insertLogic(msg.obj as Riderdata)
                 else if(msg.what == Finals.SELECT_RIDER) select.value = Finals.SELECT_RIDER
                 else if(msg.what == Finals.SELECT_EMPTY)

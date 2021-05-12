@@ -65,13 +65,13 @@ class MapViewModel : ViewModel()
 
     init
     {
-        Log.e("MapViewModel", "MapViewModel init")
+        //Log.e("MapViewModel", "MapViewModel init")
         Drawer.value = false
         Lrawer.value = false
 
         Vars.MapHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
-                Log.e("Map View", "" + msg.what)
+                //Log.e("Map View", "" + msg.what)
                 if (msg.what == Finals.CREATE_RIDER_MARKER && msg.obj != null) createRider(msg.obj as Riderdata)
                 else if (msg.what == Finals.UPDATE_RIDER_MARKER && msg.obj != null) updateRider(msg.obj as Riderdata)
                 else if (msg.what == Finals.REMOVE_RIDER_MARKER && msg.obj != null) removeRider(msg.obj as Riderdata)
@@ -121,7 +121,7 @@ class MapViewModel : ViewModel()
 
     fun MapFocusSet(obj: Any){
 
-        Log.e("SET Move" ," Focus Set on ")
+        //Log.e("SET Move" ," Focus Set on ")
 
         Item.value = obj as Riderdata
 
@@ -155,20 +155,21 @@ class MapViewModel : ViewModel()
                     ItemAc[acnt] = Vars.orderList[itt]!!
                     tempmap[tcnt] = Vars.orderList[itt]!!
                     acnt++
+                    tcnt++
                 }
                 else if (Vars.orderList[itt]!!.DeliveryStateName == "픽업")
                 {
                     ItemPc[pcnt] = Vars.orderList[itt]!!
                     tempmap[tcnt] = Vars.orderList[itt]!!
                     pcnt++
+                    tcnt++
                 }
-                tcnt++
             }
         }
 
         if(first == false)
         {
-            Log.e("호출되나?","알려주세요 호출되는지~")
+            //Log.e("호출되나?","알려주세요 호출되는지~")
             CancelRider()
             first = true
         }

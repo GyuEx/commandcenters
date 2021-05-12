@@ -1,5 +1,7 @@
 package com.beyondinc.commandcenter.util
 
+import com.beyondinc.commandcenter.R
+
 object Finals {
 
     //View Codes
@@ -79,7 +81,11 @@ object Finals {
     val CLOSE_KEYBOARD : Int = 121
     val SET_BRIGHT : Int = 122
 
+    val APK_UPDATE : Int = 131
+    val APK_INSTALL : Int = 132
+
     const val REQUEST_PERMISSION = 10001
     const val KAKAO_KEY = "c5a3395640f428b7cd90ea429d902c8d"
+    val soundArray = arrayOf(R.raw.alarm_reg_order,R.raw.alarm_order_rider,R.raw.alarm_order_finish,R.raw.alarm_order_cancel) //픽업이없네?
 
 }

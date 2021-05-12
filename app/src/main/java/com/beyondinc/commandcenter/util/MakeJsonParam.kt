@@ -220,17 +220,17 @@ class MakeJsonParam {
         return parameterJSON
     }
 
-//    fun makeAgencyTownListParameter(loginID: String, editOrderID: String,
-//                                    centerID: String, agencyID: String): JSONArray {
-//        val parameterArray = JSONArray()
-//
-//        val parameterJSON = makeEditInfoParameter(loginID, Procedures.EditInfoType.AGENCY_TOWN_LIST, editOrderID)
-//        parameterJSON["CenterId"] = centerID
-//        parameterJSON["AgencyId"] = agencyID
-//        parameterArray.add(parameterJSON)
-//
-//        return parameterArray
-//    }
+    fun makeAgencyTownListParameter(loginID: String, editOrderID: String,
+                                    centerID: String, agencyID: String): JSONArray {
+        val parameterArray = JSONArray()
+
+        val parameterJSON = makeEditInfoParameter(loginID, Procedures.EditInfoType.AGENCY_TOWN_LIST, editOrderID)
+        parameterJSON["CenterId"] = centerID
+        parameterJSON["AgencyId"] = agencyID
+        parameterArray.add(parameterJSON)
+
+        return parameterArray
+    }
 
 //    fun makeAddressListParameter(loginID: String, editOrderID: String,
 //                                 centerID: String, agencyID: String, wordType: String,

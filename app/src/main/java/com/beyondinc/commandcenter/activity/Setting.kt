@@ -24,7 +24,7 @@ class Setting : AppCompatActivity(), SettingFun {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.e("Setting", "On Create init")
+        //Log.e("Setting", "On Create init")
          Vars.sContext = this
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_setting)
@@ -40,7 +40,7 @@ class Setting : AppCompatActivity(), SettingFun {
                 dialog = null
             }
         } catch (e: Exception) {
-            Log.e("MAIN", Log.getStackTraceString(e))
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 
@@ -61,6 +61,6 @@ class Setting : AppCompatActivity(), SettingFun {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.e("Setting", "Destory")
+        //Log.e("Setting", "Destory")
     }
 }

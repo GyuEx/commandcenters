@@ -85,8 +85,8 @@ class HttpConn : Thread(), ThreadFun {
                     code = jsonMessage.keys.iterator().next()
                     val data = jsonMessage[code]
 
-                    Log.e("Connect", "" + code)
-                    Log.e("Connect", "" + data)
+                    //Log.e("Connect", "" + code)
+                    //Log.e("Connect", "" + data)
 
                     val requestCipherKey = Crypto.generateMD5Hash(Vars.lContext!!.resources.getString(R.string.default_token))!!.toLowerCase(Locale.getDefault())
                     val responseCipherKey = Crypto.generateMD5Hash(Crypto.getCurrentTimeKey())!!.toLowerCase(Locale.getDefault())
@@ -95,7 +95,7 @@ class HttpConn : Thread(), ThreadFun {
                     val requestBody = Crypto.AES256.encrypt(requestPlainString, requestCipherKey)
                     var receiveDoc = StringBuilder()
 
-                    Log.e("ResultSand", "" + requestPlainString)
+                    //Log.e("ResultSand", "" + requestPlainString)
 
                     val url = URL(Vars.lContext!!.resources.getString(R.string.remote_connect_url) + Vars.lContext!!.resources.getString(R.string.remote_endpoint_url))
                     val con: HttpURLConnection = url.openConnection() as HttpURLConnection
@@ -136,14 +136,14 @@ class HttpConn : Thread(), ThreadFun {
                         val resultMethodBlock: JSONArray = results["Method"] as JSONArray
                         val returnData = makeResponseData(resultMethodBlock)
 
-                        Log.e("HTTP" , "" + resultMethodBlock)
+                        //Log.e("HTTP" , "" + resultMethodBlock)
 
                         var temp : ConcurrentHashMap<String,ArrayList<ConcurrentHashMap<String, String>>> = ConcurrentHashMap()
                         temp[code!!] = returnData
                         Vars.receiveList.add(temp)
 
                     } else {
-                        Log.e("HTTP", con.responseMessage)
+                        //Log.e("HTTP", con.responseMessage)
                     }
                     Thread.sleep(100)
                 }

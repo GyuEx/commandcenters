@@ -390,7 +390,7 @@
                     android:layout_weight="1"
                     android:textColor="@color/white"
                     android:gravity="center"
-                    android:text="@{viewModel.getItemPaymonet()}"
+                    android:text='@{(viewModel.item.approvalTypeName.equals("현금") ? "(현)": viewModel.item.approvalTypeName.equals("카드") ? "(카)": "(선)") + " " + viewModel.item.salesPrice}'
                     android:singleLine="true"
                     android:background="@color/black">
                 </TextView>
@@ -411,7 +411,7 @@
                     android:layout_weight="1"
                     android:textColor="@color/white"
                     android:gravity="center"
-                    android:text="@{viewModel.getItemRiderPay()}"
+                    android:text='@{(viewModel.item.approvalTypeName.equals("현금") ? "(현)": viewModel.item.approvalTypeName.equals("카드") ? "(카)": "(선)") + " " + viewModel.item.deliveryFee}'
                     android:singleLine="true"
                     android:background="@color/black">
                 </TextView>

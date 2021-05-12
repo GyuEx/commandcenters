@@ -21,6 +21,7 @@ import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Alarmdata
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
+import com.beyondinc.commandcenter.handler.PlaySoundThread
 import com.beyondinc.commandcenter.net.DACallerInterface
 import com.beyondinc.commandcenter.util.*
 import com.naver.maps.geometry.LatLng
@@ -31,6 +32,7 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.vasone.deliveryalarm.DAClient
 import org.json.simple.JSONArray
+import java.lang.Exception
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -56,7 +58,7 @@ class MainsViewModel : ViewModel() {
     private lateinit var alarmCallback: (ArrayList<Alarmdata>)-> Unit?
 
     init {
-        Log.e(Tag, "ViewModel Enable Mains")
+        //Log.e(Tag, "ViewModel Enable Mains")
 
         val pref = PreferenceManager.getDefaultSharedPreferences(Vars.mContext)
         Vars.Usenick = pref.getBoolean("usenick",  false)
@@ -72,9 +74,13 @@ class MainsViewModel : ViewModel() {
 
         briteLayer.value = Vars.Bright
 
-        val instanceDACallerInterface = makeDACallerInterfaceInstance(Logindata.LoginId!!, this::alarmCallback)
-        DAClient.Initialize(instanceDACallerInterface)
-        DAClient.Start()
+        if(!Vars.daclient)
+        {
+            var instanceDACallerInterface = makeDACallerInterfaceInstance(Logindata.LoginId!!, this::alarmCallback)
+            DAClient.Initialize(instanceDACallerInterface)
+            DAClient.Start()
+            Vars.daclient = true
+        }
 
         layer.postValue(Finals.SELECT_ORDER)
         select.postValue(Finals.SELECT_EMPTY)
@@ -83,7 +89,7 @@ class MainsViewModel : ViewModel() {
         //핸들러를 init에서 분리하고싶으나 이상하게 코틀린은 뷰모델이 2개가 쓰레드에서 실행이됨... 어쩔수없이 init와 함께 로드
         Vars.MainsHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
-                Log.e("Main Hanldler" , "" + msg.what)
+                //Log.e("Main Hanldler" , "" + msg.what)
                 if(msg.what == Finals.CALL_RIDER) getRiderList()
                 else if(msg.what == Finals.INSERT_RIDER) insertRider()
                 else if(msg.what == Finals.CALL_CENTER) getCenterList()
@@ -284,6 +290,12 @@ class MainsViewModel : ViewModel() {
         Vars.sendList.add(temp)
     }
 
+    fun orderTown(){
+        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeOnPickupReadyParameter(Logindata.LoginId!!,Item.value!!.OrderId)
+        Vars.sendList.add(temp)
+    }
+
     fun getSelectMap(): Int? {
         return Finals.SELECT_MAP
     }
@@ -348,6 +360,7 @@ class MainsViewModel : ViewModel() {
         }
         else if(select.value == Finals.SELECT_BRIFE) {
             Vars.ItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
+            Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
             select.value = Finals.SELECT_STORE
             showDialog(2)
         }
@@ -363,6 +376,7 @@ class MainsViewModel : ViewModel() {
             select.value = Finals.SELECT_EMPTY
         }else if(select.value == Finals.SELECT_BRIFE) {
             Vars.ItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
+            Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
             select.value = Finals.SELECT_RIDER
             showDialog(3)
         }
@@ -463,7 +477,7 @@ class MainsViewModel : ViewModel() {
 
     fun closeDetail(){
         (Vars.mContext as MainsFun).closeOderdetail()
-        Item.value = null
+        //Item.value = null
         showDetail = false
         Vars.ItemHandler!!.obtainMessage(Finals.ORDER_DETAIL_CLOSE).sendToTarget()
         Vars.AssignHandler!!.obtainMessage(Finals.ORDER_DETAIL_CLOSE).sendToTarget()
@@ -565,6 +579,11 @@ class MainsViewModel : ViewModel() {
         else if(msg == "오더완료") orderComplete()
         else if(msg == "오더취소") orderCancel()
         else if(msg == "포장상태변경") orderPaking()
+    }
+
+    fun getitemState() : String?{
+        if(Item.value != null) return Item.value!!.DeliveryStateName
+        else return "0"
     }
 
     class FixedMarkerView(context: Context, isStartPosition: Boolean = false) : ConstraintLayout(context) {

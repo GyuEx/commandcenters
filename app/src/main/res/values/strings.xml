@@ -226,7 +226,4 @@
     <string name="rconnect_gsc">https://dv.stds.co.kr:16990/dsp</string>
     <string name="alarm_gsc">tcp:dv.stds.co.kr:26990</string>
     <string name="appdown_gsc">http://dv.stds.co.kr:7090/Apps/PkgDown.action?AppId=</string>
-
-    <string name="kakao_app_key">38722ccc9e2e18b7f84f27933435fc48</string>
-
 </resources>

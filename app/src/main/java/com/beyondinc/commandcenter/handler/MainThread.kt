@@ -2,14 +2,18 @@ package com.beyondinc.commandcenter.handler
 
 import android.util.Log
 import com.beyondinc.commandcenter.Interface.ThreadFun
+import com.beyondinc.commandcenter.R
+import com.beyondinc.commandcenter.data.Alarmdata
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
+import com.beyondinc.commandcenter.net.DACallerInterface
 import com.beyondinc.commandcenter.repository.database.entity.Centerdata
 import com.beyondinc.commandcenter.repository.database.entity.Riderdata
 import com.beyondinc.commandcenter.util.Codes
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Procedures
 import com.beyondinc.commandcenter.util.Vars
+import com.vasone.deliveryalarm.DAClient
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.HashMap
 
@@ -42,7 +46,11 @@ class MainThread() : Thread() , ThreadFun{
                     if(code == Procedures.LOGIN)
                     {
                         //로그인은 반드시 0번지여야함
-                        if(data!![0]["MSG"] == "로그인 성공!")
+                        if(data!![0]["CODE"] == "-1000")
+                        {
+
+                        }
+                        else if(data!![0]["MSG"] == "로그인 성공!")
                         {
                             Logindata.CenterId=data!![0]["CenterId"]
                             Logindata.CenterName=data!![0]["CenterName"]
@@ -77,7 +85,7 @@ class MainThread() : Thread() , ThreadFun{
                     }
                     else if(code == Procedures.RIDER_LIST_IN_CENTER)
                     {
-                        Log.e("여기가","호출이 되는지 알구싶다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                        //Log.e("여기가","호출이 되는지 알구싶다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                         var ridertemp : ConcurrentHashMap<String,Riderdata> = ConcurrentHashMap()
                         for (i in 0 until data!!.size) {
                             val ri = Riderdata()

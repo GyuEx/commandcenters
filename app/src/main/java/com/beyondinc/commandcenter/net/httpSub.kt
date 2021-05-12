@@ -26,7 +26,7 @@ class httpSub : AsyncTask<LatLng, Void, ArrayList<LatLng>>() {
         var Agency = params[0]
         var Customer = params[1]
 
-        Log.e("Poi" , Agency.latitude.toString() + " // " + Agency.longitude.toString())
+        //Log.e("Poi" , Agency.latitude.toString() + " // " + Agency.longitude.toString())
 
         val url = URL("https://naveropenapi.apigw.ntruss.com/map-direction/v1/driving?start=${Agency.longitude},${Agency.latitude}&goal=${Customer.longitude},${Customer.latitude}&option=trafast")
         val con: HttpURLConnection = url.openConnection() as HttpURLConnection
