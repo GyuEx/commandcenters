@@ -1,19 +1,12 @@
 package com.beyondinc.commandcenter.util
 
+import com.beyondinc.commandcenter.data.Logindata
 import org.json.simple.JSONArray
 import org.json.simple.JSONObject
 import java.lang.StringBuilder
 import java.util.*
 
 class MakeJsonParam {
-
-    val AppType = "Smart.dim"
-    val deviceID = "b7f0b45550726ee8"
-    val devicePhone = "+821222795779"
-    val deviceModel = "SM-G950N"
-    val appID = "7"
-    val ReqType = "Login"
-    val appVersion = "1.1.0"
 
     fun makeLoginParameter(id: String, password: String): JSONArray {
         val md5EncryptedPassword = Crypto.generateMD5Hash(password)!!
@@ -23,15 +16,15 @@ class MakeJsonParam {
         val parameterArray = JSONArray()
 
         val parameterJSON = JSONObject()
-        parameterJSON["AppType"] = AppType
-        parameterJSON["DeviceId"] = deviceID
+        parameterJSON["AppType"] = Logindata.AppType
+        parameterJSON["DeviceId"] = Logindata.deviceID
         parameterJSON["LoginId"] = id
         parameterJSON["Passwd"] = encryptedPassword
-        parameterJSON["AppId"] = appID
+        parameterJSON["AppId"] = Logindata.appID
         parameterJSON["ReqType"] = Procedures.UserAuthType.LOGIN
-        parameterJSON["AppVersion"] = appVersion
-        parameterJSON["ModelName"] = deviceModel
-        parameterJSON["PhoneNo"] = devicePhone
+        parameterJSON["AppVersion"] = Logindata.appVersion
+        parameterJSON["ModelName"] = Logindata.deviceModel
+        parameterJSON["PhoneNo"] = Logindata.devicePhone
         parameterArray.add(parameterJSON)
 
         return parameterArray
@@ -40,11 +33,11 @@ class MakeJsonParam {
     private fun makeBaseParameter(loginID: String): JSONObject {
         val parameterJSON = JSONObject()
 
-        parameterJSON["AppType"] = AppType
-        parameterJSON["DeviceId"] = deviceID
+        parameterJSON["AppType"] = Logindata.AppType
+        parameterJSON["DeviceId"] = Logindata.deviceID
         parameterJSON["LoginId"] = loginID
-        parameterJSON["AppId"] = appID
-        parameterJSON["PhoneNo"] = devicePhone
+        parameterJSON["AppId"] = Logindata.appID
+        parameterJSON["PhoneNo"] = Logindata.devicePhone
 
         return parameterJSON
     }

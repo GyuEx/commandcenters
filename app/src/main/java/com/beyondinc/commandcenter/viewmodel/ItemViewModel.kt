@@ -1,12 +1,9 @@
 package com.beyondinc.commandcenter.viewmodel
 
 import android.annotation.SuppressLint
-import android.os.AsyncTask
-import android.os.Build
 import android.os.Handler
 import android.os.Message
 import android.util.Log
-import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.adapter.RecyclerAdapter
@@ -15,18 +12,16 @@ import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import java.text.SimpleDateFormat
-import java.time.LocalDate.now
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 import kotlin.concurrent.timer
 
 
 class ItemViewModel : ViewModel() {
     var Realitems: ConcurrentHashMap<String, Orderdata>? = null
     var items: ConcurrentHashMap<Int, Orderdata>? = null
-    var passList : ConcurrentHashMap<String, Orderdata> = ConcurrentHashMap()
+    var passList: ConcurrentHashMap<Int, Orderdata>? = null
     var adapter: RecyclerAdapter? = null
 
     var state_brifes = MutableLiveData<Boolean>()
@@ -55,17 +50,17 @@ class ItemViewModel : ViewModel() {
         Log.e("Memo", "Memo call")
 
         //필터 초기값 설정
-        state_brifes.postValue(true)
-        state_recive.postValue(true)
-        state_pikup.postValue(true)
-        state_complete.postValue(true)
-        state_cancel.postValue(true)
+        state_brifes.value = true
+        state_recive.value = true
+        state_pikup.value = true
+        state_complete.value = true
+        state_cancel.value = true
 
-        count_briefes.postValue(0)
-        count_recive.postValue(0)
-        count_pikup.postValue(0)
-        count_complete.postValue(0)
-        count_cancel.postValue(0)
+        count_briefes.value = 0
+        count_recive.value = 0
+        count_pikup.value = 0
+        count_complete.value = 0
+        count_cancel.value = 0
 
         if (items == null) {
             items = ConcurrentHashMap()
@@ -74,26 +69,22 @@ class ItemViewModel : ViewModel() {
         {
             Realitems = ConcurrentHashMap()
         }
+        if (passList == null)
+        {
+            passList = ConcurrentHashMap()
+        }
         if (adapter == null) {
             adapter = RecyclerAdapter(this)
         }
 
-        select.postValue(Finals.SELECT_EMPTY)
+        select.value = Finals.SELECT_EMPTY
 
         Vars.ItemHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
                 Log.e("ItemHandler", msg.what.toString())
                 if (msg.what == Finals.INSERT_ORDER) insertLogic()
-                else if (msg.what == Finals.SELECT_EMPTY)
-                {
-                    select.value = Finals.SELECT_EMPTY
-                    Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
-                }
-                else if (msg.what == Finals.SELECT_BRIFE)
-                {
-                    select.value = Finals.SELECT_BRIFE
-                    Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
-                }
+                else if (msg.what == Finals.SELECT_EMPTY) select.value = Finals.SELECT_EMPTY
+                else if (msg.what == Finals.SELECT_BRIFE) select.value = Finals.SELECT_BRIFE
                 else if(msg.what == Finals.ORDER_ASSIGN) OrderAssign(msg.obj as String)
                 else if(msg.what == Finals.ORDER_DETAIL_CLOSE) maincloseDetail()
                 else if(msg.what == Finals.STORE_ITEM_SELECT) storeSelect(msg.obj as String)
@@ -101,7 +92,6 @@ class ItemViewModel : ViewModel() {
                 else if(msg.what == Finals.DESABLE_SELECT) desableSelect()
             }
         }
-    //    insertLogic()
     }
 
     fun desableSelect(){
@@ -126,16 +116,16 @@ class ItemViewModel : ViewModel() {
         {
             if(time == Vars.timecnt)
             {
-                //Vars.MainsHandler!!.obtainMessage(Finals.CALL_RIDER).sendToTarget()
+                Vars.MainsHandler!!.obtainMessage(Finals.CALL_GPS).sendToTarget()
                 time = 0
             }
             else
             {
                 time++
             }
-            if(refrash == 30)
+            if(refrash == 60)
             {
-                //Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+                if(Vars.mLayer == Finals.SELECT_ORDER) Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget() //시간경과 갱신주기 1분
                 //Vars.MainsHandler!!.obtainMessage(Finals.CALL_ORDER).sendToTarget()
                 refrash = 0
             }
@@ -149,16 +139,6 @@ class ItemViewModel : ViewModel() {
     fun insertLogic()
     {
         Vars.orderList!!.let { Realitems!!.putAll(it) }
-
-        var rit : Iterator<Int> = items!!.keys.iterator()
-        while (rit.hasNext())
-        {
-            var ritt = rit.next()
-            if(items!![ritt]!!.use && Realitems!![items!![ritt]!!.OrderId]!!.DeliveryStateName == "접수")
-            {
-                Realitems!![items!![ritt]!!.OrderId]!!.use = true
-            }
-        }
 
         ////여기서 필터랑 전체 구현해야댐....///
 
@@ -244,11 +224,11 @@ class ItemViewModel : ViewModel() {
             cnt++
         }
 
-        count_briefes.postValue(cntbr)
-        count_recive.postValue(cntre)
-        count_pikup.postValue(cntpi)
-        count_complete.postValue(cntco)
-        count_cancel.postValue(cntca)
+        count_briefes.value = cntbr
+        count_recive.value = cntre
+        count_pikup.value = cntpi
+        count_complete.value = cntco
+        count_cancel.value = cntca
 
         var forstr = "배:${cntre} 픽:${cntpi} 완:${cntco}"
 
@@ -301,10 +281,6 @@ class ItemViewModel : ViewModel() {
             Logindata.OrderList = true
             StartTimer()
         }
-        else
-        {
-            Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget()
-        }
     }
 
     fun getSelectBrife(): Int{
@@ -318,8 +294,9 @@ class ItemViewModel : ViewModel() {
     fun getResttime(pos: Int): String? {
         //오더시간을 계산해보자
         var a : String = "0"
+        var ft = SimpleDateFormat("HH:mm:ss")
+
         if(items!![pos]!!.DeliveryStateName == "배정") {
-            var ft = SimpleDateFormat("HH:mm:ss")
             var now = ft.parse(ft.format(Date()))
             var nt = ft.parse(ft.format(ft.parse(items!![pos]!!.DriverAssignDT)))
             a = ((now.time - nt.time)/60000).toString()
@@ -330,7 +307,6 @@ class ItemViewModel : ViewModel() {
         }
         else if(items!![pos]!!.DeliveryStateName == "픽업")
         {
-            var ft = SimpleDateFormat("HH:mm:ss")
             var nt = ft.parse(ft.format(ft.parse(items!![pos]!!.DriverAssignDT)))
             var pt = ft.parse(ft.format(ft.parse(items!![pos]!!.PickupDT)))
             a = ((pt.time - nt.time)/60000).toString()
@@ -387,13 +363,13 @@ class ItemViewModel : ViewModel() {
     fun click_brief_filter(){
         if(state_brifes.value == true)
         {
-            state_brifes.postValue(false)
+            state_brifes.value = false
             Vars.f_five.add("접수")
             insertLogic()
         }
         else
         {
-            state_brifes.postValue(true)
+            state_brifes.value = true
             Vars.f_five.remove("접수")
             insertLogic()
         }
@@ -402,13 +378,13 @@ class ItemViewModel : ViewModel() {
     fun click_recive_filter(){
         if(state_recive.value == true)
         {
-            state_recive.postValue(false)
+            state_recive.value = false
             Vars.f_five.add("배정")
             insertLogic()
         }
         else
         {
-            state_recive.postValue(true)
+            state_recive.value = true
             Vars.f_five.remove("배정")
             insertLogic()
         }
@@ -417,13 +393,13 @@ class ItemViewModel : ViewModel() {
     fun click_picup_filter(){
         if(state_pikup.value == true)
         {
-            state_pikup.postValue(false)
+            state_pikup.value = false
             Vars.f_five.add("픽업")
             insertLogic()
         }
         else
         {
-            state_pikup.postValue(true)
+            state_pikup.value = true
             Vars.f_five.remove("픽업")
             insertLogic()
         }
@@ -432,13 +408,13 @@ class ItemViewModel : ViewModel() {
     fun click_complete_filter(){
         if(state_complete.value == true)
         {
-            state_complete.postValue(false)
+            state_complete.value = false
             Vars.f_five.add("완료")
             insertLogic()
         }
         else
         {
-            state_complete.postValue(true)
+            state_complete.value = true
             Vars.f_five.remove("완료")
             insertLogic()
         }
@@ -447,13 +423,13 @@ class ItemViewModel : ViewModel() {
     fun click_cancel_filter(){
         if(state_cancel.value == true)
         {
-            state_cancel.postValue(false)
+            state_cancel.value = false
             Vars.f_five.add("취소")
             insertLogic()
         }
         else
         {
-            state_cancel.postValue(true)
+            state_cancel.value = true
             Vars.f_five.remove("취소")
             insertLogic()
         }
@@ -469,6 +445,10 @@ class ItemViewModel : ViewModel() {
         sendedItem = null
     }
 
+    fun getfontsize() : Int?{
+        return Vars.FontSize
+    }
+
     fun OrderAssign(s: String){
         if (select.value == Finals.SELECT_EMPTY)
         {
@@ -476,7 +456,7 @@ class ItemViewModel : ViewModel() {
         }
         else if (select.value == Finals.SELECT_BRIFE)
         {
-            var makeHash = HashMap<String,ArrayList<String>>()
+            var makeHash = ConcurrentHashMap<String,ArrayList<String>>()
             var makeArray = ArrayList<String>()
             for(i in 0 until items!!.keys.size)
             {

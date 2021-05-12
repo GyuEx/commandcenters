@@ -16,6 +16,7 @@ import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Executor
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.concurrent.timer
@@ -36,11 +37,11 @@ class SubRiderViewModel : ViewModel() {
     init {
         Log.e("Memo", "Memo call")
 
-        select.postValue(Finals.SELECT_EMPTY)
+        select.value = Finals.SELECT_EMPTY
         searchtxt.value = ""
 
         if (items == null) {
-            items = ConcurrentHashMap(Collections.synchronizedMap(HashMap<Int,Riderdata>()))
+            items = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
         }
         if (adapter == null) {
             adapter = RecyclerAdapterSubRider(this)
@@ -49,14 +50,16 @@ class SubRiderViewModel : ViewModel() {
         Vars.SubRiderHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
                 Log.e("SubriderHandler",msg.what.toString())
-                if (msg.what == Finals.INSERT_RIDER) insertLogic(msg.obj)
-                else if(msg.what == Finals.SELECT_RIDER) select.postValue(Finals.SELECT_RIDER)
+                if (msg.what == Finals.INSERT_RIDER) insertLogic(msg.obj as Riderdata)
+                else if(msg.what == Finals.SELECT_RIDER) select.value = Finals.SELECT_RIDER
                 else if(msg.what == Finals.SELECT_EMPTY)
                 {
-                    select.postValue(Finals.SELECT_EMPTY)
+                    select.value = Finals.SELECT_EMPTY
                     selectedRider = null
                 }
                 else if(msg.what == Finals.MAP_FOR_CALL_RIDER) getRider(msg.obj)
+                else if(msg.what == Finals.REMOVE_RIDER_MARKER) removeRider(msg.obj as Riderdata)
+                else if(msg.what == Finals.MAP_FOR_REFRASH) refrashrider()
             }
         }
     }
@@ -68,40 +71,44 @@ class SubRiderViewModel : ViewModel() {
         while (it.hasNext())
         {
             var itt = it.next()
-            if(items!![itt]!!.MakerID == Mid)
+            if(items!![itt] == Mid)
             {
-                Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS, items!![itt]!!).sendToTarget()
-                selectedRider = items!![itt]!!
+                Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS, items!![itt]).sendToTarget()
+                selectedRider = items!![itt]
+                break // 그만행
             }
         }
+    }
+
+    fun refrashrider(){
+        if(selectedRider != null) Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS,selectedRider).sendToTarget()
+    }
+
+    fun removeRider(obj : Riderdata){
+        list.remove(obj.id)
+        onCreate()
     }
 
     fun afterTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
     {
         searchtxt.value = s.toString()
-        insertLogic(list)
+        onCreate()
     }
 
-    fun refrashRider(obj:Any)
-    {
-        var Mid = obj
-        var it : Iterator<Int> = items?.keys!!.iterator()
-        while (it.hasNext())
-        {
-            var itt = it.next()
-            if(items!![itt]!!.id == Mid)
-            {
-                Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS, items!![itt]!!).sendToTarget()
-                selectedRider = items!![itt]!!
-            }
-        }
+    fun insertLogic(obj : Riderdata) {
+        list[obj.id!!] = obj
+        onCreate()
     }
 
-    fun insertLogic(obj:Any)
-    {
-        items!!.clear()
+    fun ListClick(pos: Int) {
+        Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS, items!![pos]).sendToTarget()
+    }
 
-        list.putAll(obj as ConcurrentHashMap<String,Riderdata>)
+    fun clickClose(){
+        Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_DOPEN).sendToTarget()
+    }
+
+    fun onCreate() {
 
         var it: Iterator<String> = list.keys.iterator()
         var cnt = 0
@@ -139,28 +146,12 @@ class SubRiderViewModel : ViewModel() {
 
         finalMap!!.let { items!!.putAll(it) }
 
-        onCreate()
-    }
-
-    fun ListClick(pos: Int) {
-        Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS, items!![pos]).sendToTarget()
-    }
-
-    fun clickClose(){
-        Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_DOPEN).sendToTarget()
-    }
-
-    fun onCreate() {
         adapter!!.notifyDataSetChanged()
 
         if(items?.keys?.size!! > 0 && !first)
         {
             Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS, items?.get(0)).sendToTarget()
             first = true
-        }
-        else
-        {
-            if (selectedRider != null) refrashRider(selectedRider!!.id!!)
         }
     }
 

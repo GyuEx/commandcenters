@@ -8,6 +8,7 @@ import com.beyondinc.commandcenter.Interface.SettingFun
 import com.beyondinc.commandcenter.activity.Setting
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
+import java.util.concurrent.ConcurrentHashMap
 
 class SettingViewModel : ViewModel() {
 
@@ -20,19 +21,21 @@ class SettingViewModel : ViewModel() {
     var useW : MutableLiveData<Boolean> = MutableLiveData()
     var useC : MutableLiveData<Boolean> = MutableLiveData()
     var bright : MutableLiveData<Int> = MutableLiveData()
-    var nick : MutableLiveData<HashMap<String,String>> = MutableLiveData()
+    var fontsize : MutableLiveData<Int> = MutableLiveData()
+    var nick : MutableLiveData<ConcurrentHashMap<String, String>> = MutableLiveData()
 
     init
     {
-        usenick.postValue(Vars.Usenick)
-        useTime.postValue(Vars.UseTime)
-        useGana.postValue(Vars.UseGana)
-        useTTS.postValue(Vars.UseTime)
-        useJ.postValue(Vars.UseJ)
-        useB.postValue(Vars.UseB)
-        useW.postValue(Vars.UseW)
-        useC.postValue(Vars.UseC)
-        bright.postValue(Vars.Bright)
+        usenick.value = Vars.Usenick
+        useTime.value = Vars.UseTime
+        useGana.value = Vars.UseGana
+        useTTS.value = Vars.UseTime
+        useJ.value = Vars.UseJ
+        useB.value = Vars.UseB
+        useW.value = Vars.UseW
+        useC.value = Vars.UseC
+        bright.value = Vars.Bright
+        fontsize.value = Vars.FontSize
     }
 
     fun click_save(){
@@ -46,6 +49,7 @@ class SettingViewModel : ViewModel() {
         Vars.UseW = useW.value!!
         Vars.UseC = useC.value!!
         Vars.Bright = bright.value!!
+        Vars.FontSize = fontsize.value!!
 
         var pref = PreferenceManager.getDefaultSharedPreferences(Vars.mContext)
         var ed = pref.edit()
@@ -58,6 +62,7 @@ class SettingViewModel : ViewModel() {
         ed.putBoolean("useW", useW.value!!)
         ed.putBoolean("useC", useC.value!!)
         ed.putInt("bright", bright.value!!)
+        ed.putInt("fontsize", fontsize.value!!)
         ed.apply()
 
         Vars.MainsHandler!!.obtainMessage(Finals.SET_BRIGHT).sendToTarget()
@@ -82,68 +87,78 @@ class SettingViewModel : ViewModel() {
     }
 
     fun click_nick_use(){
-        usenick.postValue(true)
+        usenick.value = true
     }
 
     fun click_nick_un_use(){
-        usenick.postValue(false)
+        usenick.value = false
     }
 
     fun click_order_use(){
-        useTime.postValue(true)
+        useTime.value = true
     }
 
     fun click_order_un_use(){
-        useTime.postValue(false)
+        useTime.value = false
     }
 
     fun click_rider_use(){
-        useGana.postValue(true)
+        useGana.value = true
     }
 
     fun click_rider_un_use(){
-        useGana.postValue(false)
+        useGana.value = false
     }
 
     fun click_j_use(){
-        if(useJ.value == false) useJ.postValue(true)
-        else useJ.postValue(false)
+        useJ.value = useJ.value == false
     }
 
     fun click_b_use(){
-        if(useB.value == false) useB.postValue(true)
-        else useB.postValue(false)
+        useB.value = useB.value == false
     }
 
     fun click_w_use(){
-        if(useW.value == false) useW.postValue(true)
-        else useW.postValue(false)
+        useW.value = useW.value == false
     }
 
     fun click_c_use(){
-        if(useC.value == false) useC.postValue(true)
-        else useC.postValue(false)
+        useC.value = useC.value == false
     }
 
     fun click_tts_use(){
-        useTTS.postValue(true)
+        useTTS.value = true
     }
 
     fun click_tts_un_use(){
-        useTTS.postValue(false)
+        useTTS.value = false
     }
 
     fun click_brigth_plus(){
         if(bright.value!! < 10) {
             var i = bright.value!! + 1
-            bright.postValue(i)
+            bright.value = i
         }
     }
 
     fun click_brigth_minus(){
         if(bright.value!! > 0) {
             var i = bright.value!! - 1
-            bright.postValue(i)
+            bright.value = i
+        }
+    }
+
+    fun click_fontsize_plus(){
+        if(fontsize.value!! < 30) {
+            var i = fontsize.value!! + 1
+            fontsize.value = i
+        }
+    }
+
+    fun click_fontsize_minus(){
+        if(fontsize.value!! > 1) {
+            var i = fontsize.value!! - 1
+            fontsize.value = i
         }
     }
 }

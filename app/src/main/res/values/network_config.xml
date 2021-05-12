@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 기본 정보 -->
+    <string name="app_type">Smart.dim</string>
+
+    <!-- 연결 설정 -->
+    <integer name="timeout_connect_default">3</integer>
+    <integer name="timeout_read_default">30</integer>
+
+    <!-- API endpoint -->
+    <string name="remote_endpoint_url">ManagerAppCipherConnect.action</string>
+
+    <!-- 회사별 포트 정보 (삭제 예정) -->
+
+    <!-- 로드파일럿 -->
+    <string name="road_api_port">17060</string>
+    <string name="road_alarm_port">27060</string>
+
+    <!-- 배달인 -->
+    <string name="dsp_api_port">17050</string>
+    <string name="dsp_alarm_port">27050</string>
+
+    <!-- 워밍업 -->
+    <string name="warmingup_api_port">170**</string>
+    <string name="warmingup_alarm_port">270**</string>
+</resources>

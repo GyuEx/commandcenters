@@ -34,7 +34,7 @@ class RiderViewModel : ViewModel() {
     fun insertBrief() {
 
         var it : Iterator<String> = Vars.orderList!!.keys.iterator()
-        var tempmap = HashMap<String, AgencyRiderdata>()
+        var tempmap = ConcurrentHashMap<String, AgencyRiderdata>()
         while (it.hasNext())
         {
             var rittemp = it.next()

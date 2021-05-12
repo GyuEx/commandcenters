@@ -25,16 +25,13 @@ import kotlin.concurrent.timer
 
 class NickViewModel : ViewModel() {
     var items: ConcurrentHashMap<Int,String>? = null
-    var nicks = MutableLiveData<HashMap<String,String>>()
+    var nicks = MutableLiveData<ConcurrentHashMap<String,String>>()
     var adapter: RecyclerAdapterNick? = null
 
     init{
         if (items == null) {
-            items = ConcurrentHashMap(Collections.synchronizedMap(HashMap<Int,String>()))
+            items = ConcurrentHashMap(Collections.synchronizedMap(ConcurrentHashMap()))
         }
-//        if (nicks == null) {
-//            nicks = ConcurrentHashMap()
-//        }
         if (adapter == null) {
             adapter = RecyclerAdapterNick(this)
         }
@@ -54,7 +51,7 @@ class NickViewModel : ViewModel() {
         }
 
         var itn : Iterator<Int> = items!!.keys.iterator()
-        var map = HashMap<String,String>()
+        var map = ConcurrentHashMap<String,String>()
         while (itn.hasNext())
         {
             var itnn = itn.next()
@@ -84,7 +81,6 @@ class NickViewModel : ViewModel() {
             var itt = it.next()
             Vars.centerNick[itt] = nicks.value?.get(itt)!!
             ed.putString(itt, nicks.value?.get(itt)!!)
-            Log.e("Save","////////////////// " + Vars.centerNick + " // " + nicks.value?.get(itt)!! + " // " + itt.toString())
         }
         ed.apply()
         (Vars.sContext as SettingFun).closeDialog()

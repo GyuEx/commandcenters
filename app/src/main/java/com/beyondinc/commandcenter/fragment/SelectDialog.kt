@@ -9,15 +9,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.R
-import com.beyondinc.commandcenter.databinding.MessageDialogBinding
+import com.beyondinc.commandcenter.databinding.SelectDialogBinding
 import com.beyondinc.commandcenter.util.Vars
-import com.beyondinc.commandcenter.viewmodel.MessageViewModel
+import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 
-class MessageDialog(i:String) : DialogFragment(){
+class SelectDialog : DialogFragment(){
 
-    var binding: MessageDialogBinding? = null
-    var viewModel: MessageViewModel? = null
-    var num = i
+    var binding: SelectDialogBinding? = null
+    var viewModel: MainsViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,17 +26,15 @@ class MessageDialog(i:String) : DialogFragment(){
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.message_dialog, container, false)
+        return inflater.inflate(R.layout.select_dialog, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DataBindingUtil.bind(view)
-        viewModel = ViewModelProvider(requireActivity()).get(MessageViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(MainsViewModel::class.java)
         binding!!.viewModel = viewModel
         binding!!.lifecycleOwner = requireActivity()
-        viewModel!!.msg.postValue(tag)
-        viewModel!!.num = num // 전화걸기 기능 전화번호 전달
     }
 
     override fun onResume() {
@@ -46,7 +43,7 @@ class MessageDialog(i:String) : DialogFragment(){
         val deviceWidth = Vars.DeviceSize.x
         val deviceHeight = Vars.DeviceSize.y
         params?.width = (deviceWidth).toInt()
-        params?.height = (deviceHeight).toInt()/4
+        params?.height = (deviceHeight).toInt() / 2
         dialog?.window?.attributes = params as WindowManager.LayoutParams
     }
 }

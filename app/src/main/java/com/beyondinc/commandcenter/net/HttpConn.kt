@@ -1,8 +1,10 @@
 package com.beyondinc.commandcenter.net
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.beyondinc.commandcenter.Interface.ThreadFun
+import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.util.Crypto
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Procedures
@@ -16,6 +18,7 @@ import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -23,6 +26,7 @@ class HttpConn : Thread(), ThreadFun {
 
     var isKeep : Boolean = false
     var code : String? = null
+    var context : Context? = null
 
     init {
         isKeep = true
@@ -48,8 +52,8 @@ class HttpConn : Thread(), ThreadFun {
         return requestJson
     }
 
-    fun makeResponseData(responseData: JSONArray): ArrayList<HashMap<String, String>> {
-        val returnData: ArrayList<HashMap<String, String>> = ArrayList()
+    fun makeResponseData(responseData: JSONArray): ArrayList<ConcurrentHashMap<String, String>> {
+        val returnData: ArrayList<ConcurrentHashMap<String, String>> = ArrayList()
 
         for (block in responseData.indices) {
             val joMethod = responseData[block] as JSONObject
@@ -57,7 +61,7 @@ class HttpConn : Thread(), ThreadFun {
             if (null != jaData) {
                 for (j in jaData.indices) {
                     val joData = jaData[j] as JSONObject
-                    val map = HashMap<String, String>()
+                    val map = ConcurrentHashMap<String, String>()
                     val keySet = joData.keys
                     for (sName in keySet) {
                         map[(sName as String)] = joData[sName].toString()
@@ -84,7 +88,7 @@ class HttpConn : Thread(), ThreadFun {
                     Log.e("Connect", "" + code)
                     Log.e("Connect", "" + data)
 
-                    val requestCipherKey = Crypto.generateMD5Hash("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ3b29kZWwiLCJVc2VySWQiOiJ3b29kZWwiLCJQYXNzd2QiOiJhcHBrZXkiLCJHcmFudFR5cGUiOiJydyIsIlNlcnZpY2VOYW1lIjoid29vZGVsIiwiQWNjZXNzRXhwaXJlRFQiOiIyMTIwLTA5LTA2IDEyOjQ4OjM2In0.Gf0U5k_3vCbcb0O6xOeetwnk66N8HiJwFe_iQ-Ri8iCZRi2DDHns3GYWnk9Xf1vteuu3AJQ13iOEQaq1N99ZCA")!!.toLowerCase(Locale.getDefault())
+                    val requestCipherKey = Crypto.generateMD5Hash(Vars.lContext!!.resources.getString(R.string.default_token))!!.toLowerCase(Locale.getDefault())
                     val responseCipherKey = Crypto.generateMD5Hash(Crypto.getCurrentTimeKey())!!.toLowerCase(Locale.getDefault())
                     val requestJson = makeRequestJSON(responseCipherKey, code!!,data!!)
                     val requestPlainString = requestJson.toString()
@@ -93,13 +97,13 @@ class HttpConn : Thread(), ThreadFun {
 
                     Log.e("ResultSand", "" + requestPlainString)
 
-                    val url = URL("https://dev.stds.co.kr:8443/byservice/ManagerAppCipherConnect.action")
+                    val url = URL(Vars.lContext!!.resources.getString(R.string.remote_connect_url) + Vars.lContext!!.resources.getString(R.string.remote_endpoint_url))
                     val con: HttpURLConnection = url.openConnection() as HttpURLConnection
                     con.connectTimeout = 3000 //서버에 연결되는 Timeout 시간 설정
                     con.readTimeout = 3000 // InputStream 읽어 오는 Timeout 시간 설정
                     con.setRequestProperty("UserAddData", "2")
                     con.setRequestProperty("content-type", "application/json; charset=utf-8")
-                    con.setRequestProperty("authorization", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ3b29kZWwiLCJVc2VySWQiOiJ3b29kZWwiLCJQYXNzd2QiOiJhcHBrZXkiLCJHcmFudFR5cGUiOiJydyIsIlNlcnZpY2VOYW1lIjoid29vZGVsIiwiQWNjZXNzRXhwaXJlRFQiOiIyMTIwLTA5LTA2IDEyOjQ4OjM2In0.Gf0U5k_3vCbcb0O6xOeetwnk66N8HiJwFe_iQ-Ri8iCZRi2DDHns3GYWnk9Xf1vteuu3AJQ13iOEQaq1N99ZCA")
+                    con.setRequestProperty("authorization", Vars.lContext!!.resources.getString(R.string.default_token))
                     con.requestMethod = "POST"
 
                     //json으로 message를 전달하고자 할 때
@@ -134,7 +138,7 @@ class HttpConn : Thread(), ThreadFun {
 
                         Log.e("HTTP" , "" + resultMethodBlock)
 
-                        var temp : HashMap<String,ArrayList<HashMap<String, String>>> = HashMap()
+                        var temp : ConcurrentHashMap<String,ArrayList<ConcurrentHashMap<String, String>>> = ConcurrentHashMap()
                         temp[code!!] = returnData
                         Vars.receiveList.add(temp)
 

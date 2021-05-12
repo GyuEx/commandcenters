@@ -379,4 +379,16 @@ object MainAdapter {
             view.setBackgroundColor(Vars.mContext!!.getColor(R.color.trans_pickup))
         }
     }
+
+    @JvmStatic
+    @BindingAdapter("item_font_size")
+    fun item_font_size(view: TextView, height: Int) {
+        view.textSize = height.toFloat()
+    }
+
+    @JvmStatic
+    @BindingAdapter("item_font_size_title")
+    fun item_font_size_title(view: TextView, height: Int) {
+        view.textSize = height.toFloat() + 2
+    }
 }

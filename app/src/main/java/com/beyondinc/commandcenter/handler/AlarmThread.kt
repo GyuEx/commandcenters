@@ -6,6 +6,7 @@ import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.util.*
 import org.json.simple.JSONArray
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -35,7 +36,7 @@ class AlarmThread() : Thread() , ThreadFun{
                     {
                         var list : ArrayList<String> = ArrayList()
                         list.add(rdata.mnOrderId.toString())
-                        var temp : HashMap<String, JSONArray> =  HashMap()
+                        var temp : ConcurrentHashMap<String, JSONArray> = ConcurrentHashMap()
                         temp[Procedures.ORDER_DETAIL] = MakeJsonParam().makeOrderDetailParameter(Logindata.LoginId!!,list)
                         Vars.sendList.add(temp)
                     }
@@ -66,7 +67,6 @@ class AlarmThread() : Thread() , ThreadFun{
                                 3 -> Vars.riderList[rdata.mnOrderId.toString()]!!.workingStateCode = Codes.RIDER_ON_EAT
                                 4 -> Vars.riderList[rdata.mnOrderId.toString()]!!.workingStateCode = Codes.RIDER_ON_WORK
                             }
-                            Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget()
                         }
                     }
                     else if(rdata.mnAlarmType == AlarmCodes.ALARM_TYPE_CHATTING)
@@ -82,7 +82,7 @@ class AlarmThread() : Thread() , ThreadFun{
         }
     }
 
-    fun passing(data : HashMap<String, String>) : Orderdata
+    fun passing(data : ConcurrentHashMap<String, String>) : Orderdata
     {
         val or = Orderdata()
 

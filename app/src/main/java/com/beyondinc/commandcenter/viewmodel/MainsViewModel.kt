@@ -31,6 +31,7 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.vasone.deliveryalarm.DAClient
 import org.json.simple.JSONArray
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -40,7 +41,6 @@ class MainsViewModel : ViewModel() {
 
     var layer = MutableLiveData<Int>()
     var select = MutableLiveData<Int>()
-    var popuptitle = MutableLiveData<String>()
     var checkview = MutableLiveData<Int>()
     var drawer = MutableLiveData<Boolean>()
     var briteLayer = MutableLiveData<Int>()
@@ -68,10 +68,9 @@ class MainsViewModel : ViewModel() {
         Vars.UseW = pref.getBoolean("useW",  false)
         Vars.UseC = pref.getBoolean("useC",  false)
         Vars.Bright = pref.getInt("bright", 10)
+        Vars.FontSize = pref.getInt("fontsize",15)
 
-        Log.e("bbbbbbbbbb", "" + pref.all)
-
-        briteLayer.postValue(Vars.Bright)
+        briteLayer.value = Vars.Bright
 
         val instanceDACallerInterface = makeDACallerInterfaceInstance(Logindata.LoginId!!, this::alarmCallback)
         DAClient.Initialize(instanceDACallerInterface)
@@ -79,8 +78,9 @@ class MainsViewModel : ViewModel() {
 
         layer.postValue(Finals.SELECT_ORDER)
         select.postValue(Finals.SELECT_EMPTY)
-        drawer.postValue(false)
+        drawer.value = false
 
+        //핸들러를 init에서 분리하고싶으나 이상하게 코틀린은 뷰모델이 2개가 쓰레드에서 실행이됨... 어쩔수없이 init와 함께 로드
         Vars.MainsHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
                 Log.e("Main Hanldler" , "" + msg.what)
@@ -88,32 +88,68 @@ class MainsViewModel : ViewModel() {
                 else if(msg.what == Finals.INSERT_RIDER) insertRider()
                 else if(msg.what == Finals.CALL_CENTER) getCenterList()
                 else if(msg.what == Finals.CALL_ORDER) getOrderList()
-                else if(msg.what == Finals.CLOSE_CHECK) checkview.postValue(Finals.SELECT_EMPTY)
-                else if(msg.what == Finals.ORDER_ITEM_SELECT)
-                {
-                    Item.postValue(msg.obj as Orderdata?)
-                    if(!showDetail) showOrderDetail()
-                }
+                else if(msg.what == Finals.CLOSE_CHECK) checkview.value = Finals.SELECT_EMPTY
+                else if(msg.what == Finals.ORDER_ITEM_SELECT)showOrderDetail(msg.obj as Orderdata)
                 else if(msg.what == Finals.HTTP_ERROR) HttpError()
                 else if(msg.what == Finals.CLOSE_KEYBOARD) closeKeyBoard()
-                else if(msg.what == Finals.INSERT_ORDER_COUNT) order_count.postValue(msg.obj as String?)
-                else if(msg.what == Finals.INSERT_RIDER_COUNT) rider_count.postValue(msg.obj as String?)
+                else if(msg.what == Finals.INSERT_ORDER_COUNT) order_count.value = msg.obj as String?
+                else if(msg.what == Finals.INSERT_RIDER_COUNT) rider_count.value = msg.obj as String?
                 else if(msg.what == Finals.SET_BRIGHT) setBright()
                 else if(msg.what == Finals.CANCEL_MESSAGE) closeMessage()
                 else if(msg.what == Finals.SUCCESS_MESSAGE) successMessage(msg.obj as String)
                 else if(msg.what == Finals.ORDER_ASSIGN) orderAssign(msg.obj as String)
-                else if(msg.what == Finals.ORDER_ASSIGN_LIST) orderAssignList(msg.obj as HashMap<String, ArrayList<String>>)
+                else if(msg.what == Finals.ORDER_ASSIGN_LIST) orderAssignList(msg.obj as ConcurrentHashMap<String, ArrayList<String>>)
                 else if(msg.what == Finals.ORDER_TOAST_SHOW) showToast(msg.obj as String)
                 else if(msg.what == Finals.CLOSE_POPUP) closeDialogHidden()
                 else if(msg.what == Finals.CLOSE_DIALOG) closeDialog()
+                else if(msg.what == Finals.SEND_TELEPHONE) send_call(msg.obj as String)
+                else if(msg.what == Finals.MAP_FOR_SOPEN) showSelectDialog(msg.obj as Orderdata)
+                else if(msg.what == Finals.CALL_GPS) getRiderGPS()
+                else if(msg.what == Finals.SEND_ITEM) getItemsend(msg.obj as Orderdata)
             }
         }
+    }
+
+    fun getItemsend(obj : Orderdata){
+        Item.value = obj
     }
 
     fun showToast(msg: String){
         closeDialog()
         closeMessage()
         Toast.makeText(Vars.mContext,msg,Toast.LENGTH_LONG).show()
+    }
+
+    fun mapfordetail(){
+        showDetail = true
+        (Vars.mContext as MainsFun).showOderdetail()
+        (Vars.mContext as MainsFun).closeSelect()
+    }
+
+    fun mapforchange(){
+        showDialog(1)
+        (Vars.mContext as MainsFun).closeSelect()
+    }
+
+    fun mapforcancel(){
+        showMessage("배정취소","0")
+        (Vars.mContext as MainsFun).closeSelect()
+    }
+
+    fun mapfororcancel(){
+        showMessage("오더취소","0")
+        (Vars.mContext as MainsFun).closeSelect()
+    }
+
+    fun showSelectDialog(msg : Any?){
+        Item.value = msg as Orderdata
+        (Vars.mContext as MainsFun).showSelect()
+    }
+
+    fun closeSelectDialog(){
+        Item.value = null
+        (Vars.mContext as MainsFun).closeSelect()
+        Vars.AssignHandler!!.obtainMessage(Finals.ORDER_DETAIL_CLOSE).sendToTarget()
     }
 
     private fun proceedAlarmCallback(alarmList: ArrayList<Alarmdata>) {
@@ -126,9 +162,9 @@ class MainsViewModel : ViewModel() {
         return DACallerInterface(
                 Logindata.appID,
                 loginID,
-                "tcp:dev.stds.co.kr:27070",
-                3,
-                30,
+                Vars.mContext!!.resources.getString(R.string.alarm_url),
+                Vars.mContext!!.resources.getInteger(R.integer.timeout_connect_default),
+                Vars.mContext!!.resources.getInteger(R.integer.timeout_read_default),
                 this::proceedAlarmCallback,
         )
     }
@@ -145,7 +181,7 @@ class MainsViewModel : ViewModel() {
     }
 
     fun setBright(){
-        briteLayer.postValue(Vars.Bright)
+        briteLayer.value = Vars.Bright
         Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
         Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
         Vars.MapHandler!!.obtainMessage(Finals.INSERT_RIDER).sendToTarget()
@@ -164,7 +200,7 @@ class MainsViewModel : ViewModel() {
 
     fun getCenterList()
     {
-        var temp : HashMap<String,JSONArray> =  HashMap()
+        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
         temp.put(Procedures.CENTER_LIST,MakeJsonParam().makeCenterListParameter(Logindata.LoginId!!))
         Vars.sendList.add(temp)
     }
@@ -177,8 +213,8 @@ class MainsViewModel : ViewModel() {
         {
             ids.add(Vars.centerList[it.next()]!!.centerId)
         }
-        var temp : HashMap<String, JSONArray> =  HashMap()
-        temp.put(Procedures.ORDER_LIST_IN_CENTER, MakeJsonParam().makeFullOrderListParameter(Logindata.LoginId!!,ids))
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.ORDER_LIST_IN_CENTER] = MakeJsonParam().makeFullOrderListParameter(Logindata.LoginId!!,ids)
         Vars.sendList.add(temp)
     }
 
@@ -190,7 +226,7 @@ class MainsViewModel : ViewModel() {
         {
             ids.add(Vars.centerList[it.next()]!!.centerId)
         }
-        var temp : HashMap<String, JSONArray> =  HashMap()
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
         temp[Procedures.RIDER_LOCATION_IN_CENTER] =
             MakeJsonParam().makeRidersLocationParameter(Logindata.LoginId!!,ids)
         Vars.sendList.add(temp)
@@ -204,20 +240,20 @@ class MainsViewModel : ViewModel() {
         {
             ids.add(Vars.centerList[it.next()]!!.centerId)
         }
-        var temp : HashMap<String,JSONArray> =  HashMap()
+        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
         temp[Procedures.RIDER_LIST_IN_CENTER] =
             MakeJsonParam().makeRiderListParameter(Logindata.LoginId!!,ids)
         Vars.sendList.add(temp)
     }
 
     fun orderAssign(id:String){
-        var temp : HashMap<String,JSONArray> =  HashMap()
+        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
         temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeAssignOrderParameter(Logindata.LoginId!!,Item.value!!.OrderId,Procedures.ChangeStatusType.ASSIGN_RIDER,id)
         Vars.sendList.add(temp)
     }
 
-    fun orderAssignList(rec : HashMap<String,ArrayList<String>>){
-        var temp : HashMap<String,JSONArray> =  HashMap()
+    fun orderAssignList(rec : ConcurrentHashMap<String,ArrayList<String>>){
+        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
         var id = rec.keys.iterator().next()
         var order = rec[id]!!
         temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeAssignOrderListParameter(Logindata.LoginId!!,order,Procedures.ChangeStatusType.ASSIGN_RIDER,id)
@@ -225,25 +261,25 @@ class MainsViewModel : ViewModel() {
     }
 
     fun orderAssingCancel(){
-        var temp : HashMap<String,JSONArray> =  HashMap()
+        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
         temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeChangeOrderStatusParameter(Logindata.LoginId!!,Item.value!!.OrderId,Procedures.ChangeStatusType.ORDER_ASSIGN_CANCEL,"",Item.value!!.ApprovalType)
         Vars.sendList.add(temp)
     }
 
     fun orderComplete(){
-        var temp : HashMap<String,JSONArray> =  HashMap()
+        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
         temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeChangeOrderStatusParameter(Logindata.LoginId!!,Item.value!!.OrderId,Procedures.ChangeStatusType.ORDER_FORCE_COMPLETE,Item.value!!.RiderId,Item.value!!.ApprovalType)
         Vars.sendList.add(temp)
     }
 
     fun orderCancel(){
-        var temp : HashMap<String,JSONArray> =  HashMap()
+        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
         temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeChangeOrderStatusParameter(Logindata.LoginId!!,Item.value!!.OrderId,Procedures.ChangeStatusType.ORDER_CANCEL,Item.value!!.RiderId,Item.value!!.ApprovalType)
         Vars.sendList.add(temp)
     }
 
     fun orderPaking(){
-        var temp : HashMap<String,JSONArray> =  HashMap()
+        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
         temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeOnPickupReadyParameter(Logindata.LoginId!!,Item.value!!.OrderId)
         Vars.sendList.add(temp)
     }
@@ -294,27 +330,29 @@ class MainsViewModel : ViewModel() {
 
     fun click_brife() {
         if (select.value == Finals.SELECT_BRIFE) {
-            select.postValue(Finals.SELECT_EMPTY)
+            select.value = Finals.SELECT_EMPTY
             Vars.ItemHandler!!.obtainMessage(Finals.DESABLE_SELECT).sendToTarget()
             Vars.ItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
+            Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
         } else {
-            select.postValue(Finals.SELECT_BRIFE)
+            select.value = Finals.SELECT_BRIFE
             Vars.ItemHandler!!.obtainMessage(Finals.SELECT_BRIFE).sendToTarget()
+            Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
         }
     }
 
     fun click_store() {
         if (select.value == Finals.SELECT_STORE) {
             Vars.ItemHandler!!.obtainMessage(Finals.DESABLE_SELECT).sendToTarget()
-            select.postValue(Finals.SELECT_EMPTY)
+            select.value = Finals.SELECT_EMPTY
         }
         else if(select.value == Finals.SELECT_BRIFE) {
             Vars.ItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
-            select.postValue(Finals.SELECT_STORE)
+            select.value = Finals.SELECT_STORE
             showDialog(2)
         }
         else {
-            select.postValue(Finals.SELECT_STORE)
+            select.value = Finals.SELECT_STORE
             showDialog(2)
         }
     }
@@ -322,14 +360,14 @@ class MainsViewModel : ViewModel() {
     fun click_rider() {
         if (select.value == Finals.SELECT_RIDER) {
             Vars.ItemHandler!!.obtainMessage(Finals.DESABLE_SELECT).sendToTarget()
-            select.postValue(Finals.SELECT_EMPTY)
+            select.value = Finals.SELECT_EMPTY
         }else if(select.value == Finals.SELECT_BRIFE) {
             Vars.ItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
-            select.postValue(Finals.SELECT_RIDER)
+            select.value = Finals.SELECT_RIDER
             showDialog(3)
         }
         else {
-            select.postValue(Finals.SELECT_RIDER)
+            select.value = Finals.SELECT_RIDER
             showDialog(3)
         }
     }
@@ -337,15 +375,21 @@ class MainsViewModel : ViewModel() {
     fun click_map_to_order() {
         if(layer.value != Finals.SELECT_MAP)
         {
-            layer.postValue(Finals.SELECT_MAP)
-            select.postValue(Finals.SELECT_EMPTY)
+            layer.value = Finals.SELECT_MAP
+            Vars.mLayer = Finals.SELECT_MAP // 쓰레드가 현재 메인레이어를 뭘보고 있는지 알고싶어함
+            select.value = Finals.SELECT_EMPTY
             Vars.ItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
+            Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+            // empty를 먼저 던져줘야 맵이 초기화가 됨
         }
         else
         {
-            layer.postValue(Finals.SELECT_ORDER)
-            Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_DCLOSE).sendToTarget()
+            layer.value = Finals.SELECT_ORDER
+            Vars.mLayer = Finals.SELECT_ORDER // 쓰레드가 현재 메인레이어를 뭘보고 있는지 알고싶어함
             Vars.SubItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
+            Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+            Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_DCLOSE).sendToTarget()
+            // empty를 먼저 던져줘야 맵이 초기화가 됨
         }
     }
 
@@ -361,9 +405,9 @@ class MainsViewModel : ViewModel() {
     fun click_check() {
         if ((layer.value == Finals.SELECT_ORDER || layer.value == Finals.SELECT_MAP) && select.value != Finals.SELECT_BRIFE) {
             if (checkview.value == Finals.SELECT_CHECK) {
-                checkview.postValue(Finals.SELECT_EMPTY)
+                checkview.value = Finals.SELECT_EMPTY
             } else {
-                checkview.postValue(Finals.SELECT_CHECK)
+                checkview.value = Finals.SELECT_CHECK
             }
         }
     }
@@ -399,13 +443,17 @@ class MainsViewModel : ViewModel() {
         }
     }
 
-    fun showOrderDetail() {
-        showDetail = true
-        (Vars.mContext as MainsFun).showOderdetail()
+    fun showOrderDetail(msg : Any?) {
+        if(!showDetail)
+        {
+            showDetail = true
+            (Vars.mContext as MainsFun).showOderdetail()
+        }
+        Item.value = msg as Orderdata
     }
 
     fun closeDialog(){
-        if(select.value != Finals.SELECT_BRIFE) select.postValue(Finals.SELECT_EMPTY)
+        if(select.value != Finals.SELECT_BRIFE) select.value = Finals.SELECT_EMPTY
         (Vars.mContext as MainsFun).closeDialog()
     }
 
@@ -418,6 +466,8 @@ class MainsViewModel : ViewModel() {
         Item.value = null
         showDetail = false
         Vars.ItemHandler!!.obtainMessage(Finals.ORDER_DETAIL_CLOSE).sendToTarget()
+        Vars.AssignHandler!!.obtainMessage(Finals.ORDER_DETAIL_CLOSE).sendToTarget()
+        (Vars.mContext as MainsFun).closeSelect()
     }
 
     fun closeHistory(){
@@ -438,16 +488,9 @@ class MainsViewModel : ViewModel() {
         (Vars.mContext as MainsFun).detail_Fragment(2)
     }
 
-    fun click_send_agency(){
-        (Vars.mContext as MainsFun).send_call(Item.value!!.AgencyPhoneNo)
-    }
-
-    fun click_send_cust(){
-        (Vars.mContext as MainsFun).send_call(Item.value!!.CustomerPhone)
-    }
-
-    fun click_send_rider(){
-        (Vars.mContext as MainsFun).send_call(Item.value!!.RiderPhoneNo)
+    fun send_call(num :  String){
+        (Vars.mContext as MainsFun).send_call(num)
+        closeMessage()
     }
 
     fun makeMarker(i : Int) {
@@ -504,13 +547,12 @@ class MainsViewModel : ViewModel() {
         }
     }
 
-    fun showMessage(msg : String){
-        (Vars.mContext as MainsFun).showMessage(msg)
+    fun showMessage(msg : String, num : String){
+        (Vars.mContext as MainsFun).showMessage(msg,num)
     }
 
     fun showDrawer(){
-        if(drawer.value == false) drawer.postValue(true)
-        else drawer.postValue(false)
+        drawer.value = drawer.value == false
     }
 
     fun closeKeyBoard(){

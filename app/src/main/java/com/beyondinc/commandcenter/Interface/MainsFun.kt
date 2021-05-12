@@ -11,12 +11,14 @@ interface MainsFun {
     fun showDialogRider()
     fun showOderdetail()
     fun showHistory()
-    fun showMessage(msg:String)
+    fun showMessage(msg:String,num:String)
+    fun showSelect()
 
     fun closeDialog()
     fun closeOderdetail()
     fun closeHistory()
     fun closeMessage()
+    fun closeSelect()
 
     fun detail_Fragment(i : Int)
 

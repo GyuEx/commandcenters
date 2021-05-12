@@ -19,9 +19,13 @@ object Logindata {
     var RiderList : Boolean = false
     var OrderList : Boolean = false
 
-    val appID: String = "7"
-    val appVersionName: String = ""
-    val deviceModelNumber: String = ""
-    val deviceID: String = ""
-    val devicePhoneNumber: String = ""
+    var appID: String = "7"
+    var AppType = "Smart.dim"
+    var appVersionName: String = ""
+    var deviceModelNumber: String = ""
+    var deviceID: String = "b7f0b45550726ee8"
+    var devicePhone = "+821222795779"
+    var deviceModel = "SM-G950N"
+    var devicePhoneNumber: String = ""
+    val appVersion = "1.1.0"
 }

@@ -61,6 +61,7 @@
                         android:text="@{viewModel.getUsetime(pos)}"
                         android:textSize="15sp"
                         android:gravity="center"
+                        app:item_font_size="@{viewModel.getfontsize()}"
                         android:singleLine="true"
                         android:textStyle="bold"
                         app:text_color_string="@{viewModel.items.get(pos).orderId}"/>
@@ -73,6 +74,7 @@
                         android:text="@{viewModel.getResttime(pos)}"
                         android:textSize="13sp"
                         android:gravity="center"
+                        app:item_font_size="@{viewModel.getfontsize()}"
                         android:singleLine="true"
                         app:text_color="@{viewModel.items.get(pos).id}"/>
                     <TextView
@@ -83,6 +85,7 @@
                         android:text="@{viewModel.getPay(pos)}"
                         android:textSize="13sp"
                         android:gravity="center"
+                        app:item_font_size="@{viewModel.getfontsize()}"
                         android:singleLine="true"
                         android:textColor="@android:color/black"/>
 
@@ -101,12 +104,14 @@
                         android:layout_height="wrap_content"
                         android:includeFontPadding="false"
                         android:text="@{viewModel.getTitle(pos)}"
-                        android:textSize="15sp"
+                        android:textSize="15dp"
                         android:gravity="left"
                         android:singleLine="true"
                         android:ellipsize="marquee"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:focusable="true"
+                        app:maquee="@{viewModel.getTitle(pos).length() > 0? 1:0}"
+                        app:item_font_size_title="@{viewModel.getfontsize()}"
                         android:textColor="@android:color/black"
                         android:textStyle="bold"/>
 
@@ -122,6 +127,8 @@
                         android:ellipsize="marquee"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:focusable="true"
+                        app:maquee="@{viewModel.getTitle(pos).length() > 0? 1:0}"
+                        app:item_font_size="@{viewModel.getfontsize()}"
                         android:textColor="@android:color/black"/>
 
                     <TextView
@@ -132,10 +139,12 @@
                         android:text="@{viewModel.getPoi(pos)}"
                         android:textSize="13sp"
                         android:singleLine="true"
+                        android:gravity="left"
                         android:ellipsize="marquee"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:focusable="true"
-                        android:gravity="left"
+                        app:maquee="@{viewModel.getTitle(pos).length() > 0? 1:0}"
+                        app:item_font_size="@{viewModel.getfontsize()}"
                         android:textColor="@android:color/black"/>
 
                 </LinearLayout>
@@ -154,6 +163,7 @@
                         android:text="@{viewModel.getRider(pos)}"
                         android:textSize="13sp"
                         android:gravity="center"
+                        app:item_font_size="@{viewModel.getfontsize()}"
                         android:textColor="@android:color/black"
                         android:singleLine="true"
                         android:textStyle="bold"/>
@@ -165,6 +175,7 @@
                         android:includeFontPadding="false"
                         android:textSize="13sp"
                         android:gravity="center"
+                        app:item_font_size="@{viewModel.getfontsize()}"
                         android:text="@{viewModel.getWork(pos)}"
                         app:back_color="@{viewModel.items.get(pos).deliveryStateName}"
                         android:layout_marginLeft="5dp"
@@ -178,6 +189,7 @@
                         android:includeFontPadding="false"
                         android:text="@{viewModel.getPaywon(pos)}"
                         android:textSize="13sp"
+                        app:item_font_size="@{viewModel.getfontsize()}"
                         android:gravity="center"
                         android:singleLine="true"
                         android:textColor="@android:color/black"/>

@@ -58,6 +58,7 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
         var detail:DetailDialog? = null
         var history:HistoryDialog? = null
         var message:MessageDialog? = null
+        var select:SelectDialog? = null
         var ttsClient: TextToSpeechClient? = null
 
         val FINISH_INTERVAL_TIME: Long = 2000
@@ -102,7 +103,6 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
 
         TextToSpeechManager.getInstance().initializeLibrary(Vars.mContext) //카카오 음성합성
         getKeyHash(this)
-        TTS()
         getDeviceSize()
     }
 
@@ -132,9 +132,9 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
     }
 
     override fun exit(){
-        moveTaskToBack(true);						// 태스크를 백그라운드로 이동
-        finishAndRemoveTask();						// 액티비티 종료 + 태스크 리스트에서 지우기
-        android.os.Process.killProcess(android.os.Process.myPid());	// 앱 프로세스 종료
+        moveTaskToBack(true)						// 태스크를 백그라운드로 이동
+        finishAndRemoveTask()						// 액티비티 종료 + 태스크 리스트에서 지우기
+        android.os.Process.killProcess(android.os.Process.myPid())	// 앱 프로세스 종료
     }
 
     override fun setFragment() {
@@ -158,8 +158,6 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
         val display = windowManager.defaultDisplay
         display.getSize(Vars.DeviceSize)
     }
-
-
 
     override fun closeDialog() {
         try {
@@ -200,6 +198,18 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
             if (message != null) {
                 message!!.dismiss()
                 message = null
+            }
+        } catch (e: Exception) {
+            Log.e("MAIN", Log.getStackTraceString(e))
+        }
+    }
+
+    override fun closeSelect()
+    {
+        try {
+            if (select != null) {
+                select!!.dismiss()
+                select = null
             }
         } catch (e: Exception) {
             Log.e("MAIN", Log.getStackTraceString(e))
@@ -263,14 +273,25 @@ class Mains : AppCompatActivity(), MainsFun , TextToSpeechListener {
         }
     }
 
-    override fun showMessage(msg: String) {
+    override fun showMessage(msg: String,num : String) {
         runOnUiThread {
             if (message != null) {
                 message!!.dismiss()
                 message = null
             }
-            message = MessageDialog()
+            message = MessageDialog(num)
             message!!.show(supportFragmentManager, msg)
+        }
+    }
+
+    override fun showSelect() {
+        runOnUiThread {
+            if (select != null) {
+                select!!.dismiss()
+                select = null
+            }
+            select = SelectDialog()
+            select!!.show(supportFragmentManager, "Select")
         }
     }
 

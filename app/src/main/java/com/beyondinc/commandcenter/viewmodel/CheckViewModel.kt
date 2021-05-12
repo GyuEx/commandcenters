@@ -25,7 +25,7 @@ class CheckViewModel : ViewModel() {
 
     init {
         Log.e("CheckView", "CheckView Enable")
-        allcheck.postValue(true)
+        allcheck.value = true
 
         if (items == null) {
             items = ConcurrentHashMap()
@@ -36,7 +36,6 @@ class CheckViewModel : ViewModel() {
 
         Vars.CheckHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
-                Log.e("Check View","aaaa")
                 if (msg.what == Finals.INSERT_STORE) insertStore()
             }
         }
@@ -115,7 +114,7 @@ class CheckViewModel : ViewModel() {
         {
             items!![i]?.use = true
         }
-        allcheck.postValue(true)
+        allcheck.value = true
         onCreate()
     }
     fun allDisable(){
@@ -123,7 +122,7 @@ class CheckViewModel : ViewModel() {
         {
             items!![i]?.use = false
         }
-        allcheck.postValue(false)
+        allcheck.value = false
         onCreate()
     }
 
@@ -136,7 +135,7 @@ class CheckViewModel : ViewModel() {
         }
         Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget() //리스트 새로그리고
         Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget() //리스트 새로그리고
-        Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget() //리스트 새로그리고
+        //Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget() //리스트 새로그리고
         Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_CHECK).sendToTarget() //뷰 닫기
     }
 

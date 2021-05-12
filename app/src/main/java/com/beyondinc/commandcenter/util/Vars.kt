@@ -6,8 +6,10 @@ import android.graphics.Point
 import android.os.Handler
 import com.beyondinc.commandcenter.data.Alarmdata
 import com.beyondinc.commandcenter.data.Orderdata
+import com.beyondinc.commandcenter.handler.MarkerThread
 import com.beyondinc.commandcenter.repository.database.entity.Centerdata
 import com.beyondinc.commandcenter.repository.database.entity.Riderdata
+import com.naver.maps.map.overlay.Marker
 import org.json.simple.JSONArray
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -22,6 +24,8 @@ object Vars {
     var dContext: Context? = null
     var lContext: Context? = null
 
+    var mLayer : Int = Finals.SELECT_ORDER
+
     var mWorkState = 0
     var multiSelectCnt = 0
     var LoginResult : String? = null
@@ -30,8 +34,8 @@ object Vars {
 
     var DeviceSize = Point()
 
-    var sendList: ArrayList<HashMap<String,JSONArray>> = ArrayList()
-    var receiveList: ArrayList<HashMap<String,ArrayList<HashMap<String, String>>>> = ArrayList()
+    var sendList: ArrayList<ConcurrentHashMap<String,JSONArray>> = ArrayList()
+    var receiveList: ArrayList<ConcurrentHashMap<String,ArrayList<ConcurrentHashMap<String, String>>>> = ArrayList()
     var alarmList : LinkedList<Alarmdata> = LinkedList()
 
     var centerList: ConcurrentHashMap<String,Centerdata> = ConcurrentHashMap()
@@ -47,13 +51,11 @@ object Vars {
     var MapHandler : Handler? = null
     var SubRiderHandler : Handler? = null
     var AssignHandler : Handler? = null
-    var DialogHandler : Handler? = null
-    var HistoryHandler : Handler? = null
-    var MessageHandler : Handler? = null
 
     var MainThread : Thread? = null
     var HttpThread : Thread? = null
     var AlarmThread : Thread? = null
+    var MarkerThread : Thread? = null
 
     /*setting */
     var Usenick : Boolean = false
@@ -65,6 +67,7 @@ object Vars {
     var UseW : Boolean = false
     var UseC : Boolean = false
     var Bright : Int = 10
+    var FontSize : Int = 30
 
     /*usefiler */
     var f_center : ArrayList<String> = ArrayList()

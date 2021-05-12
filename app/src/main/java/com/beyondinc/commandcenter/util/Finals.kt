@@ -31,14 +31,11 @@ object Finals {
     val ORDER_DETAIL_CLOSE : Int = 28
     val ORDER_ASSIGN_LIST : Int = 29
 
-    val breiftitle = "라이더 배정"
-    val storetitle = "가맹점 기준 조회"
-    val ridertitle = "라이더 기준 조회"
-
     val CALL_STORE : Int = 41
     val CALL_RIDER : Int = 42
     val CALL_ORDER : Int = 43
     val CALL_CENTER : Int = 44
+    val CALL_GPS : Int = 45
 
     val INSERT_LOGIN : Int = 51
     val INSERT_STORE : Int = 52
@@ -55,8 +52,11 @@ object Finals {
     val DESABLE_SELECT : Int = 65
 
     val CREATE_RIDER_MARKER : Int = 71
-    val MAP_FOR_DOPEN : Int = 72
-    val MAP_FOR_DCLOSE : Int = 73
+    val UPDATE_RIDER_MARKER : Int = 72
+    val REMOVE_RIDER_MARKER : Int = 73
+    val MAP_FOR_DOPEN : Int = 74
+    val MAP_FOR_DCLOSE : Int = 75
+    val MAP_FOR_SOPEN : Int = 76
 
     val MAP_FOR_ORDER : Int = 81
     val MAP_FOR_STATE : Int = 82
@@ -64,11 +64,17 @@ object Finals {
     val MAP_MOVE_FOCUS : Int = 84
     val MAP_FOR_CALL_RIDER : Int = 85
     val MAP_FOR_ITEM_SIZE : Int = 86
+    val MAP_FOR_REFRASH : Int = 87
+    val MAP_FOR_ASSIGN_CREATE : Int = 88
+    val MAP_FOR_ASSIGN_REMOVE : Int = 89
+
+    val SEND_ITEM : Int = 91
 
     val LOGIN_SUCESS : Int = 101
     val LOGIN_FAIL : Int = 102
 
     val HTTP_ERROR : Int = 111
+    val SEND_TELEPHONE : Int = 112
 
     val CLOSE_KEYBOARD : Int = 121
     val SET_BRIGHT : Int = 122

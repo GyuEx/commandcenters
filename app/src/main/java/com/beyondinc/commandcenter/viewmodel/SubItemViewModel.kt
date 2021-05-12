@@ -4,38 +4,32 @@ import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Message
 import android.util.Log
-import android.view.Gravity
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.adapter.RecyclerAdapterSub
-import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.HashMap
-import kotlin.concurrent.timer
 
 class SubItemViewModel : ViewModel() {
-    var Realitems: ConcurrentHashMap<String,Orderdata>? = null
-    var items: ConcurrentHashMap<Int,Orderdata>? = null
+    var itemss: ConcurrentHashMap<Int,Orderdata>? = null
+    var Realitemss: ConcurrentHashMap<String,Orderdata>? = null
     var adapter: RecyclerAdapterSub? = null
 
     var select = MutableLiveData<Int>()
 
     init {
         Log.e("aaaa", "Sub Item view model Init")
-        select.postValue(Finals.SELECT_EMPTY)
+        select.value = Finals.SELECT_EMPTY
 
-        if (items == null) {
-            items = ConcurrentHashMap()
+        if (itemss == null) {
+            itemss = ConcurrentHashMap()
         }
-        if (Realitems == null)
-        {
-            Realitems = ConcurrentHashMap()
+        if (Realitemss == null) {
+            Realitemss = ConcurrentHashMap()
         }
         if (adapter == null) {
             adapter = RecyclerAdapterSub(this)
@@ -45,22 +39,21 @@ class SubItemViewModel : ViewModel() {
             override fun handleMessage(msg: Message) {
                 Log.e("SubItemHandler",msg.what.toString())
                 if (msg.what == Finals.INSERT_ORDER) insertLogic()
-                else if(msg.what == Finals.SELECT_ORDER) select.postValue(Finals.SELECT_ORDER)
+                else if(msg.what == Finals.SELECT_ORDER) select.value = Finals.SELECT_ORDER
                 else if(msg.what == Finals.SELECT_EMPTY) selectEmpte()
                 else if(msg.what == Finals.ORDER_ASSIGN_LIST) orderassignlist(msg.obj as String)
             }
         }
-        //insertLogic()
     }
 
     fun orderassignlist(id : String){
-        var makeHash = HashMap<String,ArrayList<String>>()
+        var makeHash = ConcurrentHashMap<String,ArrayList<String>>()
         var makeArray = ArrayList<String>()
-        for(i in 0 until items!!.keys.size)
+        for(i in 0 until itemss!!.keys.size)
         {
-            if(items!![i]!!.use)
+            if(itemss!![i]!!.use)
             {
-                makeArray.add(items!![i]!!.OrderId)
+                makeArray.add(itemss!![i]!!.OrderId)
             }
         }
         if(makeArray.size < 1) Vars.MainsHandler!!.obtainMessage(Finals.ORDER_TOAST_SHOW,"선택된 오더가 없습니다.").sendToTarget()
@@ -70,34 +63,22 @@ class SubItemViewModel : ViewModel() {
 
     fun insertLogic()
     {
-        Realitems!!.putAll(Vars.orderList)
+        Vars.orderList!!.let { Realitemss!!.putAll(it) }
 
-        Log.e("aaaa","" + items!!.keys.size)
-
-        for(i in 0 until items!!.keys.size)
-        {
-            Log.e("aaaa111", "" + items!![i]!!.use)
-            if(items!![i]!!.use && Realitems!![items!![i]!!.OrderId]!!.DeliveryStateName == "접수")
-            {
-                Realitems!![items!![i]!!.OrderId]!!.use = true
-                Log.e("aaaa222", "" + items!![i]!!.use)
-            }
-        }
-
-        var it : Iterator<String> = Realitems!!.keys.iterator()
+        var it : Iterator<String> = Realitemss!!.keys.iterator()
         var cnt = 0
         var itemp : ConcurrentHashMap<Int,Orderdata> = ConcurrentHashMap()
         while (it.hasNext())
         {
             var ctemp = it.next()
 
-            if(Vars.f_center.contains(Realitems!![ctemp]?.RcptCenterId) || Realitems!![ctemp]?.DeliveryStateName != "접수")
+            if(Vars.f_center.contains(Realitemss!![ctemp]?.RcptCenterId) || Realitemss!![ctemp]?.DeliveryStateName != "접수")
             {
                 continue
             }
             else
             {
-                itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
+                itemp[Realitemss!![ctemp]!!.OrderId.toInt()] = Realitemss!![ctemp]!!
             }
         }
 
@@ -114,37 +95,51 @@ class SubItemViewModel : ViewModel() {
             cnt++
         }
 
-        if(finalMap.keys.size < items!!.keys.size)
+        if(finalMap.keys.size < itemss!!.keys.size)
         {
-            for(i in finalMap.keys.size..items!!.keys.size)
+            for(i in finalMap.keys.size..itemss!!.keys.size)
             {
-                items!!.remove(i)
+                itemss!!.remove(i)
             }
         }
 
-        finalMap!!.let { items!!.putAll(it) }
+        finalMap!!.let {itemss!!.putAll(it)}
 
         onCreate()
     }
 
     fun ListClick(pos: Int) {
 
-        items!![pos]!!.use = items!![pos]!!.use != true
-        Log.e("UsePos", "" + pos + " // " + items!![pos]!!.use)
+        if(itemss!![pos]!!.use)
+        {
+            itemss!![pos]!!.use = false
+            Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_ASSIGN_REMOVE, itemss!![pos]!!).sendToTarget()
+        }
+        else
+        {
+            itemss!![pos]!!.use = true
+            Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_ASSIGN_CREATE, itemss!![pos]!!).sendToTarget()
+        }
         onCreate()
     }
 
     fun onCreate() {
 
+        Vars.MapHandler!!.obtainMessage(Finals.INSERT_ORDER_COUNT,itemss!!.keys.size).sendToTarget()
+
         var cnt = 0
-        for(i in 0 until items?.keys!!.size)
+        for(i in 0 until itemss!!.keys.size)
         {
-            if(items!![i]!!.use)cnt++
+            if(itemss!![i]!!.use!! && select.value == Finals.SELECT_ORDER) cnt++
+            else if(select.value != Finals.SELECT_ORDER)
+            {
+                itemss!![i]!!.use = false
+                cnt = 0
+            }
         }
 
         if(cnt > 0) Vars.MapHandler!!.obtainMessage(Finals.SELECT_ORDER).sendToTarget()
         else Vars.MapHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
-
         adapter!!.notifyDataSetChanged()
     }
 
@@ -154,77 +149,71 @@ class SubItemViewModel : ViewModel() {
 
     fun selectEmpte()
     {
+        Log.e("헛","설마 엠피티가 호출 되는감?!")
         select.value = Finals.SELECT_EMPTY
-        for(i in 0 until items?.keys!!.size)
+        for(i in 0 until itemss?.keys!!.size)
         {
-            items!![i]!!.use = false
-            Log.e("UsePos", "" + i + " // " + items!![i]!!.use)
+            itemss!![i]!!.use = false
         }
         onCreate()
     }
 
     fun getUsetime(pos: Int): String? {
-        return items!![pos]?.AgencyRequestTime
+        return itemss!![pos]?.AgencyRequestTime
     }
 
     fun getResttime(pos: Int): String? {
-        //오더시간을 계산해보자
-        var a : String = "0"
-        if(items!![pos]!!.DeliveryStateName == "배정") {
-            var ft = SimpleDateFormat("HH:mm:ss")
-            var now = ft.parse(ft.format(Date()))
-            var nt = ft.parse(ft.format(ft.parse(items!![pos]!!.DriverAssignDT)))
-            a = ((now.time - nt.time)/60000).toString()
-        }
-        else if(items!![pos]!!.DeliveryStateName == "접수")
-        {
-            a = "0"
-        }
-        else if(items!![pos]!!.DeliveryStateName == "픽업")
-        {
-            var ft = SimpleDateFormat("HH:mm:ss")
-            var nt = ft.parse(ft.format(ft.parse(items!![pos]!!.DriverAssignDT)))
-            var pt = ft.parse(ft.format(ft.parse(items!![pos]!!.PickupDT)))
-            a = ((pt.time - nt.time)/60000).toString()
-        }
-        return a
+        //오더시간을 계산해보자 -> 접수건은 계산할 필요가 없음
+//        var a : String = "0"
+//        if(items!![pos]!!.DeliveryStateName == "배정") {
+//            var ft = SimpleDateFormat("HH:mm:ss")
+//            var now = ft.parse(ft.format(Date()))
+//            var nt = ft.parse(ft.format(ft.parse(items!![pos]!!.DriverAssignDT)))
+//            a = ((now.time - nt.time)/60000).toString()
+//        }
+//        else if(items!![pos]!!.DeliveryStateName == "접수")
+//        {
+//            a = "0"
+//        }
+//        else if(items!![pos]!!.DeliveryStateName == "픽업")
+//        {
+//            var ft = SimpleDateFormat("HH:mm:ss")
+//            var nt = ft.parse(ft.format(ft.parse(items!![pos]!!.DriverAssignDT)))
+//            var pt = ft.parse(ft.format(ft.parse(items!![pos]!!.PickupDT)))
+//            a = ((pt.time - nt.time)/60000).toString()
+//        }
+        return "0"
     }
 
     fun getPay(pos: Int): String? {
-        return items!![pos]?.ApprovalTypeName
+        return itemss!![pos]?.ApprovalTypeName
     }
 
     fun getTitle(pos: Int): String? {
         var s : String = ""
-        if(Vars.Usenick) s = Vars.centerNick[items!![pos]?.CenterName] + "] " + items!![pos]?.AgencyName
-        else s = items!![pos]?.CenterName + "] " + items!![pos]?.AgencyName
+        if(Vars.Usenick) s = Vars.centerNick[itemss!![pos]?.CenterName] + "] " + itemss!![pos]?.AgencyName
+        else s = itemss!![pos]?.CenterName + "] " + itemss!![pos]?.AgencyName
         return s
     }
 
     fun getAdress(pos: Int): String? {
-        return items!![pos]?.CustomerShortAddr
+        return itemss!![pos]?.CustomerShortAddr
     }
 
     fun getPoi(pos: Int): String? {
-        return items!![pos]?.CustomerDetailAddr
+        return itemss!![pos]?.CustomerDetailAddr
     }
 
     fun getRider(pos: Int): String? {
-        return if(items!![pos]?.DeliveryStateName=="접수") items!![pos]?.DeliveryDistance
-        else(items!![pos]?.RiderName)
+        return if(itemss!![pos]?.DeliveryStateName=="접수") itemss!![pos]?.DeliveryDistance
+        else(itemss!![pos]?.RiderName)
     }
 
     fun getWork(pos: Int): String? {
-        return items!![pos]?.DeliveryStateName
+        return itemss!![pos]?.DeliveryStateName
     }
 
     fun getPaywon(pos: Int): String? {
-        return items!![pos]?.DeliveryFee
-    }
-
-    fun setUse(pos: Int){
-        Log.e("UsePos","" + pos + " // " + items!![pos]!!.use)
-        items!![pos]!!.use = items!![pos]!!.use != true
-        onCreate()
+        return itemss!![pos]?.DeliveryFee
     }
 }

@@ -46,7 +46,7 @@
                 android:layout_weight="1"
                 android:layout_margin="10dp"
                 app:detail2='@{viewModel.item.deliveryStateName}'
-                android:onClick='@{v->viewModel.showMessage("배정취소")}'
+                android:onClick='@{v->viewModel.showMessage("배정취소","0")}'
                 android:text="배정취소"
                 android:textSize="15dp"
                 android:background="@color/black"
@@ -62,7 +62,7 @@
                 android:background="@color/black"
                 android:layout_margin="10dp"
                 app:detail3='@{viewModel.item.deliveryStateName}'
-                android:onClick='@{v->viewModel.showMessage("오더완료")}'
+                android:onClick='@{v->viewModel.showMessage("오더완료","0")}'
                 android:text="오더완료"
                 android:textSize="15dp"
                 android:textStyle="bold"
@@ -78,7 +78,7 @@
                 android:layout_margin="10dp"
                 app:detail4='@{viewModel.item.deliveryStateName}'
                 android:text="오더취소"
-                android:onClick='@{v->viewModel.showMessage("오더취소")}'
+                android:onClick='@{v->viewModel.showMessage("오더취소","0")}'
                 android:textSize="15dp"
                 android:textStyle="bold"
                 android:textColor="@drawable/click_text_color">
@@ -251,7 +251,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:onClick="@{v->viewModel.click_send_agency()}"
+                            android:onClick='@{v->viewModel.showMessage("가맹점에 전화",viewModel.item.agencyPhoneNo)}'
                             android:background="@android:drawable/ic_menu_call" />
 
                     </LinearLayout>
@@ -310,7 +310,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:onClick='@{v->viewModel.showMessage("고객주소변경")}'
+                            android:onClick='@{v->viewModel.showMessage("고객주소변경","0")}'
                             android:background="@android:drawable/ic_menu_edit">
                         </TextView>
 
@@ -362,7 +362,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:onClick="@{v->viewModel.click_send_cust()}"
+                            android:onClick='@{v->viewModel.showMessage("고객에게 전화",viewModel.item.customerPhone)}'
                             android:background="@android:drawable/ic_menu_call" />
                     </LinearLayout>
                 </LinearLayout>
@@ -462,7 +462,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:background="@android:drawable/ic_menu_rotate"
-                            android:onClick='@{v->viewModel.showMessage("포장상태변경")}'></TextView>
+                            android:onClick='@{v->viewModel.showMessage("포장상태변경","0")}'></TextView>
 
                     </LinearLayout>
                 </LinearLayout>
@@ -633,7 +633,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:onClick="@{v->viewModel.click_send_rider()}"
+                            android:onClick='@{v->viewModel.showMessage("라이더에게 전화",viewModel.item.riderPhoneNo)}'
                             android:background="@android:drawable/ic_menu_call" />
                     </LinearLayout>
                 </LinearLayout>

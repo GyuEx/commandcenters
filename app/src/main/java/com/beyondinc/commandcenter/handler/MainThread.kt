@@ -10,6 +10,7 @@ import com.beyondinc.commandcenter.util.Codes
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Procedures
 import com.beyondinc.commandcenter.util.Vars
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.HashMap
 
 class MainThread() : Thread() , ThreadFun{
@@ -76,7 +77,8 @@ class MainThread() : Thread() , ThreadFun{
                     }
                     else if(code == Procedures.RIDER_LIST_IN_CENTER)
                     {
-                        var ridertemp : HashMap<String,Riderdata> = HashMap()
+                        Log.e("여기가","호출이 되는지 알구싶다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                        var ridertemp : ConcurrentHashMap<String,Riderdata> = ConcurrentHashMap()
                         for (i in 0 until data!!.size) {
                             val ri = Riderdata()
                             ri.id = data[i]["RiderId"].toString()
@@ -92,14 +94,18 @@ class MainThread() : Thread() , ThreadFun{
                     }
                     else if(code == Procedures.ORDER_LIST_IN_CENTER)
                     {
-                        var centertemp : HashMap<String,Orderdata> = HashMap()
+                        var centertemp : ConcurrentHashMap<String,Orderdata> = ConcurrentHashMap()
                         for (i in 0 until data!!.size) {
                             val or = passing(data[i]) // 너무길어서 따로 메소드 처리
                             centertemp[or.OrderId] = or
                         }
                         Vars.orderList.putAll(centertemp)
-                        Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
-                        Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+                        if(Vars.mLayer == Finals.SELECT_ORDER) Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+                        else if(Vars.mLayer == Finals.SELECT_MAP)
+                        {
+                            Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+                            Vars.SubRiderHandler!!.obtainMessage(Finals.MAP_FOR_REFRASH).sendToTarget()
+                        }
                     }
                     else if(code == Procedures.RIDER_LOCATION_IN_CENTER)
                     {
@@ -110,12 +116,12 @@ class MainThread() : Thread() , ThreadFun{
                             var ry = data[i]["LastLocationLatitude"].toString()
                             var rt = data[i]["LastLocationModDT"].toString()
 
-                            Vars.riderList?.get(id)?.latitude = ry
-                            Vars.riderList?.get(id)?.longitude = rx
-                            Vars.riderList?.get(id)?.ModDT = rt
-                            Vars.riderList?.get(id)?.workingStateCode = Codes.RIDER_ON_WORK
+                            Vars.riderList[id]?.latitude = ry
+                            Vars.riderList[id]?.longitude = rx
+                            Vars.riderList[id]?.ModDT = rt
+                            Vars.riderList[id]?.workingStateCode = Codes.RIDER_ON_WORK
+
                         }
-                        Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget()
                     }
                     else if(code == Procedures.CHANGE_DELIVERY_STATUS)
                     {
@@ -142,7 +148,7 @@ class MainThread() : Thread() , ThreadFun{
         }
     }
 
-    fun passing(data : HashMap<String, String>) : Orderdata
+    fun passing(data : ConcurrentHashMap<String, String>) : Orderdata
     {
         val or = Orderdata()
 

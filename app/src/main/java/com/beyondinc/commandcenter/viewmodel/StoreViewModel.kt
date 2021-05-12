@@ -34,7 +34,7 @@ class StoreViewModel : ViewModel() {
     fun insertBrief() {
 
         var it : Iterator<String> = Vars.orderList!!.keys.iterator()
-        var tempmap = HashMap<String, Agencydata>()
+        var tempmap = ConcurrentHashMap<String, Agencydata>()
         while (it.hasNext())
         {
             var rittemp = it.next()

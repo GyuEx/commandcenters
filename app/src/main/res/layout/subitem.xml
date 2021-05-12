@@ -44,7 +44,7 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:paddingRight="15dp"
-                app:select_item_backcolor="@{viewModel.items.get(pos).use}"
+                app:select_item_backcolor="@{viewModel.itemss.get(pos).use}"
                 android:onClick="@{v->viewModel.ListClick(pos)}">
 
                 <LinearLayout
@@ -63,7 +63,7 @@
                         android:gravity="center"
                         android:singleLine="true"
                         android:textStyle="bold"
-                        app:text_color_string="@{viewModel.items.get(pos).orderId}"/>
+                        app:text_color_string="@{viewModel.itemss.get(pos).orderId}"/>
 
                     <TextView
                         android:id="@+id/resttime"
@@ -74,7 +74,7 @@
                         android:textSize="13sp"
                         android:gravity="center"
                         android:singleLine="true"
-                        app:text_color="@{viewModel.items.get(pos).id}"/>
+                        app:text_color="@{viewModel.itemss.get(pos).id}"/>
                     <TextView
                         android:id="@+id/pay"
                         android:layout_width="match_parent"
@@ -166,7 +166,7 @@
                         android:textSize="13sp"
                         android:gravity="center"
                         android:text="@{viewModel.getWork(pos)}"
-                        app:back_color="@{viewModel.items.get(pos).deliveryStateName}"
+                        app:back_color="@{viewModel.itemss.get(pos).deliveryStateName}"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:singleLine="true"
