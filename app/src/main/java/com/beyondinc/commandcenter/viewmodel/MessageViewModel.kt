@@ -24,6 +24,7 @@ class MessageViewModel : ViewModel() {
         else if(msg.value == "가맹점에 전화") Vars.MainsHandler!!.obtainMessage(Finals.SEND_TELEPHONE,num).sendToTarget()
         else if(msg.value == "고객에게 전화") Vars.MainsHandler!!.obtainMessage(Finals.SEND_TELEPHONE,num).sendToTarget()
         else if(msg.value == "라이더에게 전화") Vars.MainsHandler!!.obtainMessage(Finals.SEND_TELEPHONE,num).sendToTarget()
+        else if(msg.value == "고객주소변경") Vars.MainsHandler!!.obtainMessage(Finals.CHANGE_ADDRESS).sendToTarget()
     }
 
     fun click_cancel(){

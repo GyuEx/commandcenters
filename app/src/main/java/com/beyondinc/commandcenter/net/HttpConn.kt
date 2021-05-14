@@ -85,8 +85,8 @@ class HttpConn : Thread(), ThreadFun {
                     code = jsonMessage.keys.iterator().next()
                     val data = jsonMessage[code]
 
-                    //Log.e("Connect", "" + code)
-                    //Log.e("Connect", "" + data)
+                    Log.e("Connect", "" + code)
+                    Log.e("Connect", "" + data)
 
                     val requestCipherKey = Crypto.generateMD5Hash(Vars.lContext!!.resources.getString(R.string.default_token))!!.toLowerCase(Locale.getDefault())
                     val responseCipherKey = Crypto.generateMD5Hash(Crypto.getCurrentTimeKey())!!.toLowerCase(Locale.getDefault())

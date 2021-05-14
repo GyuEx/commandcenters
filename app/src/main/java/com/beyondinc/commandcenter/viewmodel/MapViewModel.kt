@@ -14,10 +14,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Orderdata
+import com.beyondinc.commandcenter.handler.MarkerThread
+import com.beyondinc.commandcenter.handler.PlaySoundThread
 import com.beyondinc.commandcenter.repository.database.entity.Riderdata
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Align
@@ -123,19 +126,20 @@ class MapViewModel : ViewModel()
 
         //Log.e("SET Move" ," Focus Set on ")
 
-        Item.value = obj as Riderdata
+        if(Item.value != obj as Riderdata)
+        {
+            Item.value = obj as Riderdata
+            mapInstance?.moveCamera(CameraUpdate.scrollTo(Item.value!!.MakerID!!.position))
+            CloseDrawer()
 
-        removeOrderMaker()
+            for (marker in markerList.keys) {
+                if(Item!!.value!!.MakerID != marker) marker.map = null
+            }
+            //전체 마커 초기화, 라이더 마커는 다 지웟다 그릴필요없이 선택된것이 아닌것만 삭제함
 
-        for (marker in markerList.keys) {
-            if(Item!!.value!!.MakerID != marker) marker.map = null
+            Olayer.value = Finals.MAP_FOR_ORDER
         }
 
-        //전체 마커 초기화, 라이더 마커는 다 지웟다 그릴필요없이 선택된것이 아닌것만 삭제함
-
-        mapInstance?.moveCamera(CameraUpdate.scrollTo(Item.value!!.MakerID!!.position))
-        Olayer.value = Finals.MAP_FOR_ORDER
-        CloseDrawer()
         riderTitle.value = "${Item.value!!.name} : 배정 ${Item.value!!.assignCount} / 픽업 ${Item.value!!.pickupCount} / 완료 ${Item.value!!.completeCount}"
 
         var it : Iterator<String> = Vars.orderList.keys.iterator()
@@ -190,16 +194,19 @@ class MapViewModel : ViewModel()
 
     fun CancelRider()
     {
+        if(Item.value == null) return
+
         removeOrderMaker()
         Olayer.value = Finals.MAP_FOR_REMOVE
         Item.value = null
         Vars.SubRiderHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
         Vars.AssignHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
         CloseLowLayer()
-        for (marker in markerList.keys)
-        {
-            if(marker.map == null) marker.map = mapInstance
-        }
+        MarkerThread().start()
+//        for (marker in markerList.keys)
+//        {
+//            if(marker.map == null) marker.map = mapInstance
+//        }
     }
 
     fun removeOrderMaker()
@@ -296,10 +303,10 @@ class MapViewModel : ViewModel()
 
     fun updateRider(marker: Riderdata)
     {
-        if(marker.MakerID!!.map == null) createRider(marker) //지워졌을경우에 다시 그려줌
+        if(marker.MakerID!!.map == null && Item.value == null) createRider(marker) //지워졌을경우에 다시 그려줌
 
-        val latitude = marker.MakerID!!.position.latitude
-        val longitude = marker.MakerID!!.position.longitude
+        val latitude = marker.latitude!!.toDouble()
+        val longitude = marker.longitude!!.toDouble()
         val position = LatLng(latitude!!, longitude!!)
         if(marker!!.assignCount!!.toInt() == 0 && marker!!.pickupCount!!.toInt() == 0) marker.MakerID!!.icon = imgBlue
         else marker.MakerID!!.icon = imgGray
@@ -354,6 +361,11 @@ class MapViewModel : ViewModel()
                     customerMarker.map = mapInstance
                     markerPikupList.add(customerMarker)
 
+                    for (marker in linePikup) {
+                        marker.map = null
+                    }
+                    linePikup.clear()
+
                     val path = PathOverlay()
 //                    var task = httpSub()
 //                    path.coords = task.execute(agencyPosition,customerPosition).get() // 실경로
@@ -362,7 +374,7 @@ class MapViewModel : ViewModel()
                     path.outlineColor = Vars.mContext!!.getColor(R.color.pickup)
                     path.color = Vars.mContext!!.getColor(R.color.pickup)
                     path.map = mapInstance
-                    lineAcces.add(path)
+                    linePikup.add(path)
                 }
             }
         }
@@ -403,6 +415,10 @@ class MapViewModel : ViewModel()
                     customerMarker.map = mapInstance
                     markerAccesList.add(customerMarker)
 
+                    for (marker in lineAcces) {
+                        marker.map = null
+                    }
+
                     val path = PathOverlay()
                     //var task = httpSub()
                     //path.coords = task.execute(agencyPosition,customerPosition).get()//실경로
@@ -421,9 +437,14 @@ class MapViewModel : ViewModel()
     {
         val agencylatitude = assorder?.AgencyLatitude?.toDouble()
         val agencylongitude = assorder?.AgencyLongitude?.toDouble()
+        val customerLatitude = assorder!!.CustomerLatitude?.toDouble()
+        val customerLongitude = assorder!!.CustomerLongitude?.toDouble()
+
+        val agencyPosition = LatLng(agencylatitude, agencylongitude)
+        val customerPosition = LatLng(customerLatitude, customerLongitude)
+
         if (agencylatitude != null && agencylongitude != null)
         {
-            val agencyPosition = LatLng(agencylatitude, agencylongitude)
             val agencyMarker = Marker()
             agencyMarker.icon = OverlayImage.fromView(FixedMarkerView(Vars.mContext!!, true))
             agencyMarker.position = agencyPosition
@@ -432,11 +453,8 @@ class MapViewModel : ViewModel()
             agencyMarker.map = mapInstance
             markerAssignAgencyList[assorder] = agencyMarker
 
-            val customerLatitude = assorder!!.CustomerLatitude?.toDouble()
-            val customerLongitude = assorder!!.CustomerLongitude?.toDouble()
             if (customerLatitude != null && customerLongitude != null)
             {
-                val customerPosition = LatLng(customerLatitude, customerLongitude)
                 val customerMarker = Marker()
                 customerMarker.icon =
                         OverlayImage.fromView(FixedMarkerView(Vars.mContext!!, false))
@@ -455,6 +473,8 @@ class MapViewModel : ViewModel()
                 lineAssign[assorder] = path
             }
         }
+        mapInstance?.moveCamera(CameraUpdate.fitBounds(LatLngBounds(agencyPosition,customerPosition)))
+        mapInstance?.moveCamera(CameraUpdate.zoomOut()) //간단하게 줌 아웃
     }
 
     fun removeAssign(assorder: Orderdata)

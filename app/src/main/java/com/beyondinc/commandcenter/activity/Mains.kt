@@ -20,20 +20,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.Interface.MainsFun
-import com.beyondinc.commandcenter.Interface.ThreadFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.databinding.ActivityMainBinding
 import com.beyondinc.commandcenter.fragment.*
 import com.beyondinc.commandcenter.service.AppActivateService
-import com.beyondinc.commandcenter.service.ForecdTerminationService
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
-import com.kakao.sdk.newtoneapi.TextToSpeechClient
 import com.kakao.util.helper.Utility.getPackageInfo
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
-import kotlin.system.exitProcess
 
 
 class Mains : AppCompatActivity(), MainsFun {
@@ -54,7 +50,9 @@ class Mains : AppCompatActivity(), MainsFun {
         var history:HistoryDialog? = null
         var message:MessageDialog? = null
         var select:SelectDialog? = null
-        var ttsClient: TextToSpeechClient? = null
+        var address:AddressDialog? = null
+        var payment:PaymentDialog? = null
+        var loading:LoadingDialog? = null
 
         val FINISH_INTERVAL_TIME: Long = 2000
         var backPressedTime: Long = 0
@@ -107,6 +105,8 @@ class Mains : AppCompatActivity(), MainsFun {
         //startService(Intent(this, ForecdTerminationService::class.java))
         serviceIntent.setClass(this, AppActivateService::class.java)
         startService(serviceIntent)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
@@ -328,6 +328,67 @@ class Mains : AppCompatActivity(), MainsFun {
             select!!.show(supportFragmentManager, "Select")
         }
     }
+
+    override fun showAddress() {
+        runOnUiThread {
+            if (address != null) {
+                address!!.dismiss()
+                address = null
+            }
+            address = AddressDialog()
+            address!!.show(supportFragmentManager, "address")
+        }
+    }
+
+    override fun showPayment() {
+        runOnUiThread {
+            if (payment != null) {
+                payment!!.dismiss()
+                payment = null
+            }
+            payment = PaymentDialog()
+            payment!!.show(supportFragmentManager, "Select")
+        }
+    }
+
+    override fun showLoading() {
+        runOnUiThread {
+            if (loading != null) {
+                loading!!.dismiss()
+                loading = null
+            }
+            loading = LoadingDialog()
+            loading!!.show(supportFragmentManager, "Loading")
+        }
+    }
+
+    override fun changeClose()
+    {
+        try {
+            if (address != null) {
+                address!!.dismiss()
+                address = null
+            }
+            if (payment != null) {
+                payment!!.dismiss()
+                payment = null
+            }
+        } catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
+        }
+    }
+
+    override fun closeLoading() {
+        try {
+            if (loading != null) {
+                loading!!.dismiss()
+                loading = null
+            }
+        } catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
+        }
+    }
+
 
     override fun setting(){
         startActivity(Intent(Vars.mContext, Setting::class.java))

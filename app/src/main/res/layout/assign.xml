@@ -45,11 +45,8 @@
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.getTitle(pos)}"
                         android:textSize="20dp"
-                        android:ellipsize="marquee"
                         android:singleLine="true"
                         app:assign_back="@{viewModel.getState(pos)}"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        app:maquee="@{viewModel.getTitle(pos).length()>1? 1:0}"
                         android:gravity="center"
                         android:textColor="@color/black"
                         android:textStyle="bold"/>

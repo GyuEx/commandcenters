@@ -4,11 +4,9 @@ import android.telephony.mbms.StreamingServiceInfo
 import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.size
 import androidx.databinding.BindingAdapter
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -199,10 +197,10 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("filter_font_size")
     fun filter_font_size(view: TextView, height: String) {
-        if(height.length == 1) view.textSize = 25F
-        else if(height.length == 2) view.textSize = 25F
-        else if(height.length == 3) view.textSize = 20F
-        else if(height.length == 4) view.textSize = 15F
+        if(height.length == 1) view.textSize = 20F
+        else if(height.length == 2) view.textSize = 17F
+        else if(height.length == 3) view.textSize = 14F
+        else if(height.length == 4) view.textSize = 11F
     }
 
     @JvmStatic
@@ -393,4 +391,13 @@ object MainAdapter {
     fun item_font_size_title(view: TextView, height: Int) {
         view.textSize = height.toFloat() + 2
     }
+
+    @JvmStatic
+    @BindingAdapter("item_font")
+    fun item_font(view: Spinner, height: String) {
+        if(height == "현금") view.setSelection(0)
+        else if(height == "카드") view.setSelection(1)
+        else if(height == "선결제") view.setSelection(2)
+    }
+
 }

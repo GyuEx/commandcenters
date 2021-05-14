@@ -2,18 +2,16 @@ package com.beyondinc.commandcenter.viewmodel
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Handler
 import android.os.Message
 import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.widget.AdapterView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.Interface.MainsFun
@@ -21,7 +19,6 @@ import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Alarmdata
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
-import com.beyondinc.commandcenter.handler.PlaySoundThread
 import com.beyondinc.commandcenter.net.DACallerInterface
 import com.beyondinc.commandcenter.util.*
 import com.naver.maps.geometry.LatLng
@@ -32,10 +29,8 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.vasone.deliveryalarm.DAClient
 import org.json.simple.JSONArray
-import java.lang.Exception
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
+
 
 class MainsViewModel : ViewModel() {
     var Tag = "MainsViewModel"
@@ -49,6 +44,9 @@ class MainsViewModel : ViewModel() {
 
     var Item : MutableLiveData<Orderdata> = MutableLiveData()
     var showDetail : Boolean = false
+    var payselect = 1 // 1:물품금액 , 2: 배달금액
+    var dropitem = ""
+    var pay : MutableLiveData<String> = MutableLiveData()
 
     var DetailsSelect = MutableLiveData(Finals.DETAIL_DETAIL)
 
@@ -61,26 +59,18 @@ class MainsViewModel : ViewModel() {
         //Log.e(Tag, "ViewModel Enable Mains")
 
         val pref = PreferenceManager.getDefaultSharedPreferences(Vars.mContext)
-        Vars.Usenick = pref.getBoolean("usenick",  false)
-        Vars.UseTime = pref.getBoolean("useTime",  false)
-        Vars.UseGana = pref.getBoolean("useGana",  false)
-        Vars.UseTTS = pref.getBoolean("useTTS",  false)
-        Vars.UseJ = pref.getBoolean("useJ",  false)
-        Vars.UseB = pref.getBoolean("useB",  false)
-        Vars.UseW = pref.getBoolean("useW",  false)
-        Vars.UseC = pref.getBoolean("useC",  false)
+        Vars.Usenick = pref.getBoolean("usenick", false)
+        Vars.UseTime = pref.getBoolean("useTime", false)
+        Vars.UseGana = pref.getBoolean("useGana", false)
+        Vars.UseTTS = pref.getBoolean("useTTS", false)
+        Vars.UseJ = pref.getBoolean("useJ", false)
+        Vars.UseB = pref.getBoolean("useB", false)
+        Vars.UseW = pref.getBoolean("useW", false)
+        Vars.UseC = pref.getBoolean("useC", false)
         Vars.Bright = pref.getInt("bright", 10)
-        Vars.FontSize = pref.getInt("fontsize",15)
+        Vars.FontSize = pref.getInt("fontsize", 15)
 
         briteLayer.value = Vars.Bright
-
-        if(!Vars.daclient)
-        {
-            var instanceDACallerInterface = makeDACallerInterfaceInstance(Logindata.LoginId!!, this::alarmCallback)
-            DAClient.Initialize(instanceDACallerInterface)
-            DAClient.Start()
-            Vars.daclient = true
-        }
 
         layer.postValue(Finals.SELECT_ORDER)
         select.postValue(Finals.SELECT_EMPTY)
@@ -98,8 +88,8 @@ class MainsViewModel : ViewModel() {
                 else if(msg.what == Finals.ORDER_ITEM_SELECT)showOrderDetail(msg.obj as Orderdata)
                 else if(msg.what == Finals.HTTP_ERROR) HttpError()
                 else if(msg.what == Finals.CLOSE_KEYBOARD) closeKeyBoard()
-                else if(msg.what == Finals.INSERT_ORDER_COUNT) order_count.value = msg.obj as String?
-                else if(msg.what == Finals.INSERT_RIDER_COUNT) rider_count.value = msg.obj as String?
+                else if(msg.what == Finals.INSERT_ORDER_COUNT) order_count.value = msg.obj as String
+                else if(msg.what == Finals.INSERT_RIDER_COUNT) rider_count.value = msg.obj as String
                 else if(msg.what == Finals.SET_BRIGHT) setBright()
                 else if(msg.what == Finals.CANCEL_MESSAGE) closeMessage()
                 else if(msg.what == Finals.SUCCESS_MESSAGE) successMessage(msg.obj as String)
@@ -112,18 +102,121 @@ class MainsViewModel : ViewModel() {
                 else if(msg.what == Finals.MAP_FOR_SOPEN) showSelectDialog(msg.obj as Orderdata)
                 else if(msg.what == Finals.CALL_GPS) getRiderGPS()
                 else if(msg.what == Finals.SEND_ITEM) getItemsend(msg.obj as Orderdata)
+                else if(msg.what == Finals.CHANGE_ADDRESS) showAddress()
+                else if(msg.what == Finals.CHECK_TIME) checkOrderLastTime()
+                else if(msg.what == Finals.CHECK_COUNT) checkOrderCount()
+                else if(msg.what == Finals.SHOW_LOADING) showLoading()
+                else if(msg.what == Finals.CLOSE_LOADING) closeLoading()
+                else if(msg.what == Finals.CONN_ALRAM) connenctAlram()
             }
         }
     }
 
-    fun getItemsend(obj : Orderdata){
+    fun connenctAlram(){
+        if(!Vars.daclient)
+        {
+            var instanceDACallerInterface = makeDACallerInterfaceInstance(Logindata.LoginId!!, this::alarmCallback)
+            DAClient.Initialize(instanceDACallerInterface)
+            DAClient.Start()
+            Vars.daclient = true
+        }
+    }
+
+    fun showLoading(){
+        (Vars.mContext as MainsFun).showLoading()
+    }
+
+    fun closeLoading(){
+        (Vars.mContext as MainsFun).closeLoading()
+    }
+
+
+    fun checkOrderLastTime(){
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.ORDER_LIST_IN_CENTER] = MakeJsonParam().makeChangedOrderListParameter(Logindata.LoginId!!, Vars.centerLastTime)
+
+        //var map : ConcurrentHashMap<String,String> = ConcurrentHashMap()
+        //map[Vars.orderList["250382"]!!.CenterId] = Vars.orderList["250382"]!!.ModDT // 시간에 맞는걸 주는거 같다?
+        //temp[Procedures.ORDER_LIST_IN_CENTER] = MakeJsonParam().makeChangedOrderListParameter(Logindata.LoginId!!, map)
+
+        Vars.sendList.add(temp)
+    }
+
+    fun checkOrderCount(){
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+
+        var it:Iterator<String> = Vars.centerList.keys.iterator()
+        while (it.hasNext())
+        {
+            var its = it.next()
+            var cnt = 0
+            var itt:Iterator<String> = Vars.orderList.keys.iterator()
+            while (itt.hasNext())
+            {
+                var itts = itt.next()
+                if(Vars.orderList[itts]!!.CenterId == its) cnt++
+            }
+            Vars.centerOrderCount[its] = cnt.toString()
+        }
+
+        temp[Procedures.ORDER_LIST_IN_CENTER] = MakeJsonParam().makeServerOrderListCountParameter(Logindata.LoginId!!, Vars.centerOrderCount)
+        Vars.sendList.add(temp)
+    }
+
+    fun showAddress(){
+        (Vars.mContext as MainsFun).showAddress()
+    }
+
+    fun changePay(sub: Int){
+        payselect = sub
+        (Vars.mContext as MainsFun).showPayment()
+    }
+
+    fun changeClose(){
+        pay.value = ""
+        (Vars.mContext as MainsFun).changeClose()
+    }
+
+    fun successPayment(){
+
+        if(pay.value!!.length > 6)
+        {
+            Toast.makeText(Vars.mContext,"백만원 이상은 좀 과하지 않나요 T^T",Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if(payselect == 1)
+        {
+            var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+            temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeChangeSalesPriceParameter(Logindata.LoginId!!, Item.value!!.OrderId, pay.value!!)
+            Vars.sendList.add(temp)
+        }
+        else if(payselect == 2)
+        {
+            var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+            temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeAddDeliveryFeeParameter(Logindata.LoginId!!, Item.value!!.OrderId, pay.value!!)
+            Vars.sendList.add(temp)
+        }
+        changeClose()
+    }
+
+    fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        //  스피너의 선택 내용이 바뀌면 호출된다
+        Log.e("Log", "" + parent + " // " + view + " // " + position + " // " + id)
+        if(position == 0) dropitem = "현금"
+        else if(position == 1) dropitem = "카드"
+        else if(position == 2) dropitem = "선결제"
+
+    }
+
+    fun getItemsend(obj: Orderdata){
         Item.value = obj
     }
 
     fun showToast(msg: String){
         closeDialog()
         closeMessage()
-        Toast.makeText(Vars.mContext,msg,Toast.LENGTH_LONG).show()
+        Toast.makeText(Vars.mContext, msg, Toast.LENGTH_LONG).show()
     }
 
     fun mapfordetail(){
@@ -138,16 +231,16 @@ class MainsViewModel : ViewModel() {
     }
 
     fun mapforcancel(){
-        showMessage("배정취소","0")
+        showMessage("배정취소", "0")
         (Vars.mContext as MainsFun).closeSelect()
     }
 
     fun mapfororcancel(){
-        showMessage("오더취소","0")
+        showMessage("오더취소", "0")
         (Vars.mContext as MainsFun).closeSelect()
     }
 
-    fun showSelectDialog(msg : Any?){
+    fun showSelectDialog(msg: Any?){
         Item.value = msg as Orderdata
         (Vars.mContext as MainsFun).showSelect()
     }
@@ -183,7 +276,7 @@ class MainsViewModel : ViewModel() {
 
     fun HttpError()
     {
-        Toast.makeText(Vars.mContext,"서버접속실패",Toast.LENGTH_SHORT).show()
+        Toast.makeText(Vars.mContext, "서버접속실패", Toast.LENGTH_SHORT).show()
     }
 
     fun setBright(){
@@ -206,8 +299,8 @@ class MainsViewModel : ViewModel() {
 
     fun getCenterList()
     {
-        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
-        temp.put(Procedures.CENTER_LIST,MakeJsonParam().makeCenterListParameter(Logindata.LoginId!!))
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp.put(Procedures.CENTER_LIST, MakeJsonParam().makeCenterListParameter(Logindata.LoginId!!))
         Vars.sendList.add(temp)
     }
 
@@ -220,7 +313,7 @@ class MainsViewModel : ViewModel() {
             ids.add(Vars.centerList[it.next()]!!.centerId)
         }
         var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
-        temp[Procedures.ORDER_LIST_IN_CENTER] = MakeJsonParam().makeFullOrderListParameter(Logindata.LoginId!!,ids)
+        temp[Procedures.ORDER_LIST_IN_CENTER] = MakeJsonParam().makeFullOrderListParameter(Logindata.LoginId!!, ids)
         Vars.sendList.add(temp)
     }
 
@@ -234,7 +327,7 @@ class MainsViewModel : ViewModel() {
         }
         var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
         temp[Procedures.RIDER_LOCATION_IN_CENTER] =
-            MakeJsonParam().makeRidersLocationParameter(Logindata.LoginId!!,ids)
+            MakeJsonParam().makeRidersLocationParameter(Logindata.LoginId!!, ids)
         Vars.sendList.add(temp)
     }
 
@@ -246,53 +339,53 @@ class MainsViewModel : ViewModel() {
         {
             ids.add(Vars.centerList[it.next()]!!.centerId)
         }
-        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
         temp[Procedures.RIDER_LIST_IN_CENTER] =
-            MakeJsonParam().makeRiderListParameter(Logindata.LoginId!!,ids)
+            MakeJsonParam().makeRiderListParameter(Logindata.LoginId!!, ids)
         Vars.sendList.add(temp)
     }
 
-    fun orderAssign(id:String){
-        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
-        temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeAssignOrderParameter(Logindata.LoginId!!,Item.value!!.OrderId,Procedures.ChangeStatusType.ASSIGN_RIDER,id)
+    fun orderAssign(id: String){
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeAssignOrderParameter(Logindata.LoginId!!, Item.value!!.OrderId, Procedures.ChangeStatusType.ASSIGN_RIDER, id)
         Vars.sendList.add(temp)
     }
 
-    fun orderAssignList(rec : ConcurrentHashMap<String,ArrayList<String>>){
-        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
+    fun orderAssignList(rec: ConcurrentHashMap<String, ArrayList<String>>){
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
         var id = rec.keys.iterator().next()
         var order = rec[id]!!
-        temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeAssignOrderListParameter(Logindata.LoginId!!,order,Procedures.ChangeStatusType.ASSIGN_RIDER,id)
+        temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeAssignOrderListParameter(Logindata.LoginId!!, order, Procedures.ChangeStatusType.ASSIGN_RIDER, id)
         Vars.sendList.add(temp)
     }
 
     fun orderAssingCancel(){
-        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
-        temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeChangeOrderStatusParameter(Logindata.LoginId!!,Item.value!!.OrderId,Procedures.ChangeStatusType.ORDER_ASSIGN_CANCEL,"",Item.value!!.ApprovalType)
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeChangeOrderStatusParameter(Logindata.LoginId!!, Item.value!!.OrderId, Procedures.ChangeStatusType.ORDER_ASSIGN_CANCEL, "", Item.value!!.ApprovalType)
         Vars.sendList.add(temp)
     }
 
     fun orderComplete(){
-        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
-        temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeChangeOrderStatusParameter(Logindata.LoginId!!,Item.value!!.OrderId,Procedures.ChangeStatusType.ORDER_FORCE_COMPLETE,Item.value!!.RiderId,Item.value!!.ApprovalType)
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeChangeOrderStatusParameter(Logindata.LoginId!!, Item.value!!.OrderId, Procedures.ChangeStatusType.ORDER_FORCE_COMPLETE, Item.value!!.RiderId, Item.value!!.ApprovalType)
         Vars.sendList.add(temp)
     }
 
     fun orderCancel(){
-        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
-        temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeChangeOrderStatusParameter(Logindata.LoginId!!,Item.value!!.OrderId,Procedures.ChangeStatusType.ORDER_CANCEL,Item.value!!.RiderId,Item.value!!.ApprovalType)
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.CHANGE_DELIVERY_STATUS] = MakeJsonParam().makeChangeOrderStatusParameter(Logindata.LoginId!!, Item.value!!.OrderId, Procedures.ChangeStatusType.ORDER_CANCEL, Item.value!!.RiderId, Item.value!!.ApprovalType)
         Vars.sendList.add(temp)
     }
 
     fun orderPaking(){
-        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
-        temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeOnPickupReadyParameter(Logindata.LoginId!!,Item.value!!.OrderId)
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeOnPickupReadyParameter(Logindata.LoginId!!, Item.value!!.OrderId)
         Vars.sendList.add(temp)
     }
 
     fun orderTown(){
-        var temp : ConcurrentHashMap<String,JSONArray> =  ConcurrentHashMap()
-        temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeOnPickupReadyParameter(Logindata.LoginId!!,Item.value!!.OrderId)
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeOnPickupReadyParameter(Logindata.LoginId!!, Item.value!!.OrderId)
         Vars.sendList.add(temp)
     }
 
@@ -409,8 +502,8 @@ class MainsViewModel : ViewModel() {
 
     fun click_breifing() {
         if(Vars.multiSelectCnt == 0){
-            var toast : Toast = Toast.makeText(Vars.mContext,"선택된 오더가 없습니다.", Toast.LENGTH_SHORT)
-            toast.setGravity(Gravity.TOP,0,300)
+            var toast : Toast = Toast.makeText(Vars.mContext, "선택된 오더가 없습니다.", Toast.LENGTH_SHORT)
+            toast.setGravity(Gravity.TOP, 0, 300)
             toast.show()
         }
         else showDialog(1)
@@ -443,7 +536,7 @@ class MainsViewModel : ViewModel() {
     fun click_kakao_call(){
     }
 
-    fun showDialog(txt : Int){
+    fun showDialog(txt: Int){
         if(txt == 1) {
             (Vars.mContext as MainsFun).showDialogBrief()
         }
@@ -457,7 +550,7 @@ class MainsViewModel : ViewModel() {
         }
     }
 
-    fun showOrderDetail(msg : Any?) {
+    fun showOrderDetail(msg: Any?) {
         if(!showDetail)
         {
             showDetail = true
@@ -502,12 +595,12 @@ class MainsViewModel : ViewModel() {
         (Vars.mContext as MainsFun).detail_Fragment(2)
     }
 
-    fun send_call(num :  String){
+    fun send_call(num: String){
         (Vars.mContext as MainsFun).send_call(num)
         closeMessage()
     }
 
-    fun makeMarker(i : Int) {
+    fun makeMarker(i: Int) {
         if (i == 1) {
             val agencylatitude = Item.value?.AgencyLatitude?.toDouble()
             val agencylongitude = Item.value?.AgencyLongitude?.toDouble()
@@ -515,10 +608,10 @@ class MainsViewModel : ViewModel() {
                 val agencyPosition = LatLng(agencylatitude, agencylongitude)
                 val agencyMarker = Marker()
                 agencyMarker.icon = OverlayImage.fromView(
-                    FixedMarkerView(
-                        Vars.mContext!!,
-                        true
-                    )
+                        FixedMarkerView(
+                                Vars.mContext!!,
+                                true
+                        )
                 )
                 agencyMarker.position = agencyPosition
                 agencyMarker.captionText = Item.value?.AgencyName.toString()
@@ -535,10 +628,10 @@ class MainsViewModel : ViewModel() {
                 val agencyPosition = LatLng(agencylatitude, agencylongitude)
                 val agencyMarker = Marker()
                 agencyMarker.icon = OverlayImage.fromView(
-                    FixedMarkerView(
-                        Vars.mContext!!,
-                        false
-                    )
+                        FixedMarkerView(
+                                Vars.mContext!!,
+                                false
+                        )
                 )
                 agencyMarker.position = agencyPosition
                 agencyMarker.captionText = Item.value?.CustomerShortAddr.toString()
@@ -561,8 +654,8 @@ class MainsViewModel : ViewModel() {
         }
     }
 
-    fun showMessage(msg : String, num : String){
-        (Vars.mContext as MainsFun).showMessage(msg,num)
+    fun showMessage(msg: String, num: String){
+        (Vars.mContext as MainsFun).showMessage(msg, num)
     }
 
     fun showDrawer(){

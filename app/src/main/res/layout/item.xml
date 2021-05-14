@@ -107,10 +107,6 @@
                         android:textSize="15dp"
                         android:gravity="left"
                         android:singleLine="true"
-                        android:ellipsize="marquee"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:focusable="true"
-                        app:maquee="@{viewModel.getTitle(pos).length() > 0? 1:0}"
                         app:item_font_size_title="@{viewModel.getfontsize()}"
                         android:textColor="@android:color/black"
                         android:textStyle="bold"/>
@@ -123,11 +119,6 @@
                         android:text="@{viewModel.getAdress(pos)}"
                         android:textSize="13sp"
                         android:gravity="left"
-                        android:singleLine="true"
-                        android:ellipsize="marquee"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:focusable="true"
-                        app:maquee="@{viewModel.getTitle(pos).length() > 0? 1:0}"
                         app:item_font_size="@{viewModel.getfontsize()}"
                         android:textColor="@android:color/black"/>
 
@@ -140,10 +131,6 @@
                         android:textSize="13sp"
                         android:singleLine="true"
                         android:gravity="left"
-                        android:ellipsize="marquee"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:focusable="true"
-                        app:maquee="@{viewModel.getTitle(pos).length() > 0? 1:0}"
                         app:item_font_size="@{viewModel.getfontsize()}"
                         android:textColor="@android:color/black"/>
 

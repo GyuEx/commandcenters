@@ -44,9 +44,6 @@
                     android:textSize="15dp"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:ellipsize="marquee"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:focusable="true"
                     android:textColor="@android:color/black"
                     android:text="@{viewModel.getTime(pos)}"
                     android:textStyle="bold"/>

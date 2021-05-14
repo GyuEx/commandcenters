@@ -70,7 +70,7 @@ class PlaySoundThread(private val oid:Int, private val sid:Int) : Thread(), Thre
     }
 
     fun ttsSpeak(strTTS : String){
-        Vars.tts?.speak(strTTS, TextToSpeech.QUEUE_ADD, null, null)
+        Vars.tts?.speak(strTTS, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
     override fun stopThread() {

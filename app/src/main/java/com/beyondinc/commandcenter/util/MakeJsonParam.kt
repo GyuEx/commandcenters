@@ -5,6 +5,8 @@ import org.json.simple.JSONArray
 import org.json.simple.JSONObject
 import java.lang.StringBuilder
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
+import kotlin.collections.HashMap
 
 class MakeJsonParam {
 
@@ -124,33 +126,32 @@ class MakeJsonParam {
         return parameterArray
     }
 
-//    fun makeChangedOrderListParameter(loginID: String, centerInfoSet: ArrayList<CenterInfoForOrderList>): JSONArray {
-//        val parameterArray = JSONArray()
-//
-//        for (centerInfo in centerInfoSet) {
-//            val centerID = centerInfo.centerID
-//            val parameterJSON = makeBaseParameter(loginID)
-//            parameterJSON["CenterId"] = centerID
-//            parameterJSON["InputData"] = centerInfo.latestModifyTimeString
-//            parameterJSON["ReqType"] = "2"
-//            parameterArray.add(parameterJSON)
-//        }
-//
-//        return parameterArray
-//    }
-//
-//    fun makeServerOrderListCountParameter(loginID: String, centerInfoSet: ArrayList<CenterInfoForOrderList>): JSONArray
-//    {
-//        val parameterArray = JSONArray()
-//
-//        val parameterCheckSize = makeBaseParameter(loginID)
-//        parameterCheckSize["CenterId"] = centerID
-////            parameterCheckSize["InputData"] = ""
-//        parameterCheckSize["ReqType"] = "3"
-//        parameterArray.add(parameterCheckSize)
-//
-//        return parameterArray
-//    }
+    fun makeChangedOrderListParameter(loginID: String, centerInfoSet: ConcurrentHashMap<String,String>): JSONArray
+    {
+        val parameterArray = JSONArray()
+        for (centerInfo in centerInfoSet.keys) {
+            val parameterJSON = makeBaseParameter(loginID)
+            parameterJSON["CenterId"] = centerInfo
+            parameterJSON["InputData"] = centerInfoSet[centerInfo]
+            parameterJSON["ReqType"] = "2"
+            parameterArray.add(parameterJSON)
+        }
+
+        return parameterArray
+    }
+
+    fun makeServerOrderListCountParameter(loginID: String, centerInfoSet: ConcurrentHashMap<String,String>): JSONArray
+    {
+        val parameterArray = JSONArray()
+        for (centerInfo in centerInfoSet.keys) {
+            val parameterCheckSize = makeBaseParameter(loginID)
+            parameterCheckSize["CenterId"] = centerInfo
+            parameterCheckSize["InputData"] = centerInfoSet[centerInfo]
+            parameterCheckSize["ReqType"] = "3"
+            parameterArray.add(parameterCheckSize)
+        }
+        return parameterArray
+    }
 
     fun makeOrderDetailParameter(loginID: String, orderIDs: List<String>): JSONArray {
         val parameterArray = JSONArray()
@@ -232,44 +233,44 @@ class MakeJsonParam {
         return parameterArray
     }
 
-//    fun makeAddressListParameter(loginID: String, editOrderID: String,
-//                                 centerID: String, agencyID: String, wordType: String,
-//                                 lawTownCode: String, keyword: String): JSONArray {
-//        val parameterArray = JSONArray()
-//
-//        val parameterJSON =
-//                makeEditInfoParameter(loginID, Procedures.EditInfoType.SEARCH_ADDRESS, editOrderID)
-//        parameterJSON["CenterId"] = centerID
-//        parameterJSON["AgencyId"] = agencyID
-//        parameterJSON["SearchAddrWordType"] = wordType
-//        parameterJSON["SearchWord"] = keyword
-//        parameterJSON["LawTownCode"] = lawTownCode
-//        parameterArray.add(parameterJSON)
-//
-//        return parameterArray
-//    }
+    fun makeAddressListParameter(loginID: String, editOrderID: String,
+                                 centerID: String, agencyID: String, wordType: String,
+                                 lawTownCode: String, keyword: String): JSONArray {
+        val parameterArray = JSONArray()
 
-//    fun makeChangeDeliveryAddressParameter(loginID: String, editOrderID: String,
-//                                           regionAddress: String, detailAddress: String,
-//                                           lotCode: String, shortRoadAddress: String,
-//                                           lawTownName: String, buildingManageNumber: String,
-//                                           latitude: String, longitude: String): JSONArray {
-//        val parameterArray = JSONArray()
-//
-//        val parameterJSON =
-//                makeEditInfoParameter(loginID, Procedures.EditInfoType.CHANGE_DELIVERY_ADDRESS, editOrderID)
-//        parameterJSON["Addr"] = regionAddress
-//        parameterJSON["LawTownName"] = lawTownName
-//        parameterJSON["Jibun"] = lotCode
-//        parameterJSON["DetailAddr"] = detailAddress
-//        parameterJSON["BuildingManageNo"] = buildingManageNumber
-//        parameterJSON["GPSLatitude"] = latitude
-//        parameterJSON["GPSLongitude"] = longitude
-//        parameterJSON["ShortRoadAddr"] = shortRoadAddress
-//        parameterArray.add(parameterJSON)
-//
-//        return parameterArray
-//    }
+        val parameterJSON =
+                makeEditInfoParameter(loginID, Procedures.EditInfoType.SEARCH_ADDRESS, editOrderID)
+        parameterJSON["CenterId"] = centerID
+        parameterJSON["AgencyId"] = agencyID
+        parameterJSON["SearchAddrWordType"] = wordType
+        parameterJSON["SearchWord"] = keyword
+        parameterJSON["LawTownCode"] = lawTownCode
+        parameterArray.add(parameterJSON)
+
+        return parameterArray
+    }
+
+    fun makeChangeDeliveryAddressParameter(loginID: String, editOrderID: String,
+                                           regionAddress: String, detailAddress: String,
+                                           lotCode: String, shortRoadAddress: String,
+                                           lawTownName: String, buildingManageNumber: String,
+                                           latitude: String, longitude: String): JSONArray {
+        val parameterArray = JSONArray()
+
+        val parameterJSON =
+                makeEditInfoParameter(loginID, Procedures.EditInfoType.CHANGE_DELIVERY_ADDRESS, editOrderID)
+        parameterJSON["Addr"] = regionAddress
+        parameterJSON["LawTownName"] = lawTownName
+        parameterJSON["Jibun"] = lotCode
+        parameterJSON["DetailAddr"] = detailAddress
+        parameterJSON["BuildingManageNo"] = buildingManageNumber
+        parameterJSON["GPSLatitude"] = latitude
+        parameterJSON["GPSLongitude"] = longitude
+        parameterJSON["ShortRoadAddr"] = shortRoadAddress
+        parameterArray.add(parameterJSON)
+
+        return parameterArray
+    }
 
     fun makeOnPickupReadyParameter(loginID: String, editOrderID: String): JSONArray {
         val parameterArray = JSONArray()
@@ -280,25 +281,25 @@ class MakeJsonParam {
         return parameterArray
     }
 
-//    fun makeChangeSalesPriceParameter(loginID: String, editOrderID: String, newPrice: String): JSONArray {
-//        val parameterArray = JSONArray()
-//
-//        val parameterJSON = makeEditInfoParameter(loginID, Procedures.EditInfoType.CHANGE_SALES_PRICE, editOrderID)
-//        parameterJSON["SalesPrice"] = newPrice
-//        parameterArray.add(parameterJSON)
-//
-//        return parameterArray
-//    }
+    fun makeChangeSalesPriceParameter(loginID: String, editOrderID: String, newPrice: String): JSONArray {
+        val parameterArray = JSONArray()
 
-//    fun makeAddDeliveryFeeParameter(loginID: String, editOrderID: String, extraFee: String): JSONArray {
-//        val parameterArray = JSONArray()
-//
-//        val parameterJSON = makeEditInfoParameter(loginID, Procedures.EditInfoType.ADD_DELIVERY_FEE, editOrderID)
-//        parameterJSON["AddDelivertyFee"] = extraFee
-//        parameterArray.add(parameterJSON)
-//
-//        return parameterArray
-//    }
+        val parameterJSON = makeEditInfoParameter(loginID, Procedures.EditInfoType.CHANGE_SALES_PRICE, editOrderID)
+        parameterJSON["SalesPrice"] = newPrice
+        parameterArray.add(parameterJSON)
+
+        return parameterArray
+    }
+
+    fun makeAddDeliveryFeeParameter(loginID: String, editOrderID: String, extraFee: String): JSONArray {
+        val parameterArray = JSONArray()
+
+        val parameterJSON = makeEditInfoParameter(loginID, Procedures.EditInfoType.ADD_DELIVERY_FEE, editOrderID)
+        parameterJSON["AddDelivertyFee"] = extraFee
+        parameterArray.add(parameterJSON)
+
+        return parameterArray
+    }
 
     fun makeRidersLocationParameter(loginID: String, centerIDs: List<String>): JSONArray {
         val parameterArray = JSONArray()

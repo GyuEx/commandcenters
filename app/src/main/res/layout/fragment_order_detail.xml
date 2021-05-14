@@ -389,6 +389,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textColor="@color/white"
+                    android:onClick="@{v->viewModel.changePay(1)}"
                     android:gravity="center"
                     android:text='@{(viewModel.item.approvalTypeName.equals("현금") ? "(현)": viewModel.item.approvalTypeName.equals("카드") ? "(카)": "(선)") + " " + viewModel.item.salesPrice}'
                     android:singleLine="true"
@@ -410,6 +411,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textColor="@color/white"
+                    android:onClick="@{v->viewModel.changePay(2)}"
                     android:gravity="center"
                     android:text='@{(viewModel.item.approvalTypeName.equals("현금") ? "(현)": viewModel.item.approvalTypeName.equals("카드") ? "(카)": "(선)") + " " + viewModel.item.deliveryFee}'
                     android:singleLine="true"
@@ -491,9 +493,6 @@
                     android:textColor="@color/black"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
-                    android:ellipsize="marquee"
-                    android:focusableInTouchMode="true"
-                    android:marqueeRepeatLimit="marquee_forever"
                     android:focusable="true"
                     android:text="@{viewModel.item.storeMemo}"
 

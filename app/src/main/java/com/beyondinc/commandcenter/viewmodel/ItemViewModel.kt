@@ -49,8 +49,6 @@ class ItemViewModel : ViewModel() {
     init {
         Log.e("ItemView", "Memo call")
 
-        //if(Vars.isForecd) insertLogic()
-
         //필터 초기값 설정
         state_brifes.value = true
         state_recive.value = true
@@ -119,6 +117,7 @@ class ItemViewModel : ViewModel() {
             if(time == Vars.timecnt)
             {
                 Vars.MainsHandler!!.obtainMessage(Finals.CALL_GPS).sendToTarget() // 라이더 위치정보 조회
+                //Vars.MainsHandler!!.obtainMessage(Finals.CHECK_TIME).sendToTarget() // 마지막오더를 다던져주는데,, 시간에 맞는걸 주는건지 마지막걸 주는건지 모르겠음.. 좀더 연구를
                 time = 0
             }
             else
@@ -129,6 +128,7 @@ class ItemViewModel : ViewModel() {
             {
                 if(Vars.mLayer == Finals.SELECT_ORDER) Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget() //시간경과 갱신주기 1분
                 //Vars.MainsHandler!!.obtainMessage(Finals.CALL_ORDER).sendToTarget()
+                Vars.MainsHandler!!.obtainMessage(Finals.CHECK_COUNT).sendToTarget() // 카운터를 줌
                 refrash = 0
             }
             else
@@ -163,7 +163,7 @@ class ItemViewModel : ViewModel() {
             else if (Realitems!![ctemp]?.DeliveryStateName!! == "완료") cntco++
             else if (Realitems!![ctemp]?.DeliveryStateName!! == "취소") cntca++
 
-            if(select.value == Finals.SELECT_BRIFE)
+            if(select.value == Finals.SELECT_BRIFE) // 배정하기 여부 확인
             {
                 if(Vars.f_center.contains(Realitems!![ctemp]?.RcptCenterId) || Realitems!![ctemp]?.DeliveryStateName != "접수")
                 {
@@ -177,7 +177,7 @@ class ItemViewModel : ViewModel() {
             }
             else
             {
-                if(setAgencyfilter != "")
+                if(setAgencyfilter != "") // 가맹점 검색 필터 적용
                 {
                     if (setAgencyfilter != Realitems!![ctemp]?.AgencyName)
                     {
@@ -188,7 +188,7 @@ class ItemViewModel : ViewModel() {
                         itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
                     }
                 }
-                else if(setRiderfilter != "")
+                else if(setRiderfilter != "") // 라이더 검색 필터 적용
                 {
                     if (setRiderfilter != Realitems!![ctemp]?.RiderName)
                     {
@@ -199,7 +199,7 @@ class ItemViewModel : ViewModel() {
                         itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
                     }
                 }
-                else
+                else //  필터 없음
                 {
                     if (Vars.f_center.contains(Realitems!![ctemp]?.RcptCenterId) || Vars.f_five.contains(Realitems!![ctemp]?.DeliveryStateName))
                     {
@@ -242,7 +242,7 @@ class ItemViewModel : ViewModel() {
             {
                 items!!.remove(i)
             }
-        }
+        } // 아이템의 갯수는 가져온 수치보다 많거나 적을 수 있음
 
         finalMap!!.let { items!!.putAll(it) }
 
@@ -282,6 +282,8 @@ class ItemViewModel : ViewModel() {
         {
             Logindata.OrderList = true
             StartTimer()
+            Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_LOADING).sendToTarget()
+            Vars.MainsHandler!!.obtainMessage(Finals.CONN_ALRAM).sendToTarget()
         }
     }
 

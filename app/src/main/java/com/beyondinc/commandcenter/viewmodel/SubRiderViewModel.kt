@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executor
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import kotlin.collections.LinkedHashMap
 import kotlin.concurrent.timer
 
 class SubRiderViewModel : ViewModel() {
@@ -32,7 +33,7 @@ class SubRiderViewModel : ViewModel() {
 
     var searchtxt = MutableLiveData<String>()
 
-    var list = ConcurrentHashMap<String,Riderdata>()
+    var list = LinkedHashMap<String,Riderdata>()
 
     init {
         //Log.e("Memo", "Memo call")
@@ -66,18 +67,18 @@ class SubRiderViewModel : ViewModel() {
 
     fun getRider(obj:Any)
     {
-        var Mid = obj
-        var it : Iterator<Int> = items?.keys!!.iterator()
-        while (it.hasNext())
-        {
-            var itt = it.next()
-            if(items!![itt] == Mid)
-            {
-                Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS, items!![itt]).sendToTarget()
-                selectedRider = items!![itt]
-                break // 그만행
-            }
-        }
+//        var Mid = obj
+//        var it : Iterator<Int> = items?.keys!!.iterator()
+//        while (it.hasNext())
+//        {
+//            var itt = it.next()
+//            if(items!![itt] == Mid)
+//            {
+                Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS, obj as Riderdata).sendToTarget()
+                selectedRider = obj
+//                break // 그만행
+//            }
+//        }
     }
 
     fun refrashrider(){
@@ -102,6 +103,7 @@ class SubRiderViewModel : ViewModel() {
 
     fun ListClick(pos: Int) {
         Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS, items!![pos]).sendToTarget()
+        selectedRider = items!![pos]
     }
 
     fun clickClose(){
@@ -119,19 +121,34 @@ class SubRiderViewModel : ViewModel() {
             itemp[list[ctemp]!!.completeCount] = list[ctemp]!!
         }
 
-        var shorttmp : SortedMap<Int, Riderdata>
-        if(Vars.UseGana) shorttmp = itemp.toSortedMap()
-        else shorttmp = itemp.toSortedMap(reverseOrder())
+//        var shorttmp : SortedMap<Int, Riderdata>
+//        if(Vars.UseGana) shorttmp = itemp.toSortedMap()
+//        else shorttmp = itemp.toSortedMap(reverseOrder())
+//
+//        var finalMap : ConcurrentHashMap<Int, Riderdata> = ConcurrentHashMap()
+//        var shit : Iterator<Int> = shorttmp.keys.iterator()
+//
+//        while(shit.hasNext())
+//        {
+//            var shitt = shit.next()
+//            if(searchtxt.value!!.isEmpty() || shorttmp[shitt]?.name!!.toLowerCase().contains(searchtxt.value!!))
+//            {
+//                finalMap[cnt] = shorttmp[shitt]!!
+//                cnt++
+//            }
+//        }
+
+        /// Sort 안함
 
         var finalMap : ConcurrentHashMap<Int, Riderdata> = ConcurrentHashMap()
-        var shit : Iterator<Int> = shorttmp.keys.iterator()
+        var shit : Iterator<String> = list.keys.iterator()
 
         while(shit.hasNext())
         {
             var shitt = shit.next()
-            if(searchtxt.value!!.isEmpty() || shorttmp[shitt]?.name!!.toLowerCase().contains(searchtxt.value!!))
+            if(searchtxt.value!!.isEmpty() || list[shitt]?.name!!.toLowerCase().contains(searchtxt.value!!))
             {
-                finalMap[cnt] = shorttmp[shitt]!!
+                finalMap[cnt] = list[shitt]!!
                 cnt++
             }
         }

@@ -32,6 +32,7 @@ object Vars {
     var mWorkState = 0
     var multiSelectCnt = 0
     var LoginResult : String? = null
+    var isLoading : Boolean = false
 
     var timecnt = 10 // 오더요청주기설정
 
@@ -45,6 +46,8 @@ object Vars {
     var centerNick: ConcurrentHashMap<String,String> = ConcurrentHashMap()
     var riderList: ConcurrentHashMap<String,Riderdata> = ConcurrentHashMap()
     var orderList: ConcurrentHashMap<String,Orderdata> = ConcurrentHashMap()
+    var centerLastTime: ConcurrentHashMap<String,String> = ConcurrentHashMap()
+    var centerOrderCount : ConcurrentHashMap<String,String> = ConcurrentHashMap()
 
     var MainsHandler : Handler? = null
     var ItemHandler : Handler? = null

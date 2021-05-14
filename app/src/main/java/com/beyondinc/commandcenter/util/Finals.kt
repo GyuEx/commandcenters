@@ -11,8 +11,8 @@ object Finals {
     val SELECT_STORE : Int = 3
     val SELECT_RIDER : Int = 4
 
-    val OPEN_POPUP_BRIEF : Int = 6
-    val OPEN_POPUP_STORE : Int = 7
+    val CHECK_TIME : Int = 6
+    val CHECK_COUNT : Int = 7
     val OPEN_POPUP_RIDER : Int = 8
     val CLOSE_POPUP : Int = 9
     val CLOSE_DIALOG : Int = 10
@@ -71,6 +71,9 @@ object Finals {
     val MAP_FOR_ASSIGN_REMOVE : Int = 89
 
     val SEND_ITEM : Int = 91
+    val CHANGE_ADDRESS : Int = 92
+    val CHANGE_PAYMENT : Int = 93
+    val CHANGE_CLOSE : Int = 94
 
     val LOGIN_SUCESS : Int = 101
     val LOGIN_FAIL : Int = 102
@@ -83,6 +86,10 @@ object Finals {
 
     val APK_UPDATE : Int = 131
     val APK_INSTALL : Int = 132
+
+    val SHOW_LOADING : Int = 141
+    val CLOSE_LOADING : Int = 142
+    val CONN_ALRAM : Int = 143
 
     const val REQUEST_PERMISSION = 10001
     const val KAKAO_KEY = "c5a3395640f428b7cd90ea429d902c8d"

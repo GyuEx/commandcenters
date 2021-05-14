@@ -40,6 +40,7 @@ class CheckViewModel : ViewModel() {
             }
         }
 
+        Vars.MainsHandler!!.obtainMessage(Finals.SHOW_LOADING).sendToTarget()
         Vars.MainsHandler!!.obtainMessage(Finals.CALL_CENTER).sendToTarget()
     }
 

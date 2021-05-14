@@ -13,12 +13,17 @@ interface MainsFun {
     fun showHistory()
     fun showMessage(msg:String,num:String)
     fun showSelect()
+    fun showAddress()
+    fun showPayment()
+    fun showLoading()
 
     fun closeDialog()
     fun closeOderdetail()
     fun closeHistory()
     fun closeMessage()
     fun closeSelect()
+    fun changeClose()
+    fun closeLoading()
 
     fun detail_Fragment(i : Int)
 

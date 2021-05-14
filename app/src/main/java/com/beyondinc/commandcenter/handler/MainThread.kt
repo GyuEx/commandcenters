@@ -14,6 +14,8 @@ import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Procedures
 import com.beyondinc.commandcenter.util.Vars
 import com.vasone.deliveryalarm.DAClient
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.HashMap
 
@@ -104,8 +106,19 @@ class MainThread() : Thread() , ThreadFun{
                     {
                         var centertemp : ConcurrentHashMap<String,Orderdata> = ConcurrentHashMap()
                         for (i in 0 until data!!.size) {
-                            val or = passing(data[i]) // 너무길어서 따로 메소드 처리
-                            centertemp[or.OrderId] = or
+                            if(data[i].containsKey("SumOfToday"))
+                            {
+                                if(Vars.centerOrderCount[data[i]["CenterId"]!!] != data[i]["SumOfToday"])
+                                {
+                                    Log.e("MainThread" , "일치하지 않음 // ${Vars.centerOrderCount[data[i]["CenterId"]!!]} // ${data[i]["SumOfToday"]}")
+                                }
+                            }
+                            else
+                            {
+                                val or = passing(data[i]) // 너무길어서 따로 메소드 처리
+                                centertemp[or.OrderId] = or
+                                Vars.centerLastTime[or.CenterId] = or.ModDT
+                            }
                         }
                         Vars.orderList.putAll(centertemp)
                         if(Vars.mLayer == Finals.SELECT_ORDER) Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
@@ -128,8 +141,8 @@ class MainThread() : Thread() , ThreadFun{
                             Vars.riderList[id]?.longitude = rx
                             Vars.riderList[id]?.ModDT = rt
                             Vars.riderList[id]?.workingStateCode = Codes.RIDER_ON_WORK
-
                         }
+                        MarkerThread().start()
                     }
                     else if(code == Procedures.CHANGE_DELIVERY_STATUS)
                     {

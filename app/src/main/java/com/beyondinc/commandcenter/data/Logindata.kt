@@ -27,5 +27,5 @@ object Logindata {
     var devicePhone = "+821222795779"
     var deviceModel = "SM-G950N"
     var devicePhoneNumber: String = ""
-    val appVersion = "1.1.0"
+    val appVersion = "1.1.1"
 }

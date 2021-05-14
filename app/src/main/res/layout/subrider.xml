@@ -79,9 +79,6 @@
                         android:textSize="20dp"
                         android:gravity="left"
                         android:singleLine="true"
-                        android:ellipsize="marquee"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:focusable="true"
                         android:textColor="@color/white"
                         android:textStyle="bold"/>
 

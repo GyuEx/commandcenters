@@ -3,10 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="text_color" type="int"/>
-        <variable name="text_color_string" type="String"/>
-        <variable name="back_color" type="String"/>
-
         <variable
             name="viewModel"
             type="com.beyondinc.commandcenter.viewmodel.BriefViewModel" />
@@ -42,8 +38,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
-                android:orientation="vertical"
-                android:paddingLeft="20dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/title"
@@ -53,9 +48,6 @@
                     android:textSize="20dp"
                     android:gravity="left"
                     android:singleLine="true"
-                    android:ellipsize="marquee"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:focusable="true"
                     android:textColor="@android:color/black"
                     android:text="@{viewModel.getName(pos)}"
                     android:textStyle="bold"/>

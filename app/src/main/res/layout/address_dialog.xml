@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<data>
+		<variable
+			name="viewModel"
+			type="com.beyondinc.commandcenter.viewmodel.MainsViewModel" />
+	</data>
+
+	<LinearLayout
+		android:id="@+id/cldL01"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="2"
+			android:orientation="horizontal">
+
+			<TextView
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:text="주소검색"
+				android:textSize="15dp"
+				android:gravity="center"
+				android:textStyle="bold"
+				android:textColor="@color/white"
+				android:layout_weight="2">
+
+			</TextView>
+
+			<EditText
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:hint='검색 동/읍/면'
+				android:textColorHint="@color/whitegray"
+				android:text="@={viewModel.pay}"
+				android:textColor="@color/white"
+				android:textSize="20dp"
+				android:layout_marginRight="10dp"
+				android:inputType="number"
+				android:digits="0123456789"
+				android:textStyle="bold"
+				android:layout_weight="4">
+			</EditText>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:background="?android:attr/actionModeWebSearchDrawable"
+				android:gravity="center"
+				android:textColor="@color/white"
+				android:textSize="20dp"></TextView>
+
+		</LinearLayout>
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginLeft="20dp"
+			android:layout_marginRight="20dp"
+			android:background="@color/whitegray">
+		</TextView>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="3"
+			android:orientation="horizontal">
+
+			<TextView
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:text="주소"
+				android:textSize="20dp"
+				android:gravity="center"
+				android:textColor="@color/white"
+				android:layout_weight="1">
+
+			</TextView>
+
+			<TextView
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:textColorHint="@color/whitegray"
+				android:text="@{viewModel.item.customerAddrData}"
+				android:textColor="@color/white"
+				android:textSize="20dp"
+				android:layout_marginRight="10dp"
+				android:singleLine="false"
+				android:gravity="center"
+				android:textStyle="bold"
+				android:layout_weight="2">
+			</TextView>
+
+		</LinearLayout>
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginLeft="20dp"
+			android:layout_marginRight="20dp"
+			android:background="@color/whitegray">
+		</TextView>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="3">
+
+			<TextView
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:text="상세주소"
+				android:textSize="20dp"
+				android:gravity="center"
+				android:textColor="@color/white"
+				android:layout_weight="1">
+
+			</TextView>
+
+			<EditText
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:textColorHint="@color/whitegray"
+				android:text="@{viewModel.item.customerShortAddr}"
+				android:textColor="@color/white"
+				android:textSize="20dp"
+				android:singleLine="false"
+				android:gravity="center"
+				android:layout_marginRight="10dp"
+				android:textStyle="bold"
+				android:layout_weight="2">
+			</EditText>
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="2"
+			android:layout_marginTop="10dp"
+			android:orientation="horizontal">
+
+			<TextView
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				android:text='변경'
+				android:textStyle="bold"
+				android:onClick="@{v->viewModel.successPayment()}"
+				android:textColor="@drawable/click_text_color"
+				android:textSize="30dp"
+				android:layout_gravity="center"
+				android:gravity="center"
+				android:background="@color/black"/>
+
+			<TextView
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				android:text='닫기'
+				android:textStyle="bold"
+				android:onClick="@{v->viewModel.changeClose()}"
+				android:textColor="@drawable/click_text_color"
+				android:textSize="30dp"
+				android:layout_gravity="center"
+				android:gravity="center"
+				android:background="@color/gray"/>
+		</LinearLayout>
+
+	</LinearLayout>
+</layout>

@@ -1,6 +1,7 @@
 package com.beyondinc.commandcenter.handler
 
 import android.graphics.Color
+import android.util.Log
 import com.beyondinc.commandcenter.Interface.ThreadFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.util.Codes
@@ -27,8 +28,8 @@ class MarkerThread : Thread() , ThreadFun {
     }
 
     override fun run(){
-        while (isKeep)
-        {
+//        while (isKeep)
+//        {
             var cntj : Int = 0
             var cntu : Int = 0
             var cntd : Int = 0
@@ -54,9 +55,9 @@ class MarkerThread : Thread() , ThreadFun {
                         var rtemp = rit.next()
                         if ((Vars.orderList[rtemp]!!.DeliveryStateName != "접수" || Vars.orderList[rtemp]!!.DeliveryStateName != "취소") && Vars.orderList[rtemp]!!.RiderId != "0") {
                             if (Vars.riderList.containsKey(Vars.orderList[rtemp]!!.RiderId)) {
-                                if (Vars.orderList[rtemp]!!.DeliveryStateName == "배정") Vars.riderList[itt]!!.assignCount += 1
-                                else if (Vars.orderList[rtemp]!!.DeliveryStateName == "픽업") Vars.riderList[itt]!!.pickupCount += 1
-                                else if (Vars.orderList[rtemp]!!.DeliveryStateName == "완료") Vars.riderList[itt]!!.completeCount += 1
+                                if (Vars.orderList[rtemp]!!.DeliveryStateName == "배정" && Vars.orderList[rtemp]!!.RiderId == Vars.riderList[itt]!!.id) Vars.riderList[itt]!!.assignCount += 1
+                                else if (Vars.orderList[rtemp]!!.DeliveryStateName == "픽업" && Vars.orderList[rtemp]!!.RiderId == Vars.riderList[itt]!!.id) Vars.riderList[itt]!!.pickupCount += 1
+                                else if (Vars.orderList[rtemp]!!.DeliveryStateName == "완료" && Vars.orderList[rtemp]!!.RiderId == Vars.riderList[itt]!!.id) Vars.riderList[itt]!!.completeCount += 1
                             }
                         }
                     }
@@ -83,6 +84,7 @@ class MarkerThread : Thread() , ThreadFun {
                         else marker.icon = imgGray
                         marker.setOnClickListener {
                             Vars.SubRiderHandler!!.obtainMessage(Finals.MAP_FOR_CALL_RIDER, Vars.riderList[itt]!!).sendToTarget()
+                            Log.e("Text","" + Vars.riderList[itt]!!.name)
                             true
                         }
                         Vars.riderList[itt]!!.MakerID = marker // 라이더에게 마커를 지정해줌
@@ -104,8 +106,8 @@ class MarkerThread : Thread() , ThreadFun {
 
                 var forstr = "전:${cntj} 운:${cntu} 대:${cntd} 식:${cnts} 퇴:${cntt}"
                 Vars.MainsHandler!!.obtainMessage(Finals.INSERT_RIDER_COUNT, forstr).sendToTarget()
-            }
-            Thread.sleep(1000)
+//            }
+//            Thread.sleep(1000)
         }
     }
 }
