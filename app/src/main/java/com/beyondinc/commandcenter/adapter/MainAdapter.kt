@@ -400,4 +400,10 @@ object MainAdapter {
         else if(height == "선결제") view.setSelection(2)
     }
 
+    @JvmStatic
+    @BindingAdapter("scroll_up")
+    fun scroll_up(view: RecyclerView, height: Int) {
+        if(height > 0) view.smoothScrollToPosition(0)
+    }
+
 }

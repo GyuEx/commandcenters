@@ -32,4 +32,6 @@
     <color name="trans_pickup">#B31C8B00</color>
     <color name="trans_recive">#B3FFB600</color>
 
+    <color name="backgroundLoading">#66000000</color>
+
 </resources>

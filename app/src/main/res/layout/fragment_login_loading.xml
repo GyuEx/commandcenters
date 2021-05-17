@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.beyondinc.commandcenter.viewmodel.LoginViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@color/cardview_shadow_start_color"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:text="@{viewModel.updateTxt}"
+                android:textColor="@color/white">
+            </TextView>
+
+        </LinearLayout>
+
+            <ImageView
+                android:id="@+id/anima"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:background="@drawable/anyloding">
+            </ImageView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="11dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:text="@{viewModel.infotxt}"
+                android:textColor="@color/brief">
+            </TextView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

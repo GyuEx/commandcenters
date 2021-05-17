@@ -39,8 +39,6 @@ class CheckViewModel : ViewModel() {
                 if (msg.what == Finals.INSERT_STORE) insertStore()
             }
         }
-
-        Vars.MainsHandler!!.obtainMessage(Finals.SHOW_LOADING).sendToTarget()
         Vars.MainsHandler!!.obtainMessage(Finals.CALL_CENTER).sendToTarget()
     }
 

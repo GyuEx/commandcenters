@@ -34,7 +34,8 @@ object Vars {
     var LoginResult : String? = null
     var isLoading : Boolean = false
 
-    var timecnt = 10 // 오더요청주기설정
+    var timecntGPS = 10 // 라이더 요청주기
+    var timecntOT = 60 // 오더갯수 요청주기
 
     var DeviceSize = Point()
 
@@ -62,6 +63,7 @@ object Vars {
     var HttpThread : Thread? = null
     var AlarmThread : Thread? = null
     var MarkerThread : Thread? = null
+    var CheckThread : Thread? = null
 
     var daclient : Boolean = false
     var tts : TextToSpeech? = null

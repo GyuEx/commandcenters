@@ -85,7 +85,7 @@ class MapViewModel : ViewModel()
                     CloseLowLayer()
                     CancelRider()
                 }
-                else if(msg.what == Finals.MAP_MOVE_FOCUS) MapFocusSet(msg.obj)
+                else if(msg.what == Finals.MAP_MOVE_FOCUS) MapFocusSet(msg.obj as Riderdata)
                 else if(msg.what == Finals.MAP_FOR_REMOVE) CancelRider()
                 else if(msg.what == Finals.SELECT_ORDER) selectOr(msg.obj)
                 else if(msg.what == Finals.SELECT_EMPTY) emptyOr()
@@ -122,18 +122,19 @@ class MapViewModel : ViewModel()
         }
     }
 
-    fun MapFocusSet(obj: Any){
+    fun MapFocusSet(obj: Riderdata){
 
         //Log.e("SET Move" ," Focus Set on ")
 
-        if(Item.value != obj as Riderdata)
+        if(Item.value?.id != obj.id)
         {
-            Item.value = obj as Riderdata
+            Item.value = obj
             mapInstance?.moveCamera(CameraUpdate.scrollTo(Item.value!!.MakerID!!.position))
             CloseDrawer()
 
             for (marker in markerList.keys) {
                 if(Item!!.value!!.MakerID != marker) marker.map = null
+                else if (Item!!.value!!.MakerID!!.map == null) marker.map = mapInstance // 내꺼가 없을 경우가 있음..!
             }
             //전체 마커 초기화, 라이더 마커는 다 지웟다 그릴필요없이 선택된것이 아닌것만 삭제함
 
@@ -333,6 +334,11 @@ class MapViewModel : ViewModel()
         }
         markerPikupList.clear()
 
+        for (marker in linePikup) {
+            marker.map = null
+        }
+        linePikup.clear()
+
         var it : Iterator<Int> = ItemPc.keys.iterator()
         while (it.hasNext()) {
             var itk = it.next()
@@ -361,11 +367,6 @@ class MapViewModel : ViewModel()
                     customerMarker.map = mapInstance
                     markerPikupList.add(customerMarker)
 
-                    for (marker in linePikup) {
-                        marker.map = null
-                    }
-                    linePikup.clear()
-
                     val path = PathOverlay()
 //                    var task = httpSub()
 //                    path.coords = task.execute(agencyPosition,customerPosition).get() // 실경로
@@ -386,6 +387,11 @@ class MapViewModel : ViewModel()
             marker.map = null
         }
         markerAccesList.clear()
+
+        for (marker in lineAcces) {
+            marker.map = null
+        }
+        lineAcces.clear()
 
         var it : Iterator<Int> = ItemAc.keys.iterator()
         while (it.hasNext()) {
@@ -414,10 +420,6 @@ class MapViewModel : ViewModel()
                     customerMarker.setCaptionAligns(Align.Top)
                     customerMarker.map = mapInstance
                     markerAccesList.add(customerMarker)
-
-                    for (marker in lineAcces) {
-                        marker.map = null
-                    }
 
                     val path = PathOverlay()
                     //var task = httpSub()

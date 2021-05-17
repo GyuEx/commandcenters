@@ -13,7 +13,7 @@ object Finals {
 
     val CHECK_TIME : Int = 6
     val CHECK_COUNT : Int = 7
-    val OPEN_POPUP_RIDER : Int = 8
+    val CLOSE_DETAIL : Int = 8
     val CLOSE_POPUP : Int = 9
     val CLOSE_DIALOG : Int = 10
 
@@ -90,6 +90,7 @@ object Finals {
     val SHOW_LOADING : Int = 141
     val CLOSE_LOADING : Int = 142
     val CONN_ALRAM : Int = 143
+    val DISCONN_ALRAM : Int = 144
 
     const val REQUEST_PERMISSION = 10001
     const val KAKAO_KEY = "c5a3395640f428b7cd90ea429d902c8d"

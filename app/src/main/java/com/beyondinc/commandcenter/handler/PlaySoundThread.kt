@@ -35,7 +35,6 @@ class PlaySoundThread(private val oid:Int, private val sid:Int) : Thread(), Thre
                 }
             }
 
-            Log.e("1", "5 // ${Vars.UseJ} // ${Vars.UseTTS}")
             when (sid) {
                 AlarmCodes.ALARM_ORDER_STATE_301 -> if(Vars.UseJ) ttsSpeak("$Agencyname 오더 접수")
                 AlarmCodes.ALARM_ORDER_STATE_303 -> if(Vars.UseB) ttsSpeak("$Ridername 라이더 $Agencyname 오더 배정")

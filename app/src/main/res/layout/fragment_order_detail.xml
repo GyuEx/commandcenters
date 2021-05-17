@@ -495,8 +495,11 @@
                     android:paddingLeft="15dp"
                     android:focusable="true"
                     android:text="@{viewModel.item.storeMemo}"
-
+                    android:ellipsize="marquee"
+                    android:focusableInTouchMode="true"
                     android:singleLine="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    app:maquee="@{viewModel.item.storeMemo.length > 0? 1:0}"
                     android:background="@drawable/detail_data_background">
                 </TextView>
             </LinearLayout>

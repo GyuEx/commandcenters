@@ -24,7 +24,7 @@ class AlarmThread() : Thread() , ThreadFun{
 
     override fun run() {
         while (isKeep) {
-//            try {
+            try {
 
                 if (Vars.alarmList != null && Vars.alarmList.isNotEmpty()) {
 
@@ -79,10 +79,10 @@ class AlarmThread() : Thread() , ThreadFun{
                     }
                 }
                 Thread.sleep(200)
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//                Log.e("MainThread",e.toString())
-//            }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("AlramThread",e.toString())
+            }
         }
     }
 }

@@ -143,15 +143,14 @@ class HttpConn : Thread(), ThreadFun {
                         Vars.receiveList.add(temp)
 
                     } else {
-                        //Log.e("HTTP", con.responseMessage)
+                        Log.e("HTTP", con.responseMessage)
                     }
                     Thread.sleep(100)
                 }
 
             } catch (e: Exception) {
                 if(code == Procedures.LOGIN) Vars.LoginHandler!!.obtainMessage(Finals.LOGIN_FAIL).sendToTarget()
-                else Vars.MainsHandler!!.obtainMessage(Finals.LOGIN_FAIL).sendToTarget()
-            }
+                else Vars.MainsHandler!!.obtainMessage(Finals.DISCONN_ALRAM).sendToTarget() // 데이터전송실패시 알람을 꺼버림
         }
     }
 }

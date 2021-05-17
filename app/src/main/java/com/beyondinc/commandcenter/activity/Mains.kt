@@ -137,6 +137,7 @@ class Mains : AppCompatActivity(), MainsFun {
 
         getKeyHash(this)
         getDeviceSize()
+        showLoading()
     }
 
     fun getKeyHash(context: Context) {
@@ -296,6 +297,29 @@ class Mains : AppCompatActivity(), MainsFun {
         }
     }
 
+    override fun showLoading() {
+        runOnUiThread {
+            if (loading != null) {
+                loading!!.dismiss()
+                loading = null
+            }
+            loading = LoadingDialog()
+            loading!!.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.BBB)
+            loading!!.show(supportFragmentManager, "Loading")
+        }
+    }
+
+    override fun closeLoading() {
+        try {
+            if (loading != null) {
+                loading!!.dismiss()
+                loading = null
+            }
+        } catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
+        }
+    }
+
     override fun showHistory() {
         runOnUiThread {
             if (history != null) {
@@ -351,17 +375,6 @@ class Mains : AppCompatActivity(), MainsFun {
         }
     }
 
-    override fun showLoading() {
-        runOnUiThread {
-            if (loading != null) {
-                loading!!.dismiss()
-                loading = null
-            }
-            loading = LoadingDialog()
-            loading!!.show(supportFragmentManager, "Loading")
-        }
-    }
-
     override fun changeClose()
     {
         try {
@@ -377,18 +390,6 @@ class Mains : AppCompatActivity(), MainsFun {
             //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
-
-    override fun closeLoading() {
-        try {
-            if (loading != null) {
-                loading!!.dismiss()
-                loading = null
-            }
-        } catch (e: Exception) {
-            //Log.e("MAIN", Log.getStackTraceString(e))
-        }
-    }
-
 
     override fun setting(){
         startActivity(Intent(Vars.mContext, Setting::class.java))

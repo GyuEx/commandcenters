@@ -50,7 +50,8 @@ class MainThread() : Thread() , ThreadFun{
                         //로그인은 반드시 0번지여야함
                         if(data!![0]["CODE"] == "-1000")
                         {
-
+                            Logindata.MSG = data!![0]["MSG"]
+                            Vars.LoginHandler!!.obtainMessage(Finals.APK_UPDATE).sendToTarget()
                         }
                         else if(data!![0]["MSG"] == "로그인 성공!")
                         {
@@ -110,14 +111,40 @@ class MainThread() : Thread() , ThreadFun{
                             {
                                 if(Vars.centerOrderCount[data[i]["CenterId"]!!] != data[i]["SumOfToday"])
                                 {
+                                    Vars.MainsHandler!!.obtainMessage(Finals.CHECK_TIME).sendToTarget() // 데이터가 안맞으면 마지막시간으로 던져서 확인해!
                                     Log.e("MainThread" , "일치하지 않음 // ${Vars.centerOrderCount[data[i]["CenterId"]!!]} // ${data[i]["SumOfToday"]}")
+                                }
+                                else
+                                {
+                                    if(!Vars.daclient) Vars.MainsHandler!!.obtainMessage(Finals.CONN_ALRAM).sendToTarget()
+                                        // 전송이 다시 재기되었을때 알람을 다시 켬 -> 알람을 먼저받아버리면 라스트 시간에서 문제가 발생함
+                                    Log.e("MainThread" , "일치할걸? // ${Vars.centerOrderCount[data[i]["CenterId"]!!]} // ${data[i]["SumOfToday"]}")
                                 }
                             }
                             else
                             {
                                 val or = passing(data[i]) // 너무길어서 따로 메소드 처리
+
+                                //오더시간을 계산해보자
+                                if(Vars.centerLastTime.containsKey(or.RcptCenterId)) {
+                                    var ft = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                                    var now = ft.parse(or.ReceiptDT)
+                                    var nt = ft.parse(Vars.centerLastTime[or.RcptCenterId])
+                                    Log.e(
+                                        "Time",
+                                        "${or.ReceiptDT} 이거랑 ${Vars.centerLastTime[or.RcptCenterId]}"
+                                    )
+                                    if (now.time > nt.time) {
+                                        Vars.centerLastTime[or.RcptCenterId] = or.ReceiptDT
+                                        Log.e("Time", "들어왔다!")
+                                    }
+                                }
+                                else
+                                {
+                                    Vars.centerLastTime[or.RcptCenterId] = or.ReceiptDT
+                                }
+                                // 시간정보는 데이터 수집과 동시에 진행한다, 물론 기존시간이랑 비교해서 큰지 안큰지 확인은 필수!
                                 centertemp[or.OrderId] = or
-                                Vars.centerLastTime[or.CenterId] = or.ModDT
                             }
                         }
                         Vars.orderList.putAll(centertemp)

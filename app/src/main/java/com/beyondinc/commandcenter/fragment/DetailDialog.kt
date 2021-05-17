@@ -1,5 +1,6 @@
 package com.beyondinc.commandcenter.fragment
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -32,7 +33,13 @@ class DetailDialog : DialogFragment() , OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //false로 설정해 주면 화면밖 혹은 뒤로가기 버튼시 다이얼로그라 dismiss 되지 않는다.
-        isCancelable = false
+        //isCancelable = false
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        Log.e("Dialog","Dissmiss")
+        viewModel!!.closeDetail()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

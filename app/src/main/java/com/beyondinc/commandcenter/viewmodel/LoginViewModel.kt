@@ -21,6 +21,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.BuildConfig
 import com.beyondinc.commandcenter.Interface.LoginsFun
+import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.handler.PlaySoundThread
@@ -38,9 +39,10 @@ open class LoginViewModel() : ViewModel() {
     var saveId : MutableLiveData<Boolean> = MutableLiveData()
     var savePw : MutableLiveData<Boolean> = MutableLiveData()
 
-    private var downloadID: Long = -1
-    private lateinit var file: File
-    private var downloadManager: DownloadManager? = null
+    var updateTxt = MutableLiveData<String>()
+    var infotxt = MutableLiveData<String>()
+
+    var ver = MutableLiveData<String>()
 
     init {
         Logindata.isLogin = false
@@ -48,7 +50,7 @@ open class LoginViewModel() : ViewModel() {
         saveId.value = false
         savePw.value = false
 
-        downloadManager = Vars.lContext!!.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        ver.value = Logindata.appVersion
 
         val pref = PreferenceManager.getDefaultSharedPreferences(Vars.lContext)
         if(pref.getBoolean("saveid", false))
@@ -63,8 +65,6 @@ open class LoginViewModel() : ViewModel() {
         }
 
         getPhoneNum()
-
-        downloadApk()
 
         Vars.LoginHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
@@ -88,8 +88,13 @@ open class LoginViewModel() : ViewModel() {
                     }
                     (Vars.lContext as LoginsFun).LoginFail()
                 }
-                else if(msg.what == Finals.APK_UPDATE) downloadApk()
-                else if(msg.what == Finals.APK_INSTALL) installApk()
+                else if(msg.what == Finals.APK_UPDATE)
+                {
+                        updateTxt.value = "업데이트가 있어요! \n 꼭 설치버튼을 눌러주세요."
+                        infotxt.value = "- 안 내 - \n 업데이트 도중에 WIFI 또는 무선데이터 연결을 해제하지 마십시오.\n 본 화면이 오랫동안 지속되면 앱을 강제로 종료 후 다시 실행하여 주십시오."
+                        (Vars.lContext as LoginsFun).downloadApk()
+                }
+                else if(msg.what == Finals.APK_INSTALL) (Vars.lContext as LoginsFun).installApk()
             }
         }
     }
@@ -108,6 +113,8 @@ open class LoginViewModel() : ViewModel() {
         ).show()
         else
         {
+            (Vars.lContext as LoginsFun).showLoading()
+
             Logindata.LoginId = id.value
             Logindata.LoginPw = pw.value //굳이 비밀번호를 저장할 필요가 있을까?
 
@@ -162,41 +169,5 @@ open class LoginViewModel() : ViewModel() {
         Logindata.devicePhone = tel.line1Number.toString()
         Logindata.deviceModel = Build.MODEL
         //Log.e("aaaa", "" + Logindata.devicePhone + " // " + Logindata.deviceModel)
-    }
-
-    fun downloadApk() {
-
-        //val fileName = "${BuildConfig.FLAVOR}_manager_$targetUpgradeVersion.apk"
-        val fileName = "${BuildConfig.FLAVOR}_manager.apk"
-        file = File(Vars.lContext!!.getExternalFilesDir(null), fileName)
-        val fileUri = Uri.fromFile(file)
-        val downloadUrl = "${Vars.lContext!!.getString(R.string.app_down_url)}${Logindata.appID}"
-
-        val request = DownloadManager.Request(Uri.parse(downloadUrl))
-                .setTitle("Download")
-                .setDescription("Downloading new version...")
-                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-                .setDestinationUri(fileUri)
-                .setAllowedOverMetered(true)
-                .setAllowedOverRoaming(true)
-
-        downloadID = downloadManager!!.enqueue(request)
-        //loadingDialog.show(requireActivity().supportFragmentManager, "loadingDialog")
-    }
-
-    fun installApk() {
-        val intent = Intent(Intent.ACTION_VIEW)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val uri = FileProvider.getUriForFile(Vars.lContext!!, "${BuildConfig.APPLICATION_ID}.fileprovider", file)
-            intent.setDataAndType(uri, "application/vnd.android.package-archive")
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            Vars.lContext!!.startActivity(intent)
-        } else {
-            val uri = Uri.fromFile(file)
-            intent.setDataAndType(uri, "application/vnd.android.package-archive")
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            Vars.lContext!!.startActivity(intent)
-        }
     }
 }

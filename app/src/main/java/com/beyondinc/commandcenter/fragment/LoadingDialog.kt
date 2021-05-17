@@ -6,9 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.R
-import com.beyondinc.commandcenter.databinding.ActivityOderDetailBinding
 import com.beyondinc.commandcenter.databinding.FragmentLoadingBinding
-import com.beyondinc.commandcenter.databinding.FragmentOrderDetailBinding
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 
 class LoadingDialog : DialogFragment() {

@@ -84,7 +84,6 @@ class MarkerThread : Thread() , ThreadFun {
                         else marker.icon = imgGray
                         marker.setOnClickListener {
                             Vars.SubRiderHandler!!.obtainMessage(Finals.MAP_FOR_CALL_RIDER, Vars.riderList[itt]!!).sendToTarget()
-                            Log.e("Text","" + Vars.riderList[itt]!!.name)
                             true
                         }
                         Vars.riderList[itt]!!.MakerID = marker // 라이더에게 마커를 지정해줌

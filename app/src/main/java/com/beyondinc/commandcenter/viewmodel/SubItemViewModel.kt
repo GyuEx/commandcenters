@@ -65,6 +65,12 @@ class SubItemViewModel : ViewModel() {
     {
         Vars.orderList!!.let { Realitemss!!.putAll(it) }
 
+        var cntbr : Int = 0
+        var cntre : Int = 0
+        var cntpi : Int = 0
+        var cntco : Int = 0
+        var cntca : Int = 0
+
         var it : Iterator<String> = Realitemss!!.keys.iterator()
         var cnt = 0
         var itemp : ConcurrentHashMap<Int,Orderdata> = ConcurrentHashMap()
@@ -74,13 +80,24 @@ class SubItemViewModel : ViewModel() {
 
             if(Vars.f_center.contains(Realitemss!![ctemp]?.RcptCenterId) || Realitemss!![ctemp]?.DeliveryStateName != "접수")
             {
+                if (Realitemss!![ctemp]?.DeliveryStateName!! == "접수") cntbr++
+                else if (Realitemss!![ctemp]?.DeliveryStateName!! == "배정") cntre++
+                else if (Realitemss!![ctemp]?.DeliveryStateName!! == "픽업") cntpi++
+                else if (Realitemss!![ctemp]?.DeliveryStateName!! == "완료") cntco++
+                else if (Realitemss!![ctemp]?.DeliveryStateName!! == "취소") cntca++
                 continue
             }
             else
             {
+                if (Realitemss!![ctemp]?.DeliveryStateName!! == "접수") cntbr++
+                else if (Realitemss!![ctemp]?.DeliveryStateName!! == "배정") cntre++
+                else if (Realitemss!![ctemp]?.DeliveryStateName!! == "픽업") cntpi++
+                else if (Realitemss!![ctemp]?.DeliveryStateName!! == "완료") cntco++
+                else if (Realitemss!![ctemp]?.DeliveryStateName!! == "취소") cntca++
                 itemp[Realitemss!![ctemp]!!.OrderId.toInt()] = Realitemss!![ctemp]!!
             }
         }
+
 
         var shorttmp : SortedMap<Int, Orderdata>
         if(Vars.UseTime) shorttmp = itemp.toSortedMap()
@@ -94,6 +111,10 @@ class SubItemViewModel : ViewModel() {
             finalMap[cnt] = shorttmp[shitt]!!
             cnt++
         }
+
+        var forstr = "배:${cntre} 픽:${cntpi} 완:${cntco}"
+
+        Vars.MainsHandler!!.obtainMessage(Finals.INSERT_ORDER_COUNT, forstr).sendToTarget()
 
         if(finalMap.keys.size < itemss!!.keys.size)
         {

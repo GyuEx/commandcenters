@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.beyondinc.commandcenter.Interface.LoginsFun
 import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Alarmdata
@@ -41,6 +42,9 @@ class MainsViewModel : ViewModel() {
     var checkview = MutableLiveData<Int>()
     var drawer = MutableLiveData<Boolean>()
     var briteLayer = MutableLiveData<Int>()
+
+    var proTxt = MutableLiveData<String>()
+    var proVal = MutableLiveData<Int>()
 
     var Item : MutableLiveData<Orderdata> = MutableLiveData()
     var showDetail : Boolean = false
@@ -72,6 +76,9 @@ class MainsViewModel : ViewModel() {
 
         briteLayer.value = Vars.Bright
 
+        proTxt.value = "서버에 접속중이예요!"
+        proVal.value = 5
+
         layer.postValue(Finals.SELECT_ORDER)
         select.postValue(Finals.SELECT_EMPTY)
         drawer.value = false
@@ -88,8 +95,8 @@ class MainsViewModel : ViewModel() {
                 else if(msg.what == Finals.ORDER_ITEM_SELECT)showOrderDetail(msg.obj as Orderdata)
                 else if(msg.what == Finals.HTTP_ERROR) HttpError()
                 else if(msg.what == Finals.CLOSE_KEYBOARD) closeKeyBoard()
-                else if(msg.what == Finals.INSERT_ORDER_COUNT) order_count.value = msg.obj as String
-                else if(msg.what == Finals.INSERT_RIDER_COUNT) rider_count.value = msg.obj as String
+                else if(msg.what == Finals.INSERT_ORDER_COUNT) order_count.postValue(msg.obj as String)
+                else if(msg.what == Finals.INSERT_RIDER_COUNT) rider_count.postValue(msg.obj as String)
                 else if(msg.what == Finals.SET_BRIGHT) setBright()
                 else if(msg.what == Finals.CANCEL_MESSAGE) closeMessage()
                 else if(msg.what == Finals.SUCCESS_MESSAGE) successMessage(msg.obj as String)
@@ -105,20 +112,12 @@ class MainsViewModel : ViewModel() {
                 else if(msg.what == Finals.CHANGE_ADDRESS) showAddress()
                 else if(msg.what == Finals.CHECK_TIME) checkOrderLastTime()
                 else if(msg.what == Finals.CHECK_COUNT) checkOrderCount()
+                else if(msg.what == Finals.CONN_ALRAM) connenctAlram()
+                else if(msg.what == Finals.CLOSE_DETAIL) closeDetail()
                 else if(msg.what == Finals.SHOW_LOADING) showLoading()
                 else if(msg.what == Finals.CLOSE_LOADING) closeLoading()
-                else if(msg.what == Finals.CONN_ALRAM) connenctAlram()
+                else if(msg.what == Finals.DISCONN_ALRAM) disconnectAlram()
             }
-        }
-    }
-
-    fun connenctAlram(){
-        if(!Vars.daclient)
-        {
-            var instanceDACallerInterface = makeDACallerInterfaceInstance(Logindata.LoginId!!, this::alarmCallback)
-            DAClient.Initialize(instanceDACallerInterface)
-            DAClient.Start()
-            Vars.daclient = true
         }
     }
 
@@ -127,9 +126,36 @@ class MainsViewModel : ViewModel() {
     }
 
     fun closeLoading(){
+
+        proTxt.value = "완료되었어요!"
+        proVal.value = 100
+
         (Vars.mContext as MainsFun).closeLoading()
     }
 
+    fun connenctAlram(){
+
+        proTxt.value = "알람서버에 요청중이예요!"
+        proVal.value = 95
+
+        if(!Vars.daclient)
+        {
+            var instanceDACallerInterface = makeDACallerInterfaceInstance(Logindata.LoginId!!, this::alarmCallback)
+            DAClient.Initialize(instanceDACallerInterface)
+            DAClient.Start()
+            Vars.daclient = true
+        }
+
+        closeLoading()
+    }
+
+    fun disconnectAlram(){
+        if(Vars.daclient)
+        {
+            DAClient.Stop()
+            Vars.daclient = false
+        }
+    }
 
     fun checkOrderLastTime(){
         var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
@@ -154,9 +180,11 @@ class MainsViewModel : ViewModel() {
             while (itt.hasNext())
             {
                 var itts = itt.next()
-                if(Vars.orderList[itts]!!.CenterId == its) cnt++
+                if(Vars.orderList[itts]!!.AssignCenterId == its || Vars.orderList[itts]!!.RcptCenterId == its) cnt++
+                // RcptCenter 불변 ,, AssginCenterId 가변 ,, 추가적인 요소는 없으면 됨
             }
             Vars.centerOrderCount[its] = cnt.toString()
+            Log.e("Count?", "" +  Vars.centerOrderCount)
         }
 
         temp[Procedures.ORDER_LIST_IN_CENTER] = MakeJsonParam().makeServerOrderListCountParameter(Logindata.LoginId!!, Vars.centerOrderCount)
@@ -202,7 +230,6 @@ class MainsViewModel : ViewModel() {
 
     fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         //  스피너의 선택 내용이 바뀌면 호출된다
-        Log.e("Log", "" + parent + " // " + view + " // " + position + " // " + id)
         if(position == 0) dropitem = "현금"
         else if(position == 1) dropitem = "카드"
         else if(position == 2) dropitem = "선결제"
@@ -299,6 +326,9 @@ class MainsViewModel : ViewModel() {
 
     fun getCenterList()
     {
+        proTxt.value = "센터를 가져오고 있어요!"
+        proVal.value = 15
+
         var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
         temp.put(Procedures.CENTER_LIST, MakeJsonParam().makeCenterListParameter(Logindata.LoginId!!))
         Vars.sendList.add(temp)
@@ -306,12 +336,17 @@ class MainsViewModel : ViewModel() {
 
     fun getOrderList()
     {
+        proTxt.value = "오더를 가져오고 있어요!"
+        proVal.value = 60
+
         var it : Iterator<String> = Vars.centerList.keys.iterator()
         var ids : java.util.ArrayList<String> = java.util.ArrayList()
         while (it.hasNext())
         {
             ids.add(Vars.centerList[it.next()]!!.centerId)
         }
+
+        //ids.add("147")
         var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
         temp[Procedures.ORDER_LIST_IN_CENTER] = MakeJsonParam().makeFullOrderListParameter(Logindata.LoginId!!, ids)
         Vars.sendList.add(temp)
@@ -333,6 +368,9 @@ class MainsViewModel : ViewModel() {
 
     fun getRiderList()
     {
+        proTxt.value = "라이더를 가져오고 있어요!"
+        proVal.value = 35
+
         var it : Iterator<String> = Vars.centerList.keys.iterator()
         var ids : ArrayList<String> = ArrayList()
         while (it.hasNext())
@@ -551,9 +589,10 @@ class MainsViewModel : ViewModel() {
     }
 
     fun showOrderDetail(msg: Any?) {
-        if(!showDetail)
+        if(!showDetail) // 창을 새로 띄우기 보단 안띄우고 갱신 시키기 위함
         {
             showDetail = true
+            DetailsSelect.value = Finals.DETAIL_DETAIL
             (Vars.mContext as MainsFun).showOderdetail()
         }
         Item.value = msg as Orderdata
