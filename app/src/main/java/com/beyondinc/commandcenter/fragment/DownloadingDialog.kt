@@ -1,19 +1,18 @@
 package com.beyondinc.commandcenter.fragment
 
-import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.R
-import com.beyondinc.commandcenter.databinding.FragmentLoadingBinding
-import com.beyondinc.commandcenter.viewmodel.MainsViewModel
+import com.beyondinc.commandcenter.databinding.FragmentDownloadingBinding
+import com.beyondinc.commandcenter.viewmodel.LoginViewModel
 
-class LoadingDialog : DialogFragment() {
+class DownloadingDialog : DialogFragment() {
 
-    var binding: FragmentLoadingBinding? = null
-    var viewModel: MainsViewModel? = null
+    var binding: FragmentDownloadingBinding? = null
+    var viewModel: LoginViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,19 +20,18 @@ class LoadingDialog : DialogFragment() {
         isCancelable = false
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_loading, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_downloading, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DataBindingUtil.bind(view)
-        viewModel = ViewModelProvider(requireActivity()).get(MainsViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(LoginViewModel::class.java)
         binding!!.viewModel = viewModel
         binding!!.lifecycleOwner = requireActivity()
-
-        var ani : AnimationDrawable = binding!!.anima.background as AnimationDrawable
-        ani.start()
     }
 }

@@ -8,6 +8,6 @@ interface LoginsFun {
     fun LoginFail()
     fun showLoading()
     fun closeLoading()
-    fun downloadApk()
-    fun installApk()
+    fun showDownLoading()
+    fun closeDownLoading()
 }

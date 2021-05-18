@@ -1,22 +1,22 @@
 package com.beyondinc.commandcenter.adapter
 
-import android.telephony.mbms.StreamingServiceInfo
-import android.util.Log
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.view.Gravity
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.size
 import androidx.databinding.BindingAdapter
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.R
-import com.beyondinc.commandcenter.util.Codes
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+
 
 object MainAdapter {
 
@@ -129,7 +129,7 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("custom_checkbox")
     fun setCustomCheck(view: View, height: Boolean) {
-        if (height == true) {
+        if (height) {
             view.setBackgroundResource(R.drawable.checkbox_sel)
         } else {
             view.setBackgroundResource(R.drawable.checkbox_nor)
@@ -139,7 +139,7 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("custom_checkbox_login")
     fun setCustomCheckLogin(view: CheckBox, height: Boolean) {
-        if (height == true) {
+        if (height) {
             view.setButtonDrawable(R.drawable.k_login_check_p)
         } else {
             view.setButtonDrawable(R.drawable.k_login_check_n)
@@ -149,7 +149,7 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("drawer_open")
     fun setDrawer_Open(view: DrawerLayout, height: Boolean) {
-        if (height == true) {
+        if (height) {
             view.openDrawer(Gravity.LEFT)
             view.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN)
         } else {
@@ -406,4 +406,31 @@ object MainAdapter {
         if(height > 0) view.smoothScrollToPosition(0)
     }
 
+    @JvmStatic
+    @BindingAdapter("sub_scroll_up")
+    fun sub_scroll_up(view: TextView, height: Boolean) {
+        if(height == true) view.setBackgroundResource(R.drawable.arrow_down)
+        else view.setBackgroundResource(R.drawable.arrow_up)
+    }
+
+    @JvmStatic
+    @BindingAdapter("balloon")
+    fun balloon(view: TextView, height: Int) {
+        if(height == 0) view.text = "접수가 하나도 없어요.."
+        else
+        {
+            val str = "접수가 ${height}건 있어요!"
+            val ssb = SpannableStringBuilder(str)
+            ssb.setSpan(
+                ForegroundColorSpan(Vars.mContext!!.getColor(R.color.brief)),
+                4,
+                if(height > 9) 6
+                else if (height > 99) 7
+                else if (height > 999) 8
+                else 5, //꼭 1자리라는 법은 없지
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            view.text = ssb
+        }
+    }
 }

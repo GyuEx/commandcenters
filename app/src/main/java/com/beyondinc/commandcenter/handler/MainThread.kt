@@ -21,7 +21,7 @@ import kotlin.collections.HashMap
 
 class MainThread() : Thread() , ThreadFun{
 
-    var isKeep : Boolean = false
+    private var isKeep : Boolean = false
 
     init {
         isKeep = true
@@ -33,7 +33,7 @@ class MainThread() : Thread() , ThreadFun{
 
     override fun run() {
         while (isKeep) {
-//            try {
+            try {
 
                 if (Vars.receiveList != null && Vars.receiveList.isNotEmpty()) {
 
@@ -105,20 +105,16 @@ class MainThread() : Thread() , ThreadFun{
                     }
                     else if(code == Procedures.ORDER_LIST_IN_CENTER)
                     {
+                        var inToday = false
+                        var orcnt = 0
                         var centertemp : ConcurrentHashMap<String,Orderdata> = ConcurrentHashMap()
                         for (i in 0 until data!!.size) {
                             if(data[i].containsKey("SumOfToday"))
                             {
+                                inToday = true
                                 if(Vars.centerOrderCount[data[i]["CenterId"]!!] != data[i]["SumOfToday"])
                                 {
-                                    Vars.MainsHandler!!.obtainMessage(Finals.CHECK_TIME).sendToTarget() // 데이터가 안맞으면 마지막시간으로 던져서 확인해!
-                                    Log.e("MainThread" , "일치하지 않음 // ${Vars.centerOrderCount[data[i]["CenterId"]!!]} // ${data[i]["SumOfToday"]}")
-                                }
-                                else
-                                {
-                                    if(!Vars.daclient) Vars.MainsHandler!!.obtainMessage(Finals.CONN_ALRAM).sendToTarget()
-                                        // 전송이 다시 재기되었을때 알람을 다시 켬 -> 알람을 먼저받아버리면 라스트 시간에서 문제가 발생함
-                                    Log.e("MainThread" , "일치할걸? // ${Vars.centerOrderCount[data[i]["CenterId"]!!]} // ${data[i]["SumOfToday"]}")
+                                    orcnt++
                                 }
                             }
                             else
@@ -128,28 +124,45 @@ class MainThread() : Thread() , ThreadFun{
                                 //오더시간을 계산해보자
                                 if(Vars.centerLastTime.containsKey(or.RcptCenterId)) {
                                     var ft = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                                    var now = ft.parse(or.ReceiptDT)
+                                    var now = ft.parse(or.ModDT)
                                     var nt = ft.parse(Vars.centerLastTime[or.RcptCenterId])
                                     Log.e(
                                         "Time",
-                                        "${or.ReceiptDT} 이거랑 ${Vars.centerLastTime[or.RcptCenterId]}"
+                                        "${or.ModDT} 이거랑 ${Vars.centerLastTime[or.RcptCenterId]}"
                                     )
                                     if (now.time > nt.time) {
-                                        Vars.centerLastTime[or.RcptCenterId] = or.ReceiptDT
+                                        Vars.centerLastTime[or.RcptCenterId] = or.ModDT
                                         Log.e("Time", "들어왔다!")
                                     }
                                 }
                                 else
                                 {
-                                    Vars.centerLastTime[or.RcptCenterId] = or.ReceiptDT
+                                    Vars.centerLastTime[or.RcptCenterId] = or.ModDT
                                 }
                                 // 시간정보는 데이터 수집과 동시에 진행한다, 물론 기존시간이랑 비교해서 큰지 안큰지 확인은 필수!
                                 centertemp[or.OrderId] = or
                             }
                         }
+
+                        if(inToday)
+                        {
+                            if(orcnt == 0)
+                            {
+                                Vars.timecntOT = 60
+                                Vars.MainsHandler!!.obtainMessage(Finals.CONN_ALRAM).sendToTarget()
+                                Log.e("MainThread" , "일치할걸?")
+                            }
+                            else
+                            {
+                                Vars.MainsHandler!!.obtainMessage(Finals.CHECK_TIME).sendToTarget() // 데이터가 안맞으면 마지막시간으로 던져서 확인해!
+                                Log.e("MainThread" , "일치하지 않음")
+                            }
+                        }
+
                         Vars.orderList.putAll(centertemp)
-                        if(Vars.mLayer == Finals.SELECT_ORDER) Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
-                        else if(Vars.mLayer == Finals.SELECT_MAP)
+
+                        if(Vars.mLayer == Finals.SELECT_ORDER && !inToday) Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+                        else if(Vars.mLayer == Finals.SELECT_MAP && !inToday)
                         {
                             Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
                             Vars.SubRiderHandler!!.obtainMessage(Finals.MAP_FOR_REFRASH).sendToTarget()
@@ -173,7 +186,7 @@ class MainThread() : Thread() , ThreadFun{
                     }
                     else if(code == Procedures.CHANGE_DELIVERY_STATUS)
                     {
-                        var msg : String = ""
+                        var msg = ""
                         for(i in 0 until data!!.size) {
                             msg = data!![i]["MSG"].toString()
                         }
@@ -181,7 +194,7 @@ class MainThread() : Thread() , ThreadFun{
                     }
                     else if(code == Procedures.EDIT_ORDER_INFO)
                     {
-                        var msg : String = ""
+                        var msg = ""
                         for(i in 0 until data!!.size) {
                             msg = data!![i]["MSG"].toString()
                         }
@@ -189,10 +202,10 @@ class MainThread() : Thread() , ThreadFun{
                     }
                 }
                 Thread.sleep(200)
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//                Log.e("MainThread",e.toString())
-//            }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("MainThread",e.toString())
+            }
         }
     }
 

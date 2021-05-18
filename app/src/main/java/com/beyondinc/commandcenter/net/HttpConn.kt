@@ -149,8 +149,13 @@ class HttpConn : Thread(), ThreadFun {
                 }
 
             } catch (e: Exception) {
-                if(code == Procedures.LOGIN) Vars.LoginHandler!!.obtainMessage(Finals.LOGIN_FAIL).sendToTarget()
-                else Vars.MainsHandler!!.obtainMessage(Finals.DISCONN_ALRAM).sendToTarget() // 데이터전송실패시 알람을 꺼버림
+                if (code == Procedures.LOGIN) Vars.LoginHandler!!.obtainMessage(Finals.LOGIN_FAIL).sendToTarget()
+                else
+                {
+                    Vars.MainsHandler!!.obtainMessage(Finals.DISCONN_ALRAM).sendToTarget() // 데이터전송실패시 알람을 꺼버림
+                    Vars.timecntOT = 10 // 갯수조회 카운터를 한시적으로 10초로 변경
+                }
+            }
         }
     }
 }

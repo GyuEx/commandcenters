@@ -44,7 +44,6 @@ class MainsViewModel : ViewModel() {
     var briteLayer = MutableLiveData<Int>()
 
     var proTxt = MutableLiveData<String>()
-    var proVal = MutableLiveData<Int>()
 
     var Item : MutableLiveData<Orderdata> = MutableLiveData()
     var showDetail : Boolean = false
@@ -60,7 +59,7 @@ class MainsViewModel : ViewModel() {
     private lateinit var alarmCallback: (ArrayList<Alarmdata>)-> Unit?
 
     init {
-        //Log.e(Tag, "ViewModel Enable Mains")
+        Log.e(Tag, "ViewModel Enable Mains")
 
         val pref = PreferenceManager.getDefaultSharedPreferences(Vars.mContext)
         Vars.Usenick = pref.getBoolean("usenick", false)
@@ -77,13 +76,13 @@ class MainsViewModel : ViewModel() {
         briteLayer.value = Vars.Bright
 
         proTxt.value = "서버에 접속중이예요!"
-        proVal.value = 5
 
         layer.postValue(Finals.SELECT_ORDER)
         select.postValue(Finals.SELECT_EMPTY)
         drawer.value = false
 
         //핸들러를 init에서 분리하고싶으나 이상하게 코틀린은 뷰모델이 2개가 쓰레드에서 실행이됨... 어쩔수없이 init와 함께 로드
+        //모델과 뷰모델을 따로 분리해야되나..
         Vars.MainsHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {
                 //Log.e("Main Hanldler" , "" + msg.what)
@@ -126,18 +125,12 @@ class MainsViewModel : ViewModel() {
     }
 
     fun closeLoading(){
-
         proTxt.value = "완료되었어요!"
-        proVal.value = 100
-
         (Vars.mContext as MainsFun).closeLoading()
     }
 
     fun connenctAlram(){
-
         proTxt.value = "알람서버에 요청중이예요!"
-        proVal.value = 95
-
         if(!Vars.daclient)
         {
             var instanceDACallerInterface = makeDACallerInterfaceInstance(Logindata.LoginId!!, this::alarmCallback)
@@ -145,7 +138,6 @@ class MainsViewModel : ViewModel() {
             DAClient.Start()
             Vars.daclient = true
         }
-
         closeLoading()
     }
 
@@ -160,17 +152,11 @@ class MainsViewModel : ViewModel() {
     fun checkOrderLastTime(){
         var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
         temp[Procedures.ORDER_LIST_IN_CENTER] = MakeJsonParam().makeChangedOrderListParameter(Logindata.LoginId!!, Vars.centerLastTime)
-
-        //var map : ConcurrentHashMap<String,String> = ConcurrentHashMap()
-        //map[Vars.orderList["250382"]!!.CenterId] = Vars.orderList["250382"]!!.ModDT // 시간에 맞는걸 주는거 같다?
-        //temp[Procedures.ORDER_LIST_IN_CENTER] = MakeJsonParam().makeChangedOrderListParameter(Logindata.LoginId!!, map)
-
         Vars.sendList.add(temp)
     }
 
     fun checkOrderCount(){
         var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
-
         var it:Iterator<String> = Vars.centerList.keys.iterator()
         while (it.hasNext())
         {
@@ -184,9 +170,7 @@ class MainsViewModel : ViewModel() {
                 // RcptCenter 불변 ,, AssginCenterId 가변 ,, 추가적인 요소는 없으면 됨
             }
             Vars.centerOrderCount[its] = cnt.toString()
-            Log.e("Count?", "" +  Vars.centerOrderCount)
         }
-
         temp[Procedures.ORDER_LIST_IN_CENTER] = MakeJsonParam().makeServerOrderListCountParameter(Logindata.LoginId!!, Vars.centerOrderCount)
         Vars.sendList.add(temp)
     }
@@ -206,13 +190,11 @@ class MainsViewModel : ViewModel() {
     }
 
     fun successPayment(){
-
         if(pay.value!!.length > 6)
         {
             Toast.makeText(Vars.mContext,"백만원 이상은 좀 과하지 않나요 T^T",Toast.LENGTH_SHORT).show()
             return
         }
-
         if(payselect == 1)
         {
             var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
@@ -233,7 +215,6 @@ class MainsViewModel : ViewModel() {
         if(position == 0) dropitem = "현금"
         else if(position == 1) dropitem = "카드"
         else if(position == 2) dropitem = "선결제"
-
     }
 
     fun getItemsend(obj: Orderdata){
@@ -316,7 +297,6 @@ class MainsViewModel : ViewModel() {
     fun insertRider()
     {
         getRiderGPS()
-
         if(!Logindata.RiderList)
         {
             Vars.MainsHandler!!.obtainMessage(Finals.CALL_ORDER).sendToTarget()
@@ -327,8 +307,6 @@ class MainsViewModel : ViewModel() {
     fun getCenterList()
     {
         proTxt.value = "센터를 가져오고 있어요!"
-        proVal.value = 15
-
         var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
         temp.put(Procedures.CENTER_LIST, MakeJsonParam().makeCenterListParameter(Logindata.LoginId!!))
         Vars.sendList.add(temp)
@@ -337,15 +315,12 @@ class MainsViewModel : ViewModel() {
     fun getOrderList()
     {
         proTxt.value = "오더를 가져오고 있어요!"
-        proVal.value = 60
-
         var it : Iterator<String> = Vars.centerList.keys.iterator()
         var ids : java.util.ArrayList<String> = java.util.ArrayList()
         while (it.hasNext())
         {
             ids.add(Vars.centerList[it.next()]!!.centerId)
         }
-
         //ids.add("147")
         var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
         temp[Procedures.ORDER_LIST_IN_CENTER] = MakeJsonParam().makeFullOrderListParameter(Logindata.LoginId!!, ids)
@@ -369,7 +344,6 @@ class MainsViewModel : ViewModel() {
     fun getRiderList()
     {
         proTxt.value = "라이더를 가져오고 있어요!"
-        proVal.value = 35
 
         var it : Iterator<String> = Vars.centerList.keys.iterator()
         var ids : ArrayList<String> = ArrayList()
@@ -452,23 +426,6 @@ class MainsViewModel : ViewModel() {
 
     fun MapOrderOpen(){
         Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_REMOVE).sendToTarget()
-    }
-
-    fun getItemPaymonet() : String?{
-        var pay = ""
-        if(Item.value!!.ApprovalTypeName == "현금") pay = "(현)"
-        else if(Item.value!!.ApprovalTypeName == "카드") pay = "(카)"
-        else if(Item.value!!.ApprovalTypeName == "선결제") pay = "(선)"
-        pay += " " + Item.value!!.SalesPrice
-        return pay
-    }
-    fun getItemRiderPay() : String?{
-        var pay = ""
-        if(Item.value!!.ApprovalTypeName == "현금") pay = "(현)"
-        else if(Item.value!!.ApprovalTypeName == "카드") pay = "(카)"
-        else if(Item.value!!.ApprovalTypeName == "선결제") pay = "(선)"
-        pay += " " + Item.value!!.DeliveryFee
-        return pay
     }
 
     fun click_brife() {
@@ -711,11 +668,6 @@ class MainsViewModel : ViewModel() {
         else if(msg == "오더완료") orderComplete()
         else if(msg == "오더취소") orderCancel()
         else if(msg == "포장상태변경") orderPaking()
-    }
-
-    fun getitemState() : String?{
-        if(Item.value != null) return Item.value!!.DeliveryStateName
-        else return "0"
     }
 
     class FixedMarkerView(context: Context, isStartPosition: Boolean = false) : ConstraintLayout(context) {

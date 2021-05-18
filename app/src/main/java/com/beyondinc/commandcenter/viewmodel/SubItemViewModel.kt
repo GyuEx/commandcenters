@@ -115,6 +115,7 @@ class SubItemViewModel : ViewModel() {
         var forstr = "배:${cntre} 픽:${cntpi} 완:${cntco}"
 
         Vars.MainsHandler!!.obtainMessage(Finals.INSERT_ORDER_COUNT, forstr).sendToTarget()
+        Vars.MapHandler!!.obtainMessage(Finals.INSERT_ORDER_COUNT,cntbr).sendToTarget()
 
         if(finalMap.keys.size < itemss!!.keys.size)
         {

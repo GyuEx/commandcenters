@@ -18,12 +18,14 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.BuildConfig
 import com.beyondinc.commandcenter.Interface.LoginsFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.databinding.ActivityLoginsBinding
+import com.beyondinc.commandcenter.fragment.DownloadingDialog
 import com.beyondinc.commandcenter.fragment.LoadingDialog
 import com.beyondinc.commandcenter.fragment.LoginLoadingDialog
 import com.beyondinc.commandcenter.handler.AlarmThread
@@ -49,10 +51,7 @@ class Logins : AppCompatActivity() , LoginsFun {
     var viewModel: LoginViewModel? = null
     var isLogin = false
     var loading:LoginLoadingDialog? = null
-
-    private var downloadID: Long = -1
-    private lateinit var file: File
-    private var downloadManager: DownloadManager? = null
+    var downloading:DownloadingDialog? = null
 
     private val Tag = "Logins Activity"
 
@@ -143,11 +142,34 @@ class Logins : AppCompatActivity() , LoginsFun {
         }
     }
 
+    override fun showDownLoading() {
+        runOnUiThread {
+            if (downloading != null) {
+                downloading!!.dismiss()
+                downloading = null
+            }
+            downloading = DownloadingDialog()
+            downloading!!.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.BBB)
+            downloading!!.show(supportFragmentManager, "DownLoading")
+        }
+    }
+
     override fun closeLoading() {
         try {
             if (loading != null) {
                 loading!!.dismiss()
                 loading = null
+            }
+        } catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
+        }
+    }
+
+    override fun closeDownLoading() {
+        try {
+            if (downloading != null) {
+                downloading!!.dismiss()
+                downloading = null
             }
         } catch (e: Exception) {
             //Log.e("MAIN", Log.getStackTraceString(e))
@@ -236,71 +258,6 @@ class Logins : AppCompatActivity() , LoginsFun {
                     this,
                     pms.toTypedArray(), Finals.REQUEST_PERMISSION
             )
-        }
-    }
-
-    override fun downloadApk() {
-
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
-        this.registerReceiver(completeReceiver, intentFilter)
-
-        downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-
-        val fileName = "${BuildConfig.FLAVOR}_manager_${Logindata.MSG}.apk"
-        file = File(this.getExternalFilesDir(null), fileName)
-        val fileUri = Uri.fromFile(file)
-        val downloadUrl = "${getString(R.string.app_down_url)}${Logindata.appID}"
-
-        val request = DownloadManager.Request(Uri.parse(downloadUrl))
-            .setTitle("새로운 버전을 받고 있습니다")
-            .setDescription("영차..영차..")
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-            .setDestinationUri(fileUri)
-            .setAllowedOverMetered(true)
-            .setAllowedOverRoaming(true)
-
-        downloadID = downloadManager!!.enqueue(request)
-
-
-    }
-
-    override fun installApk() {
-        val intent = Intent(Intent.ACTION_VIEW)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val uri = FileProvider.getUriForFile(this, "${BuildConfig.APPLICATION_ID}.fileprovider", file)
-            intent.setDataAndType(uri, "application/vnd.android.package-archive")
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            Vars.lContext!!.startActivity(intent)
-        } else {
-            val uri = Uri.fromFile(file)
-            intent.setDataAndType(uri, "application/vnd.android.package-archive")
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            Vars.lContext!!.startActivity(intent)
-        }
-    }
-
-    private val completeReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent != null) {
-                val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-                if (intent.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
-                    if (id == downloadID) {
-                        val query: DownloadManager.Query = DownloadManager.Query()
-                        query.setFilterById(id)
-                        val cursor = downloadManager!!.query(query)
-                        if (!cursor.moveToFirst()) {
-                            return
-                        }
-                        val columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
-                        val status = cursor.getInt(columnIndex)
-                        if (status == DownloadManager.STATUS_SUCCESSFUL) {
-                            installApk()
-                        }
-                    }
-                }
-            }
         }
     }
 }

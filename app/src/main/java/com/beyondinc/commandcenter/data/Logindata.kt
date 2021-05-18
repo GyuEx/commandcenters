@@ -24,8 +24,8 @@ object Logindata {
     var appVersionName: String = ""
     var deviceModelNumber: String = ""
     var deviceID: String = "b7f0b45550726ee8"
-    var devicePhone = "+821222795779"
-    var deviceModel = "SM-G950N"
+    var devicePhone = "+821222795779" // 앱켜질때 자동으로 갱신함
+    var deviceModel = "SM-G950N" // 앱켜질때 자동으로 갱신함
     var devicePhoneNumber: String = ""
     val appVersion = "1.1.1"
 }

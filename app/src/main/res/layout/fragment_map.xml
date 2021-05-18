@@ -114,7 +114,33 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="2"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        app:layout="@{viewModel.lrawer == true? 0:1}"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="2"
+                            app:balloon="@{viewModel.subitemsize}"
+                            android:gravity="center"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:background="@drawable/balloon"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -135,7 +161,17 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="2"
+                    android:layout_marginRight="10dp"
+                    android:gravity="right|bottom"
                     android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:onClick="@{v->viewModel.LowLayerClick()}"
+                        app:sub_scroll_up="@{viewModel.lrawer}"
+                        android:background="@drawable/arrow_up">
+                    </TextView>
 
                 </LinearLayout>
 

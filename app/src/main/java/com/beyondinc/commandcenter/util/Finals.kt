@@ -86,6 +86,7 @@ object Finals {
 
     val APK_UPDATE : Int = 131
     val APK_INSTALL : Int = 132
+    val DOWNLOADVALUE : Int = 133
 
     val SHOW_LOADING : Int = 141
     val CLOSE_LOADING : Int = 142

@@ -156,9 +156,7 @@ class Mains : AppCompatActivity(), MainsFun {
         val tempTime = System.currentTimeMillis()
         val intervalTime: Long = tempTime - backPressedTime
         if (intervalTime in 0..FINISH_INTERVAL_TIME) {
-            moveTaskToBack(true);						// 태스크를 백그라운드로 이동
-            finishAndRemoveTask();						// 액티비티 종료 + 태스크 리스트에서 지우기
-            android.os.Process.killProcess(android.os.Process.myPid());	// 앱 프로세스 종료
+            exit()
         } else {
             backPressedTime = tempTime
             Toast.makeText(applicationContext, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
