@@ -1,11 +1,16 @@
 package com.beyondinc.commandcenter.adapter
 
+import android.content.Context.INPUT_METHOD_SERVICE
+import android.os.Build
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import androidx.drawerlayout.widget.DrawerLayout
@@ -127,6 +132,48 @@ object MainAdapter {
     }
 
     @JvmStatic
+    @BindingAdapter("layout_addr")
+    fun setLayoutaddr(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == True) {
+            layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
+            layoutParams.height = LinearLayout.LayoutParams.MATCH_PARENT
+            view.layoutParams = layoutParams
+        } else {
+            layoutParams.width = 0
+            layoutParams.height = 0
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("layout_tranform")
+    fun setLayouttranform(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == True) {
+            layoutParams.weight = 12f
+            view.layoutParams = layoutParams
+        } else {
+            layoutParams.weight = 0f
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("layout_txt")
+    fun setLayouttxt(view: TextView, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == True) {
+            layoutParams.weight = 1f
+            view.layoutParams = layoutParams
+        } else {
+            layoutParams.weight = 0f
+            view.layoutParams = layoutParams
+        }
+    }
+
+
+    @JvmStatic
     @BindingAdapter("custom_checkbox")
     fun setCustomCheck(view: View, height: Boolean) {
         if (height) {
@@ -237,6 +284,13 @@ object MainAdapter {
     fun setitembackcolor(view: LinearLayout, height: Boolean) {
         if (height) view.setBackgroundColor(Vars.mContext!!.getColor(R.color.orange))
         else view.setBackgroundColor(Vars.mContext!!.getColor(R.color.lightgray))
+    }
+
+    @JvmStatic
+    @BindingAdapter("select_dong_backcolor")
+    fun setitemdongcolor(view: LinearLayout, height: Boolean) {
+        if (height) view.setBackgroundColor(Vars.mContext!!.getColor(R.color.gray))
+        else view.setBackgroundColor(Vars.mContext!!.getColor(android.R.color.transparent))
     }
 
     @JvmStatic
@@ -411,6 +465,26 @@ object MainAdapter {
     fun sub_scroll_up(view: TextView, height: Boolean) {
         if(height == true) view.setBackgroundResource(R.drawable.arrow_down)
         else view.setBackgroundResource(R.drawable.arrow_up)
+    }
+
+    @JvmStatic
+    @BindingAdapter("sel_Addr")
+    fun sel_Addr(view: TextView, height: String) {
+        if(height =="Jibun") view.text = "지번검색"
+        else if(height == "Road") view.text = "도로명검색"
+        else if(height == "Build") view.text = "건물명검색"
+    }
+
+    @JvmStatic
+    @BindingAdapter("focus")
+    fun focus(view: EditText, height: Boolean) {
+        if(height == true)
+        else
+        {
+            var focusView: View = view
+            var immhide : InputMethodManager = Vars.mContext!!.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            immhide?.hideSoftInputFromWindow(focusView?.windowToken, 0)
+        }
     }
 
     @JvmStatic

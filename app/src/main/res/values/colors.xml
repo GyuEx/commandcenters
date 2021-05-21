@@ -10,6 +10,7 @@
 
     <color name="gray">#FF4B4B4B</color>
     <color name="whitegray">#FFCDCDCD</color>
+    <color name="darkgray">#FF222222</color>
     <color name="orange">#FFFAC45E</color>
     <color name="orange_gradian">#FFFAA53C</color>
 

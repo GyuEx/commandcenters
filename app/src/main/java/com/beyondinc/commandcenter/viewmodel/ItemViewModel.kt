@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Message
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +19,6 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
 import kotlin.concurrent.timer
-
 
 class ItemViewModel : ViewModel() {
     var Realitems: ConcurrentHashMap<String, Orderdata>? = null
@@ -63,12 +63,10 @@ class ItemViewModel : ViewModel() {
         if (items == null) {
             items = ConcurrentHashMap()
         }
-        if (Realitems == null)
-        {
+        if (Realitems == null) {
             Realitems = ConcurrentHashMap()
         }
-        if (passList == null)
-        {
+        if (passList == null) {
             passList = ConcurrentHashMap()
         }
         if (adapter == null) {
@@ -130,53 +128,60 @@ class ItemViewModel : ViewModel() {
 
             if (select.value == Finals.SELECT_BRIFE) // 배정하기 여부 확인
             {
+                if (Realitems!![ctemp]?.DeliveryStateName!! == "접수") cntbr++
+                else if (Realitems!![ctemp]?.DeliveryStateName!! == "배정") cntre++
+                else if (Realitems!![ctemp]?.DeliveryStateName!! == "픽업") cntpi++
+                else if (Realitems!![ctemp]?.DeliveryStateName!! == "완료") cntco++
+                else if (Realitems!![ctemp]?.DeliveryStateName!! == "취소") cntca++
+
                 if (Vars.f_center.contains(Realitems!![ctemp]?.RcptCenterId) || Realitems!![ctemp]?.DeliveryStateName != "접수") {
                     continue
                 } else {
                     itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
-                    if (Realitems!![ctemp]?.DeliveryStateName!! == "접수") cntbr++
-                    else if (Realitems!![ctemp]?.DeliveryStateName!! == "배정") cntre++
-                    else if (Realitems!![ctemp]?.DeliveryStateName!! == "픽업") cntpi++
-                    else if (Realitems!![ctemp]?.DeliveryStateName!! == "완료") cntco++
-                    else if (Realitems!![ctemp]?.DeliveryStateName!! == "취소") cntca++
                 }
 
             } else {
                 if (setAgencyfilter != "") // 가맹점 검색 필터 적용
                 {
+                    if (Realitems!![ctemp]?.DeliveryStateName!! == "접수") cntbr++
+                    else if (Realitems!![ctemp]?.DeliveryStateName!! == "배정") cntre++
+                    else if (Realitems!![ctemp]?.DeliveryStateName!! == "픽업") cntpi++
+                    else if (Realitems!![ctemp]?.DeliveryStateName!! == "완료") cntco++
+                    else if (Realitems!![ctemp]?.DeliveryStateName!! == "취소") cntca++
+
                     if (setAgencyfilter != Realitems!![ctemp]?.AgencyName) {
                         continue
                     } else {
                         itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
-                        if (Realitems!![ctemp]?.DeliveryStateName!! == "접수") cntbr++
-                        else if (Realitems!![ctemp]?.DeliveryStateName!! == "배정") cntre++
-                        else if (Realitems!![ctemp]?.DeliveryStateName!! == "픽업") cntpi++
-                        else if (Realitems!![ctemp]?.DeliveryStateName!! == "완료") cntco++
-                        else if (Realitems!![ctemp]?.DeliveryStateName!! == "취소") cntca++
                     }
                 } else if (setRiderfilter != "") // 라이더 검색 필터 적용
                 {
+                    if (Realitems!![ctemp]?.DeliveryStateName!! == "접수") cntbr++
+                    else if (Realitems!![ctemp]?.DeliveryStateName!! == "배정") cntre++
+                    else if (Realitems!![ctemp]?.DeliveryStateName!! == "픽업") cntpi++
+                    else if (Realitems!![ctemp]?.DeliveryStateName!! == "완료") cntco++
+                    else if (Realitems!![ctemp]?.DeliveryStateName!! == "취소") cntca++
+
                     if (setRiderfilter != Realitems!![ctemp]?.RiderName) {
                         continue
                     } else {
                         itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
-                        if (Realitems!![ctemp]?.DeliveryStateName!! == "접수") cntbr++
-                        else if (Realitems!![ctemp]?.DeliveryStateName!! == "배정") cntre++
-                        else if (Realitems!![ctemp]?.DeliveryStateName!! == "픽업") cntpi++
-                        else if (Realitems!![ctemp]?.DeliveryStateName!! == "완료") cntco++
-                        else if (Realitems!![ctemp]?.DeliveryStateName!! == "취소") cntca++
                     }
                 } else //  필터 없음
                 {
-                    if (Vars.f_center.contains(Realitems!![ctemp]?.RcptCenterId) || Vars.f_five.contains(Realitems!![ctemp]?.DeliveryStateName)) {
+                    if (Realitems!![ctemp]?.DeliveryStateName!! == "접수") cntbr++
+                    else if (Realitems!![ctemp]?.DeliveryStateName!! == "배정") cntre++
+                    else if (Realitems!![ctemp]?.DeliveryStateName!! == "픽업") cntpi++
+                    else if (Realitems!![ctemp]?.DeliveryStateName!! == "완료") cntco++
+                    else if (Realitems!![ctemp]?.DeliveryStateName!! == "취소") cntca++
+
+                    if (Vars.f_center.contains(Realitems!![ctemp]?.RcptCenterId) || Vars.f_five.contains(Realitems!![ctemp]?.DeliveryStateName))
+                    {
                         continue
-                    } else {
+                    }
+                    else
+                    {
                         itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
-                        if (Realitems!![ctemp]?.DeliveryStateName!! == "접수") cntbr++
-                        else if (Realitems!![ctemp]?.DeliveryStateName!! == "배정") cntre++
-                        else if (Realitems!![ctemp]?.DeliveryStateName!! == "픽업") cntpi++
-                        else if (Realitems!![ctemp]?.DeliveryStateName!! == "완료") cntco++
-                        else if (Realitems!![ctemp]?.DeliveryStateName!! == "취소") cntca++
                     }
                 }
             }
@@ -409,11 +414,11 @@ class ItemViewModel : ViewModel() {
         }
     }
 
-//    fun onLongClickOnHeading(v: View?, pos: Int): Boolean {
-//        Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ITEM_SELECT, items?.get(pos)).sendToTarget()
-//        sendedItem = items?.get(pos)
-//        return true
-//    }
+    fun onLongClickOnHeading(v: View?, pos: Int): Boolean {
+        Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ITEM_SELECT, items?.get(pos)).sendToTarget()
+        sendedItem = items?.get(pos)
+        return true
+    }
 
     fun maincloseDetail(){
         sendedItem = null

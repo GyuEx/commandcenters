@@ -25,6 +25,8 @@ class MessageViewModel : ViewModel() {
         else if(msg.value == "고객에게 전화") Vars.MainsHandler!!.obtainMessage(Finals.SEND_TELEPHONE,num).sendToTarget()
         else if(msg.value == "라이더에게 전화") Vars.MainsHandler!!.obtainMessage(Finals.SEND_TELEPHONE,num).sendToTarget()
         else if(msg.value == "고객주소변경") Vars.MainsHandler!!.obtainMessage(Finals.CHANGE_ADDRESS).sendToTarget()
+        else if(msg.value!!.indexOf("라이더에게 배정") > 0) Vars.MapHandler!!.obtainMessage(Finals.ORDER_ASSIGN).sendToTarget() // 라이더명은 N이므로 indexOf로 처리
+
     }
 
     fun click_cancel(){

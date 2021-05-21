@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="text_color" type="int"/>
+        <variable name="text_color_string" type="String"/>
+        <variable name="back_color" type="String"/>
+
+        <variable
+            name="viewModel"
+            type="com.beyondinc.commandcenter.viewmodel.AddressViewModel" />
+
+        <variable
+            name="pos"
+            type="Integer" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white">
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:onClick="@{v->viewModel.click_Adress(pos)}"
+            app:select_dong_backcolor="@{viewModel.itemsAddr.get(pos).use}"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:textSize="15dp"
+                    android:gravity="left"
+                    android:text='@{viewModel.selection.equals("Jibun")? viewModel.getTitle(pos) : viewModel.selection.equals("Road")? viewModel.getSub(pos):viewModel.getPoi(pos)}'
+                    android:singleLine="true"
+                    android:focusable="true"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:textSize="13dp"
+                    android:gravity="left"
+                    android:text='@{viewModel.selection.equals("Jibun")? viewModel.getSub(pos) : viewModel.selection.equals("Road")? viewModel.getTitle(pos):viewModel.getTitle(pos)}'
+                    android:singleLine="true"
+                    android:focusable="true"
+                    android:textColor="@color/whitegray"
+                    android:textStyle="bold"/>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:textSize="13dp"
+                    android:gravity="left"
+                    android:text='@{viewModel.selection.equals("Jibun")? viewModel.getPoi(pos) : viewModel.selection.equals("Road")? viewModel.getPoi(pos):viewModel.getSub(pos)}'
+                    android:singleLine="true"
+                    android:focusable="true"
+                    android:textColor="@color/whitegray"
+                    android:textStyle="bold"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingRight="5dp"
+                android:onClick="@{v->viewModel.click_choice()}"
+                app:layout_addr="@{viewModel.itemsAddr.get(pos).use == true? 1:0}"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"
+                    android:background="@color/orange"
+                    android:text="선택">
+
+                </TextView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white">
+        </TextView>
+
+    </LinearLayout>
+</layout>

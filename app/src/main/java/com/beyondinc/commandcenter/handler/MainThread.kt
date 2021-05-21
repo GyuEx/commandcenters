@@ -7,7 +7,9 @@ import com.beyondinc.commandcenter.data.Alarmdata
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.net.DACallerInterface
+import com.beyondinc.commandcenter.repository.database.entity.Addrdata
 import com.beyondinc.commandcenter.repository.database.entity.Centerdata
+import com.beyondinc.commandcenter.repository.database.entity.Dongdata
 import com.beyondinc.commandcenter.repository.database.entity.Riderdata
 import com.beyondinc.commandcenter.util.Codes
 import com.beyondinc.commandcenter.util.Finals
@@ -17,11 +19,13 @@ import com.vasone.deliveryalarm.DAClient
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class MainThread() : Thread() , ThreadFun{
 
     private var isKeep : Boolean = false
+    private var allcnt = 0
 
     init {
         isKeep = true
@@ -148,13 +152,20 @@ class MainThread() : Thread() , ThreadFun{
                         {
                             if(orcnt == 0)
                             {
-                                Vars.timecntOT = 60
-                                Vars.MainsHandler!!.obtainMessage(Finals.CONN_ALRAM).sendToTarget()
+                                Vars.timecntOT = 60 // 체크 주기 다시 1분으로 변경하고
+                                allcnt = 0 // 재시도 횟수 0으로 초기화
+                                Vars.MainsHandler!!.obtainMessage(Finals.CONN_ALRAM).sendToTarget() // 알람켜기
                                 Log.e("MainThread" , "일치할걸?")
                             }
                             else
                             {
                                 Vars.MainsHandler!!.obtainMessage(Finals.CHECK_TIME).sendToTarget() // 데이터가 안맞으면 마지막시간으로 던져서 확인해!
+                                if(allcnt > 5)
+                                {
+                                    Vars.MainsHandler!!.obtainMessage(Finals.CALL_ORDER).sendToTarget() // 5번정도 안맞으면 전체리스트 땡겨와
+                                    allcnt = 0 // 전체리스트를 두번씩 땡길 필요는 없지
+                                }
+                                else allcnt++
                                 Log.e("MainThread" , "일치하지 않음")
                             }
                         }
@@ -195,10 +206,56 @@ class MainThread() : Thread() , ThreadFun{
                     else if(code == Procedures.EDIT_ORDER_INFO)
                     {
                         var msg = ""
-                        for(i in 0 until data!!.size) {
-                            msg = data!![i]["MSG"].toString()
+                        var arrayList : HashMap<String,Any> = HashMap()
+                        var sub = 0
+                        for(i in 0 until data!!.size)
+                        {
+                            if(data!![i].size == 4)
+                            {
+                                sub = 4
+                                var dd = Dongdata()
+                                dd.code = data!![i]["LawTownCode"].toString()
+                                dd.name = data!![i]["LawTownName"].toString()
+                                arrayList[dd.name!!] = dd
+                            }
+                            else if(data!![i].size == 13)
+                            {
+                                sub = 13
+                                var ad = Addrdata()
+                                ad.BuildingManageNo = data!![i]["BuildingManageNo"].toString()
+                                ad.CityName = data!![i]["CityName"].toString()
+                                ad.CountyName = data!![i]["CountyName"].toString()
+                                ad.Jibun = data!![i]["Jibun"].toString()
+                                ad.JibunAddr = data!![i]["JibunAddr"].toString()
+                                ad.Latitude = data!![i]["Latitude"].toString()
+                                ad.Longitude = data!![i]["Longitude"].toString()
+                                ad.Road = data!![i]["Road"].toString()
+                                ad.RoadAddr = data!![i]["RoadAddr"].toString()
+                                ad.VillageName = data!![i]["VillageName"].toString()
+                                ad.LawTownName = data!![i]["LawTownName"].toString()
+                                arrayList[ad.BuildingManageNo!!] = ad
+                            }
+                            else
+                            {
+                                msg = data!![i]["MSG"].toString()
+                            }
                         }
-                        Vars.MainsHandler!!.obtainMessage(Finals.ORDER_TOAST_SHOW,msg).sendToTarget()
+                        if(sub == 0 && msg != "조회결과가 존재하지 않습니다.")
+                        {
+                            Vars.MainsHandler!!.obtainMessage(Finals.ORDER_TOAST_SHOW,msg).sendToTarget()
+                        }
+                        else if(sub == 4)
+                        {
+                            Vars.dongList.clear() // 한번전체삭제 하고
+                            Vars.dongList.putAll(arrayList)
+                            Vars.MainsHandler!!.obtainMessage(Finals.INSERT_ADDR).sendToTarget() //메인으로보낼것 Addr은 null임
+                        }
+                        else if(sub == 13)
+                        {
+                            Vars.AddrList.clear() // 한번전체삭제 하고
+                            Vars.AddrList.putAll(arrayList)
+                            Vars.AddressHandler!!.obtainMessage(Finals.SEARCH_ADDR).sendToTarget() //Addr은 Null이 아니므로 바로 보냄
+                        }
                     }
                 }
                 Thread.sleep(200)

@@ -14,13 +14,13 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.beyondinc.commandcenter.Interface.LoginsFun
 import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Alarmdata
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.net.DACallerInterface
+import com.beyondinc.commandcenter.repository.database.entity.Addrdata
 import com.beyondinc.commandcenter.util.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
@@ -44,6 +44,7 @@ class MainsViewModel : ViewModel() {
     var briteLayer = MutableLiveData<Int>()
 
     var proTxt = MutableLiveData<String>()
+    var dongArray = MutableLiveData<ArrayList<String>>()
 
     var Item : MutableLiveData<Orderdata> = MutableLiveData()
     var showDetail : Boolean = false
@@ -116,8 +117,25 @@ class MainsViewModel : ViewModel() {
                 else if(msg.what == Finals.SHOW_LOADING) showLoading()
                 else if(msg.what == Finals.CLOSE_LOADING) closeLoading()
                 else if(msg.what == Finals.DISCONN_ALRAM) disconnectAlram()
+                else if(msg.what == Finals.SHOW_MESSAGE) showMessage(msg.obj as String,"0")
+                else if(msg.what == Finals.CHANGE_CLOSE) changeClose()
+                else if(msg.what == Finals.SEARCH_ADDR) getAddress(msg.obj as HashMap<Int, String>)
+                else if(msg.what == Finals.INSERT_ADDR) insertAddr()
+                else if(msg.what == Finals.CHANGE_ADDR) changeAddr(msg.obj as Addrdata)
             }
         }
+    }
+
+    fun insertAddr(){
+        (Vars.mContext as MainsFun).showAddress()
+        (Vars.mContext as MainsFun).closeMessage()
+        if(Vars.AddressHandler != null) Vars.AddressHandler!!.obtainMessage(Finals.INSERT_ADDR).sendToTarget()
+    }
+
+    fun changeAddr(addrdata: Addrdata) {
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeChangeDeliveryAddressParameter(Logindata.LoginId!!, Item.value!!.OrderId, addrdata.Addr, addrdata.detailAddress,addrdata.Jibun,addrdata.Road,addrdata.LawTownName,addrdata.BuildingManageNo,addrdata.Latitude, addrdata.Longitude)
+        Vars.sendList.add(temp)
     }
 
     fun showLoading(){
@@ -155,6 +173,12 @@ class MainsViewModel : ViewModel() {
         Vars.sendList.add(temp)
     }
 
+    fun getAddress(value : HashMap<Int,String>){
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeAddressListParameter(Logindata.LoginId!!, Item.value!!.OrderId, Item.value!!.RcptCenterId, Item.value!!.AgencyId,value[0].toString(),value[1].toString(),value[2].toString())
+        Vars.sendList.add(temp)
+    }
+
     fun checkOrderCount(){
         var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
         var it:Iterator<String> = Vars.centerList.keys.iterator()
@@ -176,7 +200,9 @@ class MainsViewModel : ViewModel() {
     }
 
     fun showAddress(){
-        (Vars.mContext as MainsFun).showAddress()
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeAgencyTownListParameter(Logindata.LoginId!!, Item.value!!.OrderId, Item.value!!.RcptCenterId, Item.value!!.AgencyId)
+        Vars.sendList.add(temp)
     }
 
     fun changePay(sub: Int){
@@ -284,11 +310,13 @@ class MainsViewModel : ViewModel() {
 
     fun HttpError()
     {
-        Toast.makeText(Vars.mContext, "서버접속실패", Toast.LENGTH_SHORT).show()
+        proTxt.value = "인터넷 연결상태가 올바르지 않습니다.\n연결이 회복되면 자동으로 사라집니다."
+        showLoading()
     }
 
     fun setBright(){
         briteLayer.value = Vars.Bright
+        Vars.CheckHandler!!.obtainMessage(Finals.INSERT_STORE).sendToTarget()
         Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
         Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
         Vars.MapHandler!!.obtainMessage(Finals.INSERT_RIDER).sendToTarget()

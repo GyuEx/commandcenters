@@ -87,28 +87,17 @@ class MapViewModel : ViewModel()
                 }
                 else if(msg.what == Finals.MAP_MOVE_FOCUS) MapFocusSet(msg.obj as Riderdata)
                 else if(msg.what == Finals.MAP_FOR_REMOVE) CancelRider()
-                else if(msg.what == Finals.SELECT_ORDER) selectOr(msg.obj)
+                else if(msg.what == Finals.SELECT_ORDER) selectOr()
                 else if(msg.what == Finals.SELECT_EMPTY) emptyOr()
                 else if(msg.what == Finals.INSERT_ORDER_COUNT) subitemsize.value = msg.obj as Int
                 else if(msg.what == Finals.MAP_FOR_ASSIGN_CREATE) createAssign(msg.obj as Orderdata)
                 else if(msg.what == Finals.MAP_FOR_ASSIGN_REMOVE) removeAssign(msg.obj as Orderdata)
+                else if(msg.what == Finals.ORDER_ASSIGN) to_assgin_click()
             }
         }
     }
 
-    fun selectOr(v : Any?){
-        if(Lrawer.value!!) selectOr.value = Finals.SELECT_ORDER
-    }
-
-    fun emptyOr(){
-        selectOr.value = Finals.SELECT_EMPTY
-    }
-
-    fun getOr() : Int?{
-        return Finals.SELECT_ORDER
-    }
-
-    fun click_assign(){
+    fun to_assgin_click(){
         if(Item.value != null)
         {
             Vars.SubItemHandler!!.obtainMessage(Finals.ORDER_ASSIGN_LIST, Item!!.value!!.id).sendToTarget() //아이디는 그냥 주는거임
@@ -122,16 +111,93 @@ class MapViewModel : ViewModel()
         }
     }
 
+    fun selectOr(){
+        if(Lrawer.value!!) selectOr.value = Finals.SELECT_ORDER
+    }
+
+    fun emptyOr(){
+        selectOr.value = Finals.SELECT_EMPTY
+    }
+
+    fun getOr() : Int?{
+        return if(Item.value != null) Finals.SELECT_ORDER else Finals.NOT_USE_CODE
+    }
+
+    fun click_assign(){
+        var msg = "${Item.value!!.name} 라이더에게 배정"
+        Vars.MainsHandler!!.obtainMessage(Finals.SHOW_MESSAGE,msg).sendToTarget()
+    }
+
+    fun mapFocusing(){
+
+        // 모든 마커의 중심으로 갈수있는 로직을 짜보자
+
+        var MaxY : Double = Item.value!!.latitude!!.toDouble()
+        var MinY : Double = Item.value!!.latitude!!.toDouble()
+        var MaxX : Double = Item.value!!.longitude!!.toDouble()
+        var MinX : Double = Item.value!!.longitude!!.toDouble()
+
+        // 기준은 라이더 마커의 중심으로 한다!
+
+        if(markerAccesList.size > 0)
+        {
+            for(i in 0 until markerAccesList.size)
+            {
+                if(markerAccesList[i]!!.position.latitude > MaxY) MaxY = markerAccesList[i]!!.position.latitude
+                if(markerAccesList[i]!!.position.latitude < MinY) MinY = markerAccesList[i]!!.position.latitude
+                if(markerAccesList[i]!!.position.longitude > MaxX) MaxX = markerAccesList[i]!!.position.longitude
+                if(markerAccesList[i]!!.position.longitude < MinX) MinX = markerAccesList[i]!!.position.longitude
+            }
+        }
+        if(markerPikupList.size > 0)
+        {
+            for(i in 0 until markerPikupList.size)
+            {
+                if(markerPikupList[i]!!.position.latitude > MaxY) MaxY = markerPikupList[i]!!.position.latitude
+                if(markerPikupList[i]!!.position.latitude < MinY) MinY = markerPikupList[i]!!.position.latitude
+                if(markerPikupList[i]!!.position.longitude > MaxX) MaxX = markerPikupList[i]!!.position.longitude
+                if(markerPikupList[i]!!.position.longitude < MinX) MinX = markerPikupList[i]!!.position.longitude
+            }
+        }
+
+        var ita = markerAssignAgencyList.keys.iterator()
+        while (ita.hasNext())
+        {
+            var itaa = ita.next()
+            if(markerAssignAgencyList[itaa]!!.position.latitude > MaxY) MaxY = markerAssignAgencyList[itaa]!!.position.latitude
+            if(markerAssignAgencyList[itaa]!!.position.latitude < MinY) MinY = markerAssignAgencyList[itaa]!!.position.latitude
+            if(markerAssignAgencyList[itaa]!!.position.longitude > MaxX) MaxX = markerAssignAgencyList[itaa]!!.position.longitude
+            if(markerAssignAgencyList[itaa]!!.position.longitude < MinX) MinX = markerAssignAgencyList[itaa]!!.position.longitude
+        }
+        var itc = markerAssignCustList.keys.iterator()
+        while (itc.hasNext())
+        {
+            var itcc = itc.next()
+            if(markerAssignCustList[itcc]!!.position.latitude > MaxY) MaxY = markerAssignCustList[itcc]!!.position.latitude
+            if(markerAssignCustList[itcc]!!.position.latitude < MinY) MinY = markerAssignCustList[itcc]!!.position.latitude
+            if(markerAssignCustList[itcc]!!.position.longitude > MaxX) MaxX = markerAssignCustList[itcc]!!.position.longitude
+            if(markerAssignCustList[itcc]!!.position.longitude < MinX) MinX = markerAssignCustList[itcc]!!.position.longitude
+        }
+
+        var LatLng1 = LatLng(MaxY,MaxX)
+        var LatLng2 = LatLng(MinY,MinX)
+
+        mapInstance?.moveCamera(CameraUpdate.fitBounds(LatLngBounds(LatLng1,LatLng2)))
+        mapInstance?.moveCamera(CameraUpdate.zoomOut()) //간단하게 줌 아웃
+    }
+
     fun MapFocusSet(obj: Riderdata){
 
         //Log.e("SET Move" ," Focus Set on ")
 
+        var onMove : Boolean = false
+
         if(Item.value?.id != obj.id)
         {
+            onMove = true
             Item.value = obj
-            mapInstance?.moveCamera(CameraUpdate.scrollTo(Item.value!!.MakerID!!.position))
             CloseDrawer()
-
+            mapFocusing()
             for (marker in markerList.keys) {
                 if(Item!!.value!!.MakerID != marker) marker.map = null
                 else if (Item!!.value!!.MakerID!!.map == null) marker.map = mapInstance // 내꺼가 없을 경우가 있음..!
@@ -139,6 +205,7 @@ class MapViewModel : ViewModel()
             //전체 마커 초기화, 라이더 마커는 다 지웟다 그릴필요없이 선택된것이 아닌것만 삭제함
 
             Olayer.value = Finals.MAP_FOR_ORDER
+            if(Lrawer.value!!) selectOr.value = Finals.SELECT_ORDER
         }
 
         riderTitle.value = "${Item.value!!.name} : 배정 ${Item.value!!.assignCount} / 픽업 ${Item.value!!.pickupCount} / 완료 ${Item.value!!.completeCount}"
@@ -180,8 +247,8 @@ class MapViewModel : ViewModel()
         }
         else
         {
-            createAccept()
-            createPikup()
+            createAccept(onMove)
+            createPikup(onMove)
             Vars.AssignHandler!!.obtainMessage(Finals.INSERT_ORDER,tempmap).sendToTarget()
         }
     }
@@ -327,7 +394,7 @@ class MapViewModel : ViewModel()
         Vars.SubRiderHandler!!.obtainMessage(Finals.REMOVE_RIDER_MARKER,marker).sendToTarget()
     }
 
-    fun createPikup()
+    fun createPikup(move : Boolean)
     {
         for (marker in markerPikupList) {
             marker.map = null
@@ -379,9 +446,11 @@ class MapViewModel : ViewModel()
                 }
             }
         }
+
+        if(move) mapFocusing()
     }
 
-    fun createAccept()
+    fun createAccept(move : Boolean)
     {
         for (marker in markerAccesList) {
             marker.map = null
@@ -433,6 +502,8 @@ class MapViewModel : ViewModel()
                 }
             }
         }
+
+        if(move) mapFocusing()
     }
 
     fun createAssign(assorder: Orderdata)
@@ -475,8 +546,7 @@ class MapViewModel : ViewModel()
                 lineAssign[assorder] = path
             }
         }
-        mapInstance?.moveCamera(CameraUpdate.fitBounds(LatLngBounds(agencyPosition,customerPosition)))
-        mapInstance?.moveCamera(CameraUpdate.zoomOut()) //간단하게 줌 아웃
+        mapFocusing()
     }
 
     fun removeAssign(assorder: Orderdata)

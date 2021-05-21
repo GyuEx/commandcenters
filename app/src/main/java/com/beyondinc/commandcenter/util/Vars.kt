@@ -10,6 +10,7 @@ import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.handler.MarkerThread
 import com.beyondinc.commandcenter.net.DACallerInterface
 import com.beyondinc.commandcenter.repository.database.entity.Centerdata
+import com.beyondinc.commandcenter.repository.database.entity.Dongdata
 import com.beyondinc.commandcenter.repository.database.entity.Riderdata
 import com.naver.maps.map.overlay.Marker
 import com.vasone.deliveryalarm.DAClient
@@ -42,6 +43,8 @@ object Vars {
     var sendList: ArrayList<ConcurrentHashMap<String,JSONArray>> = ArrayList()
     var receiveList: ArrayList<ConcurrentHashMap<String,ArrayList<ConcurrentHashMap<String, String>>>> = ArrayList()
     var alarmList : LinkedList<Alarmdata> = LinkedList()
+    var dongList : ConcurrentHashMap<String,Any> = ConcurrentHashMap()
+    var AddrList : ConcurrentHashMap<String,Any> = ConcurrentHashMap()
 
     var centerList: ConcurrentHashMap<String,Centerdata> = ConcurrentHashMap()
     var centerNick: ConcurrentHashMap<String,String> = ConcurrentHashMap()
@@ -58,6 +61,7 @@ object Vars {
     var MapHandler : Handler? = null
     var SubRiderHandler : Handler? = null
     var AssignHandler : Handler? = null
+    var AddressHandler : Handler? = null
 
     var MainThread : Thread? = null
     var HttpThread : Thread? = null

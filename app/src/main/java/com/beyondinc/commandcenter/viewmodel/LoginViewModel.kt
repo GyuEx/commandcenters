@@ -72,7 +72,7 @@ open class LoginViewModel() : ViewModel() {
             pw.value = pref.getString("pw", "")
         }
 
-        getPhoneNum()
+        //getPhoneNum()
 
         Vars.LoginHandler = @SuppressLint("HandlerLeak") object : Handler() {
             override fun handleMessage(msg: Message) {

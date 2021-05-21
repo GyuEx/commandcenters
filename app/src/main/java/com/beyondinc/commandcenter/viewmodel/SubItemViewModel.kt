@@ -78,26 +78,21 @@ class SubItemViewModel : ViewModel() {
         {
             var ctemp = it.next()
 
+            if (Realitemss!![ctemp]?.DeliveryStateName!! == "접수") cntbr++
+            else if (Realitemss!![ctemp]?.DeliveryStateName!! == "배정") cntre++
+            else if (Realitemss!![ctemp]?.DeliveryStateName!! == "픽업") cntpi++
+            else if (Realitemss!![ctemp]?.DeliveryStateName!! == "완료") cntco++
+            else if (Realitemss!![ctemp]?.DeliveryStateName!! == "취소") cntca++
+
             if(Vars.f_center.contains(Realitemss!![ctemp]?.RcptCenterId) || Realitemss!![ctemp]?.DeliveryStateName != "접수")
             {
-                if (Realitemss!![ctemp]?.DeliveryStateName!! == "접수") cntbr++
-                else if (Realitemss!![ctemp]?.DeliveryStateName!! == "배정") cntre++
-                else if (Realitemss!![ctemp]?.DeliveryStateName!! == "픽업") cntpi++
-                else if (Realitemss!![ctemp]?.DeliveryStateName!! == "완료") cntco++
-                else if (Realitemss!![ctemp]?.DeliveryStateName!! == "취소") cntca++
                 continue
             }
             else
             {
-                if (Realitemss!![ctemp]?.DeliveryStateName!! == "접수") cntbr++
-                else if (Realitemss!![ctemp]?.DeliveryStateName!! == "배정") cntre++
-                else if (Realitemss!![ctemp]?.DeliveryStateName!! == "픽업") cntpi++
-                else if (Realitemss!![ctemp]?.DeliveryStateName!! == "완료") cntco++
-                else if (Realitemss!![ctemp]?.DeliveryStateName!! == "취소") cntca++
                 itemp[Realitemss!![ctemp]!!.OrderId.toInt()] = Realitemss!![ctemp]!!
             }
         }
-
 
         var shorttmp : SortedMap<Int, Orderdata>
         if(Vars.UseTime) shorttmp = itemp.toSortedMap()

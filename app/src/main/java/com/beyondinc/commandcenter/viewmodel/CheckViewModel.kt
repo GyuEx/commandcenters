@@ -87,20 +87,13 @@ class CheckViewModel : ViewModel() {
 
     fun onResume() {}
 
-//    fun getItems(): ConcurrentHashMap<Int,Checkdata>? {
-//        return items
-//    }
-
-    fun getId(pos: Int): Int? {
-        return items!![pos]?.id
-    }
 
     fun getTitle(pos: Int): String? {
-        return items!![pos]?.title
-    }
-
-    fun getUse(pos: Int): Boolean? {
-        return items!![pos]?.use
+        return if(Vars.centerNick.containsKey(items!![pos]?.title)) //키가 없을수도 있음
+        {
+            if(!Vars.centerNick[items!![pos]?.title].isNullOrEmpty()) items!![pos]?.title + " // " + Vars.centerNick[items!![pos]?.title] //값이 없을수도 있음
+            else items!![pos]?.title
+        } else items!![pos]?.title
     }
 
     fun setUse(pos: Int){

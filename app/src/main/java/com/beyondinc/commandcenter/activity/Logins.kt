@@ -1,47 +1,37 @@
 package com.beyondinc.commandcenter.activity
 
 import android.Manifest
-import android.app.DownloadManager
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.net.Uri
+import android.net.ConnectivityManager
+import android.net.ConnectivityManager.TYPE_MOBILE
+import android.net.ConnectivityManager.TYPE_WIFI
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
-import com.beyondinc.commandcenter.BuildConfig
 import com.beyondinc.commandcenter.Interface.LoginsFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.databinding.ActivityLoginsBinding
 import com.beyondinc.commandcenter.fragment.DownloadingDialog
-import com.beyondinc.commandcenter.fragment.LoadingDialog
 import com.beyondinc.commandcenter.fragment.LoginLoadingDialog
 import com.beyondinc.commandcenter.handler.AlarmThread
 import com.beyondinc.commandcenter.handler.CheckThread
 import com.beyondinc.commandcenter.handler.MainThread
 import com.beyondinc.commandcenter.handler.MarkerThread
 import com.beyondinc.commandcenter.net.HttpConn
-import com.beyondinc.commandcenter.service.ForecdTerminationService
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.MakeJsonParam
 import com.beyondinc.commandcenter.util.Procedures
 import com.beyondinc.commandcenter.util.Vars
-import com.beyondinc.commandcenter.viewmodel.CheckViewModel
 import com.beyondinc.commandcenter.viewmodel.LoginViewModel
 import org.json.simple.JSONArray
-import java.io.File
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -180,39 +170,39 @@ class Logins : AppCompatActivity() , LoginsFun {
         if (Build.VERSION.SDK_INT >= 17) {
             val pms: MutableList<String> = ArrayList()
             if (ActivityCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.READ_PHONE_STATE
-                    ) !== PackageManager.PERMISSION_GRANTED
-            ) pms.add(
+                    this,
                     Manifest.permission.READ_PHONE_STATE
+                ) !== PackageManager.PERMISSION_GRANTED
+            ) pms.add(
+                Manifest.permission.READ_PHONE_STATE
             )
             if (ActivityCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) !== PackageManager.PERMISSION_GRANTED
-            ) pms.add(
+                    this,
                     Manifest.permission.ACCESS_COARSE_LOCATION
+                ) !== PackageManager.PERMISSION_GRANTED
+            ) pms.add(
+                Manifest.permission.ACCESS_COARSE_LOCATION
             )
             if (ActivityCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                    ) !== PackageManager.PERMISSION_GRANTED
-            ) pms.add(
+                    this,
                     Manifest.permission.ACCESS_FINE_LOCATION
+                ) !== PackageManager.PERMISSION_GRANTED
+            ) pms.add(
+                Manifest.permission.ACCESS_FINE_LOCATION
             )
             if (ActivityCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.CALL_PHONE
-                    ) !== PackageManager.PERMISSION_GRANTED
-            ) pms.add(
+                    this,
                     Manifest.permission.CALL_PHONE
+                ) !== PackageManager.PERMISSION_GRANTED
+            ) pms.add(
+                Manifest.permission.CALL_PHONE
             )
             if (ActivityCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ) !== PackageManager.PERMISSION_GRANTED
-            ) pms.add(
+                    this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) !== PackageManager.PERMISSION_GRANTED
+            ) pms.add(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
             if (ActivityCompat.checkSelfPermission(
                     this,
@@ -231,32 +221,32 @@ class Logins : AppCompatActivity() , LoginsFun {
                 Manifest.permission.REQUEST_INSTALL_PACKAGES
             )
             if (ActivityCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.RECORD_AUDIO
-                    ) !== PackageManager.PERMISSION_GRANTED
-            ) pms.add(
+                    this,
                     Manifest.permission.RECORD_AUDIO
-            )
-            if (ActivityCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.READ_PHONE_STATE
-                    ) !== PackageManager.PERMISSION_GRANTED
+                ) !== PackageManager.PERMISSION_GRANTED
             ) pms.add(
-                    Manifest.permission.READ_PHONE_STATE
+                Manifest.permission.RECORD_AUDIO
             )
             if (ActivityCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.READ_PHONE_NUMBERS
-                    ) !== PackageManager.PERMISSION_GRANTED
+                    this,
+                    Manifest.permission.READ_PHONE_STATE
+                ) !== PackageManager.PERMISSION_GRANTED
+            ) pms.add(
+                Manifest.permission.READ_PHONE_STATE
+            )
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_PHONE_NUMBERS
+                ) !== PackageManager.PERMISSION_GRANTED
 
             ) pms.add(
-                    Manifest.permission.READ_PHONE_NUMBERS
+                Manifest.permission.READ_PHONE_NUMBERS
             )
             if (pms.size == 0) {
 
             } else ActivityCompat.requestPermissions(
-                    this,
-                    pms.toTypedArray(), Finals.REQUEST_PERMISSION
+                this,
+                pms.toTypedArray(), Finals.REQUEST_PERMISSION
             )
         }
     }

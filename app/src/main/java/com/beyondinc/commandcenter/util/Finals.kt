@@ -92,6 +92,11 @@ object Finals {
     val CLOSE_LOADING : Int = 142
     val CONN_ALRAM : Int = 143
     val DISCONN_ALRAM : Int = 144
+    val SHOW_MESSAGE : Int = 145
+
+    val INSERT_ADDR : Int = 151
+    val SEARCH_ADDR : Int = 152
+    val CHANGE_ADDR : Int = 153
 
     const val REQUEST_PERMISSION = 10001
     const val KAKAO_KEY = "c5a3395640f428b7cd90ea429d902c8d"

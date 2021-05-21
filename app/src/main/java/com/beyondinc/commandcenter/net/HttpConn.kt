@@ -27,6 +27,7 @@ class HttpConn : Thread(), ThreadFun {
     var isKeep : Boolean = false
     var code : String? = null
     var context : Context? = null
+    var dofalseConn = 0
 
     init {
         isKeep = true
@@ -142,6 +143,12 @@ class HttpConn : Thread(), ThreadFun {
                         temp[code!!] = returnData
                         Vars.receiveList.add(temp)
 
+                        if(dofalseConn > 5)
+                        {
+                            Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_LOADING).sendToTarget()
+                            dofalseConn = 0
+                        }
+
                     } else {
                         Log.e("HTTP", con.responseMessage)
                     }
@@ -152,6 +159,15 @@ class HttpConn : Thread(), ThreadFun {
                 if (code == Procedures.LOGIN) Vars.LoginHandler!!.obtainMessage(Finals.LOGIN_FAIL).sendToTarget()
                 else
                 {
+                    if(dofalseConn == 5)
+                    {
+                        Vars.MainsHandler!!.obtainMessage(Finals.HTTP_ERROR).sendToTarget()
+                        dofalseConn++
+                    }
+                    else
+                    {
+                        dofalseConn++
+                    }
                     Vars.MainsHandler!!.obtainMessage(Finals.DISCONN_ALRAM).sendToTarget() // 데이터전송실패시 알람을 꺼버림
                     Vars.timecntOT = 10 // 갯수조회 카운터를 한시적으로 10초로 변경
                 }
