@@ -2,6 +2,7 @@ package com.beyondinc.commandcenter.fragment
 
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
+import android.content.DialogInterface
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.R
+import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.databinding.AddressDialogBinding
 import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.AddressViewModel
@@ -21,17 +23,24 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 
 
-class AddressDialog : DialogFragment(), OnMapReadyCallback {
+class AddressDialog(code:Int, item : Orderdata) : DialogFragment(), OnMapReadyCallback {
 
     var binding: AddressDialogBinding? = null
     var viewModel: AddressViewModel? = null
     var mapfrag: MapFragment? = null
     var fragmentTransaction: FragmentTransaction? = null
+    var code = code
+    var item = item
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //false로 설정해 주면 화면밖 혹은 뒤로가기 버튼시 다이얼로그라 dismiss 되지 않는다.
         isCancelable = false
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        Log.e("Addr","Dissmiss")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +54,10 @@ class AddressDialog : DialogFragment(), OnMapReadyCallback {
         viewModel = ViewModelProvider(requireActivity()).get(AddressViewModel::class.java)
         binding!!.viewModel = viewModel
         binding!!.lifecycleOwner = requireActivity()
+
+        viewModel!!.from.value = code
+        Log.e("aaaaaaa","아하하하하하하하하하하하하")
+        viewModel!!.iteminit(item)
 
         fragmentTransaction = childFragmentManager.beginTransaction()
         mapfrag = MapFragment()

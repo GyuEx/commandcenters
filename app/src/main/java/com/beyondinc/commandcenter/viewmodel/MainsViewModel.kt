@@ -21,6 +21,7 @@ import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.net.DACallerInterface
 import com.beyondinc.commandcenter.repository.database.entity.Addrdata
+import com.beyondinc.commandcenter.repository.database.entity.Dongdata
 import com.beyondinc.commandcenter.util.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
@@ -120,16 +121,34 @@ class MainsViewModel : ViewModel() {
                 else if(msg.what == Finals.SHOW_MESSAGE) showMessage(msg.obj as String,"0")
                 else if(msg.what == Finals.CHANGE_CLOSE) changeClose()
                 else if(msg.what == Finals.SEARCH_ADDR) getAddress(msg.obj as HashMap<Int, String>)
-                else if(msg.what == Finals.INSERT_ADDR) insertAddr()
                 else if(msg.what == Finals.CHANGE_ADDR) changeAddr(msg.obj as Addrdata)
             }
         }
     }
 
-    fun insertAddr(){
-        (Vars.mContext as MainsFun).showAddress()
-        (Vars.mContext as MainsFun).closeMessage()
+    fun insertAllAddr(){
+        (Vars.mContext as MainsFun).closeAddrselect()
+        (Vars.mContext as MainsFun).showAddress(0,Item.value!!)
         if(Vars.AddressHandler != null) Vars.AddressHandler!!.obtainMessage(Finals.INSERT_ADDR).sendToTarget()
+    }
+
+    fun insertDetailAddr()
+    {
+        var road = Item.value!!.CustomerShortAddr.substring(Item.value!!.CustomerAddrData.length + 1).replace("[","").replace("]","")
+        var dong = Item.value!!.CustomerShortAddrNoRoad.substring(0,Item.value!!.CustomerShortAddrNoRoad.indexOf(" "))
+        var temp : HashMap<Int, String> = HashMap()
+        temp[0] = "Road"
+        temp[1] = (Vars.dongList[dong] as Dongdata).code.toString()
+        temp[2] = road
+        getAddress(temp)
+
+        (Vars.mContext as MainsFun).closeAddrselect()
+        (Vars.mContext as MainsFun).showAddress(2,Item.value!!)
+    }
+
+    fun addrclose()
+    {
+        (Vars.mContext as MainsFun).closeAddrselect()
     }
 
     fun changeAddr(addrdata: Addrdata) {
@@ -203,6 +222,8 @@ class MainsViewModel : ViewModel() {
         var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
         temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeAgencyTownListParameter(Logindata.LoginId!!, Item.value!!.OrderId, Item.value!!.RcptCenterId, Item.value!!.AgencyId)
         Vars.sendList.add(temp)
+        (Vars.mContext as MainsFun).closeMessage()
+        (Vars.mContext as MainsFun).showAddrselect()
     }
 
     fun changePay(sub: Int){

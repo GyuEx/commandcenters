@@ -248,13 +248,12 @@ class MainThread() : Thread() , ThreadFun{
                         {
                             Vars.dongList.clear() // 한번전체삭제 하고
                             Vars.dongList.putAll(arrayList)
-                            Vars.MainsHandler!!.obtainMessage(Finals.INSERT_ADDR).sendToTarget() //메인으로보낼것 Addr은 null임
                         }
                         else if(sub == 13)
                         {
                             Vars.AddrList.clear() // 한번전체삭제 하고
                             Vars.AddrList.putAll(arrayList)
-                            Vars.AddressHandler!!.obtainMessage(Finals.SEARCH_ADDR).sendToTarget() //Addr은 Null이 아니므로 바로 보냄
+                            Vars.AddressHandler?.obtainMessage(Finals.SEARCH_ADDR)?.sendToTarget() //Addr은 Null이 널일수 있음!
                         }
                     }
                 }

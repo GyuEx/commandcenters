@@ -97,6 +97,7 @@ object Finals {
     val INSERT_ADDR : Int = 151
     val SEARCH_ADDR : Int = 152
     val CHANGE_ADDR : Int = 153
+    val DETAIL_ADDR : Int = 154
 
     const val REQUEST_PERMISSION = 10001
     const val KAKAO_KEY = "c5a3395640f428b7cd90ea429d902c8d"

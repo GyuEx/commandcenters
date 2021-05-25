@@ -1,6 +1,6 @@
 package com.beyondinc.commandcenter.Interface
 
-import android.view.MotionEvent
+import com.beyondinc.commandcenter.data.Orderdata
 
 interface MainsFun {
 
@@ -13,9 +13,10 @@ interface MainsFun {
     fun showHistory()
     fun showMessage(msg:String,num:String)
     fun showSelect()
-    fun showAddress()
+    fun showAddress(code : Int,item : Orderdata)
     fun showPayment()
     fun showLoading()
+    fun showAddrselect()
 
     fun closeDialog()
     fun closeOderdetail()
@@ -24,6 +25,7 @@ interface MainsFun {
     fun closeSelect()
     fun changeClose()
     fun closeLoading()
+    fun closeAddrselect()
 
     fun detail_Fragment(i : Int)
 

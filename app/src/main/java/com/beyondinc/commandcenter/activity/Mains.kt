@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.R
+import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.databinding.ActivityMainBinding
 import com.beyondinc.commandcenter.fragment.*
 import com.beyondinc.commandcenter.service.AppActivateService
@@ -54,6 +55,7 @@ class Mains : AppCompatActivity(), MainsFun {
         var address:AddressDialog? = null
         var payment:PaymentDialog? = null
         var loading:LoadingDialog? = null
+        var addrsel:SelectAddrDialog? = null
 
         val FINISH_INTERVAL_TIME: Long = 2000
         var backPressedTime: Long = 0
@@ -308,11 +310,33 @@ class Mains : AppCompatActivity(), MainsFun {
         }
     }
 
+    override fun showAddrselect() {
+        runOnUiThread {
+            if (addrsel != null) {
+                addrsel!!.dismiss()
+                addrsel = null
+            }
+            addrsel = SelectAddrDialog()
+            addrsel!!.show(supportFragmentManager, "addrsel")
+        }
+    }
+
     override fun closeLoading() {
         try {
             if (loading != null) {
                 loading!!.dismiss()
                 loading = null
+            }
+        } catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
+        }
+    }
+
+    override fun closeAddrselect() {
+        try {
+            if (addrsel != null) {
+                addrsel!!.dismiss()
+                addrsel = null
             }
         } catch (e: Exception) {
             //Log.e("MAIN", Log.getStackTraceString(e))
@@ -352,13 +376,13 @@ class Mains : AppCompatActivity(), MainsFun {
         }
     }
 
-    override fun showAddress() {
+    override fun showAddress(code : Int, item : Orderdata) {
         runOnUiThread {
             if (address != null) {
                 address!!.dismiss()
                 address = null
             }
-            address = AddressDialog()
+            address = AddressDialog(code,item)
             address!!.show(supportFragmentManager, "address")
         }
     }

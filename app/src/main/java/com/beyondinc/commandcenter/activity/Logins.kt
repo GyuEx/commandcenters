@@ -3,6 +3,7 @@ package com.beyondinc.commandcenter.activity
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.ConnectivityManager.TYPE_MOBILE

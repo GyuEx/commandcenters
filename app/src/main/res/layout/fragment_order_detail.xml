@@ -286,7 +286,7 @@
                         android:textColor="@color/black"
                         android:gravity="center_vertical"
                         android:paddingLeft="15dp"
-                        android:text="@{viewModel.item.customerLongAddr}"
+                        android:text='@{viewModel.item.customerLongAddr + " " + viewModel.item.customerDetailAddr}'
                         android:singleLine="false"
                         android:background="@drawable/detail_data_background">
                     </TextView>

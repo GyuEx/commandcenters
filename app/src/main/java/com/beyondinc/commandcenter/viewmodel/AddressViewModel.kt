@@ -6,6 +6,7 @@ import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Handler
 import android.os.Message
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
@@ -27,6 +28,7 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Align
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
+import org.w3c.dom.Text
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.HashMap
@@ -40,24 +42,22 @@ class AddressViewModel : ViewModel() {
     var adapterAddr: RecyclerAdapterAddr? = null
     var selection : MutableLiveData<String> = MutableLiveData()
     var searchTxt = ""
-    var detailTxt = ""
+    var detailTxt : MutableLiveData<String> = MutableLiveData()
     var dong = ""
     var addr = Addrdata()
-    var from : MutableLiveData<Int> = MutableLiveData() // 0:기본 1:트랜스폼
+    var from : MutableLiveData<Int> = MutableLiveData() // 0:기본 1:트랜스폼 2: 상세온리
     var foc : MutableLiveData<Boolean> = MutableLiveData()
     var mapInstance: NaverMap? = null
 
     var title : MutableLiveData<String> = MutableLiveData()
     var sub : MutableLiveData<String> = MutableLiveData()
     var poi : MutableLiveData<String> = MutableLiveData()
+    var item = Orderdata()
 
     val CustMarker = Marker()
 
     init {
         Log.e("AddrssView", "CheckView Enable")
-
-        foc.value = true
-        from.value = 0
 
         selection.value = "Jibun"
 
@@ -81,35 +81,37 @@ class AddressViewModel : ViewModel() {
                 else if(msg.what == Finals.SEARCH_ADDR) insertAddr()
             }
         }
-
         insertdong()
     }
 
     fun initfirst(){
-        from.value = 0
         searchTxt = ""
+        detailTxt.value = ""
         itemsAddr!!.clear()
         foc.value = true
         onCreateAddr()
     }
 
+    fun iteminit(init : Orderdata){
+        item = init
+    }
+
     fun insertdong() {
 
-        initfirst()
-        itemsdong!!.clear()
+            initfirst()
+            itemsdong!!.clear()
 
-        var shorttmp : SortedMap<String, Any> = Vars.dongList.toSortedMap() // 가나다 순이요~
-        //var shorttmp : SortedMap<String, Any> = Vars.dongList.toSortedMap(reverseOrder()) // 역순이요~
+            var shorttmp: SortedMap<String, Any> = Vars.dongList.toSortedMap() // 가나다 순이요~
+            //var shorttmp : SortedMap<String, Any> = Vars.dongList.toSortedMap(reverseOrder()) // 역순이요~
 
-        var it : Iterator<String> = shorttmp.keys.iterator()
-        var cnt = 0
-        while (it.hasNext())
-        {
-            var itt = it.next()
-            itemsdong!![cnt] = shorttmp[itt] as Dongdata
-            cnt++
-        }
-        onCreateDong()
+            var it: Iterator<String> = shorttmp.keys.iterator()
+            var cnt = 0
+            while (it.hasNext()) {
+                var itt = it.next()
+                itemsdong!![cnt] = shorttmp[itt] as Dongdata
+                cnt++
+            }
+            onCreateDong()
     }
 
     fun insertAddr() {
@@ -123,18 +125,31 @@ class AddressViewModel : ViewModel() {
             cnt++
         }
         onCreateAddr()
+
+        if(from.value == 2)
+        {
+            click_Adress(0)
+            if(mapInstance != null) makeMarker()
+        }
     }
 
 
     fun afterTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
     {
         searchTxt = s.toString()
-        searchAddr()
     }
 
     fun afterTextChanged2(s: CharSequence?, start: Int, before: Int, count: Int)
     {
-        detailTxt = s.toString()
+        detailTxt.value = s.toString()
+    }
+
+    fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?) : Boolean
+    {
+        searchAddr()
+        val inputMethodManager = Vars.mContext!!.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(v?.windowToken, 0)
+        return true
     }
 
     fun searchAddr()
@@ -208,14 +223,23 @@ class AddressViewModel : ViewModel() {
 
         title.value = "${addr.CityName} ${addr.CountyName} ${addr.LawTownName} ${addr.Jibun}"
         sub.value = "${addr.CityName} ${addr.CountyName} ${addr.Road}"
-        if(addr.JibunAddr!!.length > addr.Jibun!!.length) poi.value = addr.JibunAddr!!.substring(addr.Jibun!!.length + 1)
-        else poi.value = ""
+        if(addr.JibunAddr!!.length > addr.Jibun!!.length && from.value != 2)
+        {
+            poi.value = addr.JibunAddr!!.substring(addr.Jibun!!.length + 1)
+            detailTxt.value = poi.value
+        }
+        else if(from.value == 2)
+        {
+            poi.value = item.CustomerDetailAddr
+            detailTxt.value = item.CustomerDetailAddr
+        }
+        else
+        {
+            poi.value = ""
+            detailTxt.value = poi.value
+        }
         onCreateAddr()
         closeKeyboard()
-    }
-
-    fun click_Edit(){
-        foc.value = true
     }
 
     fun click_cancel()
@@ -224,21 +248,18 @@ class AddressViewModel : ViewModel() {
     }
 
     fun click_finish(){
-        if(from.value == 1)
-        {
-            addr.Addr = "${addr.CityName} ${addr.CountyName} ${addr.LawTownName} ${addr.Jibun}"
-            if(addr.JibunAddr.length > addr.Jibun.length)
-            {
-                addr.detailAddress = addr.JibunAddr.substring(addr.Jibun.length + 1) +" "+detailTxt
-            }
-            else addr.detailAddress = detailTxt
-            Vars.MainsHandler!!.obtainMessage(Finals.CHANGE_ADDR,addr).sendToTarget()
-        }
+        addr.Addr = "${addr.CityName} ${addr.CountyName} ${addr.LawTownName} ${addr.Jibun}"
+        addr.detailAddress = detailTxt.value!!
+        Vars.MainsHandler!!.obtainMessage(Finals.CHANGE_ADDR,addr).sendToTarget()
         Vars.MainsHandler!!.obtainMessage(Finals.CHANGE_CLOSE).sendToTarget()
     }
 
+    override fun onCleared() {
+        super.onCleared()
+    }
+
     fun closeKeyboard(){
-        if(foc.value == true) foc.value = false
+        foc.value = false
     }
 
     fun click_choice(){
@@ -247,16 +268,17 @@ class AddressViewModel : ViewModel() {
         if(mapInstance != null) makeMarker()
     }
 
-    fun makeMarker(){
+    fun makeMarker()
+    {
         val agencylatitude = addr.Latitude?.toDouble()
         val agencylongitude = addr.Longitude?.toDouble()
         if (agencylatitude != null && agencylongitude != null) {
             val agencyPosition = LatLng(agencylatitude, agencylongitude)
             CustMarker.icon = OverlayImage.fromView(
-                    MainsViewModel.FixedMarkerView(
-                            Vars.mContext!!,
-                            false
-                    )
+                FixedMarkerView(
+                    Vars.mContext!!,
+                    false
+                )
             )
             CustMarker.position = agencyPosition
             CustMarker.captionText = title.value!!

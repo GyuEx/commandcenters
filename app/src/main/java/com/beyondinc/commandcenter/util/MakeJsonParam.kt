@@ -53,28 +53,6 @@ class MakeJsonParam {
         return parameterArray
     }
 
-//    fun makeLoginParameter(id: String, password: String): JSONArray {
-//        val md5EncryptedPassword = Crypto.generateMD5Hash(password)!!
-//        val encryptedPassword = Crypto.generateSHA512Hash(
-//                md5EncryptedPassword.toLowerCase(Locale.ROOT))!!.toUpperCase(Locale.ROOT)
-//
-//        val parameterArray = JSONArray()
-//
-//        val parameterJSON = JSONObject()
-//        parameterJSON["AppType"] = appType
-//        parameterJSON["DeviceId"] = globalInfo.deviceID
-//        parameterJSON["LoginId"] = id
-//        parameterJSON["Passwd"] = encryptedPassword
-//        parameterJSON["AppId"] = globalInfo.appID
-//        parameterJSON["ReqType"] = Procedures.UserAuthType.LOGIN
-//        parameterJSON["AppVersion"] = globalInfo.appVersionName
-//        parameterJSON["ModelName"] = globalInfo.deviceModelNumber
-//        parameterJSON["PhoneNo"] = globalInfo.devicePhoneNumber
-//        parameterArray.add(parameterJSON)
-//
-//        return parameterArray
-//    }
-
 //    fun makeLogoutParameter(loginID: String): JSONArray {
 //        val parameterArray = JSONArray()
 //

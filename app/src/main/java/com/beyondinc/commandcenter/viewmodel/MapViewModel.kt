@@ -16,6 +16,7 @@ import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.handler.MarkerThread
 import com.beyondinc.commandcenter.handler.PlaySoundThread
+import com.beyondinc.commandcenter.net.httpSub
 import com.beyondinc.commandcenter.repository.database.entity.Riderdata
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
@@ -23,10 +24,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.NaverMap
-import com.naver.maps.map.overlay.Align
-import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.overlay.OverlayImage
-import com.naver.maps.map.overlay.PathOverlay
+import com.naver.maps.map.overlay.*
 import java.util.concurrent.ConcurrentHashMap
 
 class MapViewModel : ViewModel()
@@ -53,12 +51,12 @@ class MapViewModel : ViewModel()
     var markerList: ConcurrentHashMap<Marker,Riderdata> = ConcurrentHashMap()
     var markerPikupList : ArrayList<Marker> = ArrayList()
     var markerAccesList : ArrayList<Marker> = ArrayList()
-    var linePikup : ArrayList<PathOverlay> = arrayListOf()
-    var lineAcces : ArrayList<PathOverlay> = arrayListOf()
+    var linePikup : ArrayList<PolylineOverlay> = arrayListOf()
+    var lineAcces : ArrayList<PolylineOverlay> = arrayListOf()
 
     var markerAssignAgencyList : HashMap<Orderdata,Marker> = HashMap()
     var markerAssignCustList : HashMap<Orderdata,Marker> = HashMap()
-    var lineAssign : HashMap<Orderdata,PathOverlay> = HashMap()
+    var lineAssign : HashMap<Orderdata,PolylineOverlay> = HashMap()
 
     var subitemsize : MutableLiveData<Int> = MutableLiveData()
 
@@ -132,10 +130,25 @@ class MapViewModel : ViewModel()
 
         // 모든 마커의 중심으로 갈수있는 로직을 짜보자
 
-        var MaxY : Double = Item.value!!.latitude!!.toDouble()
-        var MinY : Double = Item.value!!.latitude!!.toDouble()
-        var MaxX : Double = Item.value!!.longitude!!.toDouble()
-        var MinX : Double = Item.value!!.longitude!!.toDouble()
+        var MaxY: Double = 0.0
+        var MinY: Double = 0.0
+        var MaxX: Double = 0.0
+        var MinX: Double = 0.0
+
+        if(Item.value != null)
+        {
+            MaxY = Item.value!!.latitude!!.toDouble()
+            MinY = Item.value!!.latitude!!.toDouble()
+            MaxX = Item.value!!.longitude!!.toDouble()
+            MinX = Item.value!!.longitude!!.toDouble()
+        }
+        else
+        {
+            MaxY = markerAssignAgencyList[markerAssignAgencyList.keys.iterator().next()]!!.position.latitude
+            MinY = markerAssignAgencyList[markerAssignAgencyList.keys.iterator().next()]!!.position.latitude
+            MaxX = markerAssignAgencyList[markerAssignAgencyList.keys.iterator().next()]!!.position.longitude
+            MinX = markerAssignAgencyList[markerAssignAgencyList.keys.iterator().next()]!!.position.longitude
+        }
 
         // 기준은 라이더 마커의 중심으로 한다!
 
@@ -419,6 +432,7 @@ class MapViewModel : ViewModel()
                 agencyMarker.captionText = ItemPc[itk]!!.AgencyName
                 agencyMarker.setCaptionAligns(Align.Top)
                 agencyMarker.map = mapInstance
+                agencyMarker.globalZIndex = 300000
                 markerPikupList.add(agencyMarker)
 
                 val customerLatitude = ItemPc[itk]!!.CustomerLatitude?.toDouble()
@@ -432,14 +446,15 @@ class MapViewModel : ViewModel()
                     customerMarker.captionText = ItemPc[itk]!!.CustomerShortAddrNoRoad
                     customerMarker.setCaptionAligns(Align.Top)
                     customerMarker.map = mapInstance
+                    customerMarker.globalZIndex = 300000
                     markerPikupList.add(customerMarker)
 
-                    val path = PathOverlay()
+                    val path = PolylineOverlay()
 //                    var task = httpSub()
 //                    path.coords = task.execute(agencyPosition,customerPosition).get() // 실경로
                     path.coords = listOf(agencyPosition,customerPosition)
-                    path.width = 5
-                    path.outlineColor = Vars.mContext!!.getColor(R.color.pickup)
+                    path.width = 10
+                    path.globalZIndex = 300000
                     path.color = Vars.mContext!!.getColor(R.color.pickup)
                     path.map = mapInstance
                     linePikup.add(path)
@@ -475,6 +490,7 @@ class MapViewModel : ViewModel()
                 agencyMarker.captionText = ItemAc[itk]!!.AgencyName
                 agencyMarker.setCaptionAligns(Align.Top)
                 agencyMarker.map = mapInstance
+                agencyMarker.globalZIndex = 300000
                 markerAccesList.add(agencyMarker)
 
                 val customerLatitude = ItemAc[itk]!!.CustomerLatitude?.toDouble()
@@ -488,14 +504,15 @@ class MapViewModel : ViewModel()
                     customerMarker.captionText = ItemAc[itk]!!.CustomerShortAddrNoRoad
                     customerMarker.setCaptionAligns(Align.Top)
                     customerMarker.map = mapInstance
+                    customerMarker.globalZIndex = 300000
                     markerAccesList.add(customerMarker)
 
-                    val path = PathOverlay()
-                    //var task = httpSub()
-                    //path.coords = task.execute(agencyPosition,customerPosition).get()//실경로
+                    val path = PolylineOverlay()
+//                    var task = httpSub()
+//                    path.coords = task.execute(agencyPosition,customerPosition).get()//실경로
                     path.coords = listOf(agencyPosition,customerPosition)//직선경로
-                    path.width = 5
-                    path.outlineColor = Vars.mContext!!.getColor(R.color.recive)
+                    path.width = 10
+                    path.globalZIndex = 300000
                     path.color = Vars.mContext!!.getColor(R.color.recive)
                     path.map = mapInstance
                     lineAcces.add(path)
@@ -519,28 +536,32 @@ class MapViewModel : ViewModel()
         if (agencylatitude != null && agencylongitude != null)
         {
             val agencyMarker = Marker()
-            agencyMarker.icon = OverlayImage.fromView(FixedMarkerView(Vars.mContext!!, true))
+            agencyMarker.icon = OverlayImage.fromView(FixedMarkerViewBrief(Vars.mContext!!, true))
             agencyMarker.position = agencyPosition
             agencyMarker.captionText = assorder!!.AgencyName
             agencyMarker.setCaptionAligns(Align.Top)
             agencyMarker.map = mapInstance
+            agencyMarker.globalZIndex = 300000
             markerAssignAgencyList[assorder] = agencyMarker
 
             if (customerLatitude != null && customerLongitude != null)
             {
                 val customerMarker = Marker()
                 customerMarker.icon =
-                        OverlayImage.fromView(FixedMarkerView(Vars.mContext!!, false))
+                        OverlayImage.fromView(FixedMarkerViewBrief(Vars.mContext!!, false))
                 customerMarker.position = customerPosition
                 customerMarker.captionText = assorder!!.CustomerShortAddrNoRoad
                 customerMarker.setCaptionAligns(Align.Top)
                 customerMarker.map = mapInstance
+                customerMarker.globalZIndex = 300000
                 markerAssignCustList[assorder] = (customerMarker)
 
-                val path = PathOverlay()
+                val path = PolylineOverlay()
+//                var task = httpSub()
+//                path.coords = task.execute(agencyPosition,customerPosition).get()//실경로
                 path.coords = listOf(agencyPosition,customerPosition)//직선경로
-                path.width = 5
-                path.outlineColor = Vars.mContext!!.getColor(R.color.brief)
+                path.width = 10
+                path.globalZIndex = 300000
                 path.color = Vars.mContext!!.getColor(R.color.brief)
                 path.map = mapInstance
                 lineAssign[assorder] = path
@@ -552,8 +573,28 @@ class MapViewModel : ViewModel()
     fun removeAssign(assorder: Orderdata)
     {
         markerAssignAgencyList[assorder]!!.map = null
+        markerAssignAgencyList.remove(assorder)
         markerAssignCustList[assorder]!!.map = null
+        markerAssignCustList.remove(assorder)
         lineAssign[assorder]!!.map = null
+        lineAssign.remove(assorder)
+    }
+
+    class FixedMarkerViewBrief(context: Context, isStartPosition: Boolean = false) : ConstraintLayout(context) {
+        init {
+            val view: View = View.inflate(context, R.layout.view_fixed_marker, this)
+            val backgroundResourceID: Int =
+                if (isStartPosition) R.drawable.ic_marker_delivery_agency
+                else R.drawable.ic_marker_delivery_cust
+            view.setBackgroundResource(backgroundResourceID)
+
+            val titleField: TextView = findViewById(R.id.positionName)
+            val titleResourceID: Int =
+                if (isStartPosition) R.string.text_start
+                else R.string.text_arrival
+            titleField.setText(titleResourceID)
+            titleField.textSize = 12F
+        }
     }
 
     class FixedMarkerView(context: Context, isStartPosition: Boolean = false) : ConstraintLayout(context) {

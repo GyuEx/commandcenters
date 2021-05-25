@@ -28,8 +28,9 @@ class PlaySoundThread(private val oid:Int, private val sid:Int) : Thread(), Thre
                 Thread.sleep(1000) // 첫딜레이 및 루프진행
                 if(Vars.orderList.containsKey(oid.toString()))
                 {
-                    Agencyname = Vars.orderList[oid.toString()]!!.AgencyName
-                    Ridername = Vars.orderList[oid.toString()]!!.RiderName
+                    var rep = ("[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]").toRegex()
+                    Agencyname = Vars.orderList[oid.toString()]!!.AgencyName.replace("-","다시").replace(rep,"") //특수문자 다 잘라버려!
+                    Ridername = Vars.orderList[oid.toString()]!!.RiderName.replace(rep,"") //특수문자 다 잘라버려!
                     isKeep = false // 탈출
                     break
                 }

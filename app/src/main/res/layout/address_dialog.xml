@@ -104,10 +104,10 @@
 							android:textSize="20dp"
 							android:singleLine="true"
 							android:inputType="text"
-							android:imeOptions="actionDone"
+							android:imeOptions="actionSearch"
 							android:onTextChanged="@{viewModel::afterTextChanged}"
 							app:focus="@{viewModel.foc}"
-							android:onClick="@{v->viewModel.click_Edit()}"
+							android:onEditorAction="@{viewModel::onEditorAction}"
 							android:layout_marginRight="10dp"
 							android:textStyle="bold"
 							android:layout_weight="4">
@@ -172,13 +172,14 @@
 			android:layout_width="match_parent"
 			android:layout_height="0dp"
 			android:layout_weight="12"
-			app:layout_tranform="@{viewModel.from == 1? 1:0}"
+			app:layout_tranform="@{viewModel.from == 0? 0:1}"
 			android:orientation="vertical">
 
 			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_margin="10dp"
+				app:Address_top_layer="@{viewModel.from}"
 				android:background="@color/whitegray">
 
 				<TextView
@@ -297,10 +298,10 @@
 							android:gravity="center"
 							android:singleLine="true"
 							android:inputType="text"
+							android:text="@{viewModel.detailTxt}"
 							android:imeOptions="actionDone"
 							android:onTextChanged="@{viewModel::afterTextChanged2}"
 							app:focus="@{viewModel.foc}"
-							android:onClick="@{v->viewModel.click_Edit()}"
 							android:textColor="@color/white"
 							android:textSize="15dp">
 						</EditText>
@@ -355,7 +356,7 @@
 				android:layout_weight="1"
 				android:text="완료"
 				android:textStyle="bold"
-				app:layout_txt="@{viewModel.from}"
+				app:layout_txt="@{viewModel.from > 0? 1:0}"
 				android:textColor="@drawable/click_text_color_black"
 				android:textSize="30dp"
 				android:onClick="@{v->viewModel.click_finish()}"

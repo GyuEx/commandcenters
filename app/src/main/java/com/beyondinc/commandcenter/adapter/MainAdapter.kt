@@ -478,33 +478,66 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("focus")
     fun focus(view: EditText, height: Boolean) {
-        if(height == true)
+        var focusView: View = view
+        var immhide : InputMethodManager = Vars.mContext!!.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        immhide?.hideSoftInputFromWindow(focusView?.windowToken, 0)
+    }
+
+    @JvmStatic
+    @BindingAdapter("Address_top_layer")
+    fun toplayer(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == 1)
+        {
+            layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
+            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
+            view.layoutParams = layoutParams
+        }
         else
         {
-            var focusView: View = view
-            var immhide : InputMethodManager = Vars.mContext!!.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            immhide?.hideSoftInputFromWindow(focusView?.windowToken, 0)
+            layoutParams.width = 0
+            layoutParams.height = 0
+            view.layoutParams = layoutParams
         }
     }
 
     @JvmStatic
-    @BindingAdapter("balloon")
-    fun balloon(view: TextView, height: Int) {
-        if(height == 0) view.text = "접수가 하나도 없어요.."
-        else
+    @BindingAdapter("cnt","sub")
+    fun balloon(view: TextView, cnt: Int, sub:Boolean) {
+
+        if(sub)
         {
-            val str = "접수가 ${height}건 있어요!"
+            val str = "${cnt}건"
             val ssb = SpannableStringBuilder(str)
             ssb.setSpan(
                 ForegroundColorSpan(Vars.mContext!!.getColor(R.color.brief)),
-                4,
-                if(height > 9) 6
-                else if (height > 99) 7
-                else if (height > 999) 8
-                else 5, //꼭 1자리라는 법은 없지
+                0,
+                if(cnt > 9) 2
+                else if (cnt > 99) 3
+                else if (cnt > 999) 4
+                else 1, //꼭 1자리라는 법은 없지
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
             view.text = ssb
+        }
+        else
+        {
+            if(cnt == 0) view.text = "접수가 하나도 없어요.."
+            else
+            {
+                val str = "접수가 ${cnt}건 있어요!"
+                val ssb = SpannableStringBuilder(str)
+                ssb.setSpan(
+                    ForegroundColorSpan(Vars.mContext!!.getColor(R.color.brief)),
+                    4,
+                    if(cnt > 9) 6
+                    else if (cnt > 99) 7
+                    else if (cnt > 999) 8
+                    else 5, //꼭 1자리라는 법은 없지
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                view.text = ssb
+            }
         }
     }
 }

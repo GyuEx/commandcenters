@@ -1,5 +1,8 @@
 package com.beyondinc.commandcenter.data
 
+import android.os.Build
+import com.beyondinc.commandcenter.BuildConfig;
+
 object Logindata {
 
     var isLogin = false
@@ -27,5 +30,5 @@ object Logindata {
     var devicePhone = "+821222795779" // 앱켜질때 자동으로 갱신함
     var deviceModel = "SM-G950N" // 앱켜질때 자동으로 갱신함
     var devicePhoneNumber: String = ""
-    val appVersion = "1.1.1"
+    const val appVersion = BuildConfig.VERSION_NAME
 }
