@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.beyondinc.commandcenter.databinding.AddrBinding
-import com.beyondinc.commandcenter.databinding.DongBinding
 import com.beyondinc.commandcenter.databinding.ItemBinding
 import com.beyondinc.commandcenter.viewmodel.AddressViewModel
 import com.beyondinc.commandcenter.viewmodel.ItemViewModel

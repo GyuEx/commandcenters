@@ -50,7 +50,7 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("text_color_string")
     fun setTextColorString(view: TextView, velue: String) {
-        if (velue == "포장완료") {
+        if (velue == "Y") {
             view.setTextColor(Vars.mContext!!.getColor(R.color.brief))
         } else {
             view.setTextColor(Vars.mContext!!.getColor(R.color.black))
@@ -402,7 +402,7 @@ object MainAdapter {
     @BindingAdapter("detail_back")
     fun setDetailBack(view: TextView, height: Int) {
         if(height == Finals.DETAIL_MAP) view.setBackgroundResource(R.drawable.abc_vector_test)
-        else view.setBackgroundResource(R.drawable.refrash_btn)
+        else view.setBackgroundResource(R.color.black)
     }
 
     @JvmStatic
@@ -484,10 +484,66 @@ object MainAdapter {
     }
 
     @JvmStatic
+    @BindingAdapter("spin_bun")
+    fun spin_bun(view: Spinner, height: Int) {
+        Log.e("호출시점","호출시점은 바로 지금이야" + "${height}")
+        view.setSelection(height)
+        view.setSelection(height)
+    }
+
+    @JvmStatic
     @BindingAdapter("Address_top_layer")
     fun toplayer(view: LinearLayout, height: Int) {
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
-        if (height == 1)
+        if (height == 0)
+        {
+            layoutParams.weight = 0F
+            view.layoutParams = layoutParams
+        }
+        else
+        {
+            layoutParams.weight = 1f
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("Address_detail_layer")
+    fun detaillayer(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == 4)
+        {
+            layoutParams.weight = 1F
+            view.layoutParams = layoutParams
+        }
+        else
+        {
+            layoutParams.weight = 0f
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("Address_rec_layer")
+    fun reclayer(view: RecyclerView, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == 2)
+        {
+            layoutParams.weight = 1F
+            view.layoutParams = layoutParams
+        }
+        else
+        {
+            layoutParams.weight = 0f
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("Address_sel_layer")
+    fun sellayer(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == 5)
         {
             layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
             layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
@@ -500,6 +556,43 @@ object MainAdapter {
             view.layoutParams = layoutParams
         }
     }
+
+    @JvmStatic
+    @BindingAdapter("Address_sel2_layer")
+    fun sel2layer(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == 5)
+        {
+            layoutParams.width = 0
+            layoutParams.height = 0
+            view.layoutParams = layoutParams
+        }
+        else
+        {
+            layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
+            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("Address_selbtn_layer")
+    fun selbtnlayer(view: Button, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == 5)
+        {
+            layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
+            layoutParams.height = LinearLayout.LayoutParams.MATCH_PARENT
+            view.layoutParams = layoutParams
+        }
+        else
+        {
+            layoutParams.width = 0
+            layoutParams.height = 0
+            view.layoutParams = layoutParams
+        }
+    }
+
 
     @JvmStatic
     @BindingAdapter("cnt","sub")

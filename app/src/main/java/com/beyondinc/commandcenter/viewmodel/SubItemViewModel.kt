@@ -42,8 +42,14 @@ class SubItemViewModel : ViewModel() {
                 else if(msg.what == Finals.SELECT_ORDER) select.value = Finals.SELECT_ORDER
                 else if(msg.what == Finals.SELECT_EMPTY) selectEmpte()
                 else if(msg.what == Finals.ORDER_ASSIGN_LIST) orderassignlist(msg.obj as String)
+                else if(msg.what == Finals.ALL_CLEAR) allClear()
             }
         }
+    }
+
+    fun allClear(){
+        Realitemss!!.clear()
+        itemss!!.clear()
     }
 
     fun orderassignlist(id : String){

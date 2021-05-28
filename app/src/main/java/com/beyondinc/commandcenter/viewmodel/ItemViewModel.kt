@@ -86,8 +86,14 @@ class ItemViewModel : ViewModel() {
                 else if(msg.what == Finals.STORE_ITEM_SELECT) storeSelect(msg.obj as String)
                 else if(msg.what == Finals.RIDER_ITEM_SELECT) riderSelect(msg.obj as String)
                 else if(msg.what == Finals.DESABLE_SELECT) desableSelect()
+                else if(msg.what == Finals.ALL_CLEAR) allClear()
             }
         }
+    }
+
+    fun allClear(){
+        Realitems!!.clear()
+        items!!.clear()
     }
 
     fun desableSelect(){
@@ -269,7 +275,8 @@ class ItemViewModel : ViewModel() {
     }
 
     fun getUsetime(pos: Int): String? {
-        return items!![pos]?.AgencyRequestTime
+        return if(items!![pos]!!.PackingCompleteYn == "N") items!![pos]?.AgencyRequestTime
+        else "포장완료"
     }
 
     fun getResttime(pos: Int): String? {

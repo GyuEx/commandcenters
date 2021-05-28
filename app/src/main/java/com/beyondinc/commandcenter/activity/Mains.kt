@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -55,7 +56,6 @@ class Mains : AppCompatActivity(), MainsFun {
         var address:AddressDialog? = null
         var payment:PaymentDialog? = null
         var loading:LoadingDialog? = null
-        var addrsel:SelectAddrDialog? = null
 
         val FINISH_INTERVAL_TIME: Long = 2000
         var backPressedTime: Long = 0
@@ -99,6 +99,18 @@ class Mains : AppCompatActivity(), MainsFun {
     override fun onRestart() {
         super.onRestart()
         Log.e(Tag, "Restart")
+    }
+
+    override fun onConfigurationChanged(newConfig : Configuration) {
+        super.onConfigurationChanged(newConfig);
+
+        if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            Toast.makeText(this, "세로모드", Toast.LENGTH_SHORT).show();
+        }
+
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Toast.makeText(this, "가로모드", Toast.LENGTH_SHORT).show();
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -310,33 +322,11 @@ class Mains : AppCompatActivity(), MainsFun {
         }
     }
 
-    override fun showAddrselect() {
-        runOnUiThread {
-            if (addrsel != null) {
-                addrsel!!.dismiss()
-                addrsel = null
-            }
-            addrsel = SelectAddrDialog()
-            addrsel!!.show(supportFragmentManager, "addrsel")
-        }
-    }
-
     override fun closeLoading() {
         try {
             if (loading != null) {
                 loading!!.dismiss()
                 loading = null
-            }
-        } catch (e: Exception) {
-            //Log.e("MAIN", Log.getStackTraceString(e))
-        }
-    }
-
-    override fun closeAddrselect() {
-        try {
-            if (addrsel != null) {
-                addrsel!!.dismiss()
-                addrsel = null
             }
         } catch (e: Exception) {
             //Log.e("MAIN", Log.getStackTraceString(e))
@@ -376,13 +366,14 @@ class Mains : AppCompatActivity(), MainsFun {
         }
     }
 
-    override fun showAddress(code : Int, item : Orderdata) {
+    override fun showAddress() {
         runOnUiThread {
             if (address != null) {
                 address!!.dismiss()
                 address = null
             }
-            address = AddressDialog(code,item)
+            address = AddressDialog()
+            //address!!.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light) 다이얼로그 전체화면
             address!!.show(supportFragmentManager, "address")
         }
     }

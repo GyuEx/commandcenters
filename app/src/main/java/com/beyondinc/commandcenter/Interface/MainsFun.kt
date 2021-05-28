@@ -13,10 +13,9 @@ interface MainsFun {
     fun showHistory()
     fun showMessage(msg:String,num:String)
     fun showSelect()
-    fun showAddress(code : Int,item : Orderdata)
+    fun showAddress()
     fun showPayment()
     fun showLoading()
-    fun showAddrselect()
 
     fun closeDialog()
     fun closeOderdetail()
@@ -25,7 +24,6 @@ interface MainsFun {
     fun closeSelect()
     fun changeClose()
     fun closeLoading()
-    fun closeAddrselect()
 
     fun detail_Fragment(i : Int)
 

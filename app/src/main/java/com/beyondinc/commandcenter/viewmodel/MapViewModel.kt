@@ -77,12 +77,7 @@ class MapViewModel : ViewModel()
                 else if (msg.what == Finals.UPDATE_RIDER_MARKER && msg.obj != null) updateRider(msg.obj as Riderdata)
                 else if (msg.what == Finals.REMOVE_RIDER_MARKER && msg.obj != null) removeRider(msg.obj as Riderdata)
                 else if(msg.what == Finals.MAP_FOR_DOPEN) OpenDrawer()
-                else if(msg.what == Finals.MAP_FOR_DCLOSE)
-                {
-                    CloseDrawer()
-                    CloseLowLayer()
-                    CancelRider()
-                }
+                else if(msg.what == Finals.MAP_FOR_DCLOSE) dclose()
                 else if(msg.what == Finals.MAP_MOVE_FOCUS) MapFocusSet(msg.obj as Riderdata)
                 else if(msg.what == Finals.MAP_FOR_REMOVE) CancelRider()
                 else if(msg.what == Finals.SELECT_ORDER) selectOr()
@@ -93,6 +88,13 @@ class MapViewModel : ViewModel()
                 else if(msg.what == Finals.ORDER_ASSIGN) to_assgin_click()
             }
         }
+    }
+
+    fun dclose(){
+        CloseDrawer()
+        CloseLowLayer()
+        CancelRider()
+        mapInstance?.moveCamera(CameraUpdate.zoomTo(13.0))
     }
 
     fun to_assgin_click(){

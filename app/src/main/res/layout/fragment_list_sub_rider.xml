@@ -19,7 +19,7 @@
             android:layout_height="0dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:layout_weight="1">
+            android:layout_weight="2">
 
             <EditText
                 android:id="@+id/rlS01"
@@ -38,26 +38,35 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:onClick="@{v->viewModel.clickClose()}"
-                android:background="@drawable/exit_b_btn"
-                android:gravity="left">
+                android:gravity="right|center">
 
-            </TextView>
+
+                <TextView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:onClick="@{v->viewModel.clickClose()}"
+                    android:background="@drawable/exit_b_btn"
+                    android:gravity="left">
+
+                </TextView>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="12"
-            bind:verAdapter="@{viewModel.getAdapter()}">
-        </androidx.recyclerview.widget.RecyclerView>
+            android:layout_weight="17">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                bind:verAdapter="@{viewModel.getAdapter()}">
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </LinearLayout>
     </LinearLayout>
 </layout>

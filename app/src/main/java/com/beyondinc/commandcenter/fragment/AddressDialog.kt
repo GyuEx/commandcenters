@@ -23,19 +23,17 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 
 
-class AddressDialog(code:Int, item : Orderdata) : DialogFragment(), OnMapReadyCallback {
+class AddressDialog() : DialogFragment(), OnMapReadyCallback {
 
     var binding: AddressDialogBinding? = null
     var viewModel: AddressViewModel? = null
     var mapfrag: MapFragment? = null
     var fragmentTransaction: FragmentTransaction? = null
-    var code = code
-    var item = item
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //false로 설정해 주면 화면밖 혹은 뒤로가기 버튼시 다이얼로그라 dismiss 되지 않는다.
-        isCancelable = false
+        //isCancelable = false
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -50,24 +48,23 @@ class AddressDialog(code:Int, item : Orderdata) : DialogFragment(), OnMapReadyCa
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding = DataBindingUtil.bind(view)
         viewModel = ViewModelProvider(requireActivity()).get(AddressViewModel::class.java)
         binding!!.viewModel = viewModel
         binding!!.lifecycleOwner = requireActivity()
-
-        viewModel!!.from.value = code
-        Log.e("aaaaaaa","아하하하하하하하하하하하하")
-        viewModel!!.iteminit(item)
 
         fragmentTransaction = childFragmentManager.beginTransaction()
         mapfrag = MapFragment()
         fragmentTransaction!!.add(R.id.adML01, mapfrag!!)
         fragmentTransaction!!.commitAllowingStateLoss()
         mapfrag!!.getMapAsync(this)
+
     }
 
     override fun onResume() {
         super.onResume()
+
         val params: ViewGroup.LayoutParams? = dialog?.window?.attributes
         val deviceWidth = Vars.DeviceSize.x
         val deviceHeight = Vars.DeviceSize.y

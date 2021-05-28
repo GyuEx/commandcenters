@@ -64,7 +64,7 @@
                         app:item_font_size="@{viewModel.getfontsize()}"
                         android:singleLine="true"
                         android:textStyle="bold"
-                        app:text_color_string="@{viewModel.items.get(pos).orderId}"/>
+                        app:text_color_string="@{viewModel.items.get(pos).packingCompleteYn}"/>
 
                     <TextView
                         android:id="@+id/resttime"

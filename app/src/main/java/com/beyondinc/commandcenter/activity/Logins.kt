@@ -5,12 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.ConnectivityManager.TYPE_MOBILE
 import android.net.ConnectivityManager.TYPE_WIFI
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
@@ -89,7 +91,9 @@ class Logins : AppCompatActivity() , LoginsFun {
         viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         binding!!.lifecycleOwner = this
         binding!!.viewModel = viewModel
+
     }
+
 
     override fun onStart() {
         super.onStart()
