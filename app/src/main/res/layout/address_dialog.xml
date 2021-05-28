@@ -13,8 +13,50 @@
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@color/darkgray"
+		android:background="@color/white"
 		android:orientation="vertical">
+
+		 <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/black"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_weight="1">
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:text="주소변경"
+                    android:gravity="center"
+                    android:textSize="30dp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold">
+
+                </TextView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/exit_btn"
+						android:onClick="@{v->viewModel.click_cancel()}">
+                    </Button>
+                </LinearLayout>
+
+            </LinearLayout>
 
 			<LinearLayout
 				android:layout_width="match_parent"
@@ -26,6 +68,7 @@
 				<LinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
+					app:Address_main_layer="@{viewModel.from}"
 					android:orientation="vertical">
 
 					<LinearLayout
@@ -44,45 +87,11 @@
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:onClick="@{v->viewModel.closeKeyboard()}"
-								android:text='* 기존주소'
-								android:gravity="left|center"
-								android:textStyle="bold"
-								android:layout_marginBottom="5dp"
-								android:textColor="@color/white"
-								android:textSize="13dp">
-							</TextView>
-
-							<TextView
-								android:layout_width="match_parent"
-								android:layout_height="wrap_content"
-								android:onClick="@{v->viewModel.closeKeyboard()}"
 								android:text='@{viewModel.title}'
 								android:gravity="left|center"
 								android:textStyle="bold"
-								android:textColor="@color/white"
-								android:textSize="15dp">
-							</TextView>
-
-							<TextView
-								android:layout_width="match_parent"
-								android:layout_height="wrap_content"
-								android:onClick="@{v->viewModel.closeKeyboard()}"
-								android:text="@{viewModel.sub}"
-								android:gravity="left|center"
-								android:textStyle="bold"
-								android:textColor="@color/white"
-								android:textSize="15dp">
-							</TextView>
-
-							<TextView
-								android:layout_width="match_parent"
-								android:layout_height="wrap_content"
-								android:onClick="@{v->viewModel.closeKeyboard()}"
-								android:text="@{viewModel.detailtxt}"
-								android:gravity="left|center"
-								android:textStyle="bold"
-								android:textColor="@color/white"
-								android:textSize="15dp">
+								android:textColor="@color/black"
+								android:textSize="20dp">
 							</TextView>
 
 						</LinearLayout>
@@ -96,12 +105,11 @@
 							<Button
 								android:layout_width="match_parent"
 								android:layout_height="match_parent"
-								android:text="전체주소\n변경하기"
+								android:text="주소검색"
 								android:textSize="13dp"
 								android:textStyle="bold"
 								android:gravity="center"
 								android:onClick="@{view-> viewModel.setMode()}"
-								app:Address_selbtn_layer="@{viewModel.from}"
 								android:background="@drawable/line_background"
 								android:textColor="@drawable/click_text_color_black">
 							</Button>
@@ -134,21 +142,21 @@
 							android:gravity="left|center"
 							android:textStyle="bold"
 							android:layout_marginBottom="5dp"
-							android:textColor="@color/white"
+							android:textColor="@color/black"
 							android:textSize="13dp">
 						</TextView>
 
 						<EditText
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
-							android:gravity="center"
+							android:gravity="left"
 							android:hint="상세주소 입력은 여기를 터치해주세요"
 							android:imeOptions="actionDone"
 							android:inputType="text"
 							android:text="@{viewModel.detailtxt}"
 							android:onTextChanged="@{viewModel::afterTextChanged3}"
 							android:singleLine="true"
-							android:textColor="@color/white"
+							android:textColor="@color/black"
 							android:textSize="20dp"
 							android:textStyle="bold"
 							app:focus="@{viewModel.foc}">
@@ -167,22 +175,13 @@
 
 					<TextView
 						android:layout_width="match_parent"
-						android:layout_height="1dp"
-						android:layout_marginTop="5dp"
-						android:onClick="@{v->viewModel.closeKeyboard()}"
-						android:layout_marginBottom="5dp"
-						android:background="@color/whitegray">
-					</TextView>
-
-					<TextView
-						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:onClick="@{v->viewModel.closeKeyboard()}"
 						android:text='* 행정동 선택'
 						android:gravity="left|center"
 						android:textStyle="bold"
 						android:layout_marginBottom="5dp"
-						android:textColor="@color/white"
+						android:textColor="@color/black"
 						android:textSize="13dp">
 					</TextView>
 
@@ -218,7 +217,7 @@
 							android:gravity="left|center"
 							android:textStyle="bold"
 							android:layout_marginBottom="5dp"
-							android:textColor="@color/white"
+							android:textColor="@color/black"
 							android:textSize="13dp">
 						</TextView>
 
@@ -227,6 +226,7 @@
 							android:layout_height="wrap_content"
 							android:onClick="@{v->viewModel.closeKeyboard()}"
 							android:onCheckedChanged="@{viewModel::onCheckedChanged}"
+							app:Address_selbtn_layer="@{viewModel.from}"
 							android:orientation="horizontal">
 
 							<RadioButton
@@ -235,7 +235,7 @@
 								android:layout_weight="1"
 								android:onClick="@{v->viewModel.closeKeyboard()}"
 								android:layout_height="match_parent"
-								android:textColor="@color/white"
+								android:textColor="@color/black"
 								android:text="지번">
 							</RadioButton>
 
@@ -245,7 +245,7 @@
 								android:layout_weight="1"
 								android:onClick="@{v->viewModel.closeKeyboard()}"
 								android:layout_height="match_parent"
-								android:textColor="@color/white"
+								android:textColor="@color/black"
 								android:text="도로명">
 							</RadioButton>
 
@@ -255,7 +255,7 @@
 								android:layout_weight="1"
 								android:onClick="@{v->viewModel.closeKeyboard()}"
 								android:layout_height="match_parent"
-								android:textColor="@color/white"
+								android:textColor="@color/black"
 								android:text="건물명">
 							</RadioButton>
 						</RadioGroup>
@@ -277,27 +277,51 @@
 							android:gravity="left|center"
 							android:textStyle="bold"
 							android:layout_marginBottom="5dp"
-							android:textColor="@color/white"
+							android:textColor="@color/black"
 							android:textSize="13dp">
 						</TextView>
 
-						<EditText
-							android:id="@+id/editBox01"
+						<LinearLayout
 							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:hint='검색주소 입력은 여기를 터치해주세요'
-							android:textColorHint="@color/whitegray"
-							android:textColor="@color/white"
-							android:textSize="20dp"
-							android:singleLine="true"
-							android:inputType="text"
-							android:imeOptions="actionSearch"
-							android:onTextChanged="@{viewModel::afterTextChanged}"
-							app:focus="@{viewModel.foc}"
-							android:onEditorAction="@{viewModel::onEditorAction}"
-							android:layout_marginRight="10dp"
-							android:textStyle="bold">
-						</EditText>
+							android:layout_height="match_parent"
+							android:gravity="center"
+							android:orientation="horizontal">
+
+							<EditText
+								android:id="@+id/editBox01"
+								android:layout_width="0dp"
+								android:layout_weight="5"
+								android:layout_height="wrap_content"
+								android:hint='@{viewModel.hinttxt}'
+								android:textColorHint="@color/whitegray"
+								android:textColor="@color/black"
+								android:textSize="20dp"
+								android:singleLine="true"
+								android:inputType="text"
+								android:imeOptions="actionSearch"
+								app:Address_clear_layer="@{viewModel.from}"
+								android:onTextChanged="@{viewModel::afterTextChanged}"
+								app:focus="@{viewModel.foc}"
+								android:onEditorAction="@{viewModel::onEditorAction}"
+								android:layout_marginRight="10dp"
+								android:textStyle="bold">
+							</EditText>
+
+							<TextView
+								android:layout_width="0dp"
+								android:layout_height="match_parent"
+								android:layout_weight="1"
+								android:textSize="20dp"
+								android:gravity="center"
+								android:layout_margin="5dp"
+								android:onClick="@{v->viewModel.searchAddr()}"
+								android:background="@drawable/line_background"
+								android:textColor="@drawable/click_text_color_black"
+								android:text="검색">
+
+							</TextView>
+
+						</LinearLayout>
 					</LinearLayout>
 				</LinearLayout>
 
@@ -324,7 +348,7 @@
 						android:gravity="center"
 						android:text="@{viewModel.fromtext}"
 						android:onClick="@{v->viewModel.rechoice()}"
-						android:textColor="@color/white"
+						android:textColor="@color/black"
 						android:textSize="20dp"
 						android:textStyle="bold">
 					</TextView>
@@ -339,12 +363,14 @@
 
 					</androidx.recyclerview.widget.RecyclerView>
 
+				</LinearLayout>
+
 					<LinearLayout
 						android:layout_width="match_parent"
 						android:layout_height="0dp"
-						android:layout_weight="0"
+						android:layout_weight="1"
+						app:Address_map_layer="@{viewModel.from}"
 						android:onClick="@{v->viewModel.closeKeyboard()}"
-						app:Address_detail_layer="@{viewModel.from}"
 						android:orientation="vertical">
 
 						<TextView
@@ -356,34 +382,6 @@
 							android:background="@color/whitegray">
 						</TextView>
 
-						<TextView
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:onClick="@{v->viewModel.closeKeyboard()}"
-							android:text='* 상세주소를 반드시 확인하여 주세요.'
-							android:gravity="left|center"
-							android:textStyle="bold"
-							android:layout_marginBottom="5dp"
-							android:textColor="@color/white"
-							android:textSize="13dp">
-						</TextView>
-
-						<EditText
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:gravity="center"
-							android:hint="상세주소 입력은 여기를 터치해주세요"
-							android:imeOptions="actionDone"
-							android:inputType="text"
-							android:text="@{viewModel.detailsearchTxt}"
-							android:onTextChanged="@{viewModel::afterTextChanged2}"
-							android:singleLine="true"
-							android:textColor="@color/white"
-							android:textSize="20dp"
-							android:textStyle="bold"
-							app:focus="@{viewModel.foc}">
-						</EditText>
-
 						<LinearLayout
 							android:id="@+id/adML01"
 							android:onClick="@{v->viewModel.closeKeyboard()}"
@@ -393,35 +391,20 @@
 						</LinearLayout>
 
 					</LinearLayout>
-				</LinearLayout>
 			</LinearLayout>
 			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="0dp"
 				android:layout_weight="1"
+				app:Address_finish_layer="@{viewModel.from}"
 				android:layout_marginTop="10dp"
 				android:orientation="horizontal">
 
 				<TextView
-					android:layout_width="0dp"
+					android:layout_width="match_parent"
 					android:layout_height="match_parent"
-					android:layout_weight="1"
-					android:text="취소"
-					android:textStyle="bold"
-					android:textColor="@drawable/click_text_color"
-					android:textSize="30dp"
-					android:onClick="@{v->viewModel.click_cancel()}"
-					android:layout_gravity="center"
-					android:gravity="center"
-					android:background="@color/gray"/>
-
-				<TextView
-					android:layout_width="0dp"
-					android:layout_height="match_parent"
-					android:layout_weight="0"
 					android:text="완료"
 					android:textStyle="bold"
-					app:layout_txt="@{viewModel.from == 4? 1: viewModel.from == 5? 1:0}"
 					android:textColor="@drawable/click_text_color_black"
 					android:textSize="30dp"
 					android:onClick="@{v->viewModel.click_finish()}"

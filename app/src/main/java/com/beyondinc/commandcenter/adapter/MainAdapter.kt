@@ -289,7 +289,7 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("select_dong_backcolor")
     fun setitemdongcolor(view: LinearLayout, height: Boolean) {
-        if (height) view.setBackgroundColor(Vars.mContext!!.getColor(R.color.gray))
+        if (height) view.setBackgroundColor(Vars.mContext!!.getColor(R.color.whitegray))
         else view.setBackgroundColor(Vars.mContext!!.getColor(android.R.color.transparent))
     }
 
@@ -495,7 +495,7 @@ object MainAdapter {
     @BindingAdapter("Address_top_layer")
     fun toplayer(view: LinearLayout, height: Int) {
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
-        if (height == 0)
+        if (height == 0 || height == 4)
         {
             layoutParams.weight = 0F
             view.layoutParams = layoutParams
@@ -508,10 +508,26 @@ object MainAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter("Address_detail_layer")
-    fun detaillayer(view: LinearLayout, height: Int) {
+    @BindingAdapter("Address_map_layer")
+    fun maplayer(view: LinearLayout, height: Int) {
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
         if (height == 4)
+        {
+            layoutParams.weight = 1F
+            view.layoutParams = layoutParams
+        }
+        else
+        {
+            layoutParams.weight = 0f
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("Address_finish_layer")
+    fun finishlayer(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == 5 || height == 4)
         {
             layoutParams.weight = 1F
             view.layoutParams = layoutParams
@@ -543,7 +559,7 @@ object MainAdapter {
     @BindingAdapter("Address_sel_layer")
     fun sellayer(view: LinearLayout, height: Int) {
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
-        if (height == 5)
+        if (height == 5 || height == 4)
         {
             layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
             layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
@@ -561,7 +577,7 @@ object MainAdapter {
     @BindingAdapter("Address_sel2_layer")
     fun sel2layer(view: LinearLayout, height: Int) {
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
-        if (height == 5)
+        if (height == 5 || height == 4)
         {
             layoutParams.width = 0
             layoutParams.height = 0
@@ -577,12 +593,30 @@ object MainAdapter {
 
     @JvmStatic
     @BindingAdapter("Address_selbtn_layer")
-    fun selbtnlayer(view: Button, height: Int) {
+    fun selbtnlayer(view: RadioGroup, height: Int) {
+        if (height == 5 || height == 4)
+        {
+            view.clearCheck()
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("Address_clear_layer")
+    fun clearlayer(view: EditText, height: Int) {
+        if (height == 5 || height == 4)
+        {
+            view.text.clear()
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("Address_main_layer")
+    fun mainlayer(view: LinearLayout, height: Int) {
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
-        if (height == 5)
+        if (height == 4 || height == 5)
         {
             layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
-            layoutParams.height = LinearLayout.LayoutParams.MATCH_PARENT
+            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
             view.layoutParams = layoutParams
         }
         else

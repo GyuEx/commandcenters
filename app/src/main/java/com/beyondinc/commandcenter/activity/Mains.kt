@@ -373,7 +373,7 @@ class Mains : AppCompatActivity(), MainsFun {
                 address = null
             }
             address = AddressDialog()
-            //address!!.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light) 다이얼로그 전체화면
+            address!!.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light)
             address!!.show(supportFragmentManager, "address")
         }
     }

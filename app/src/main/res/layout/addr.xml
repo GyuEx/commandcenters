@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/white">
+            android:background="@color/lightgray">
         </TextView>
 
         <LinearLayout
@@ -53,7 +53,7 @@
                     android:text='@{viewModel.selection.equals("Jibun")? viewModel.getTitle(pos) : viewModel.selection.equals("Road")? viewModel.getSub(pos):viewModel.getPoi(pos)}'
                     android:singleLine="true"
                     android:focusable="true"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     android:textStyle="bold"/>
 
                 <TextView
@@ -65,7 +65,7 @@
                     android:text='@{viewModel.selection.equals("Jibun")? viewModel.getSub(pos) : viewModel.selection.equals("Road")? viewModel.getTitle(pos):viewModel.getTitle(pos)}'
                     android:singleLine="true"
                     android:focusable="true"
-                    android:textColor="@color/whitegray"
+                    android:textColor="@color/gray"
                     android:textStyle="bold"/>
 
 
@@ -78,7 +78,7 @@
                     android:text='@{viewModel.selection.equals("Jibun")? viewModel.getPoi(pos) : viewModel.selection.equals("Road")? viewModel.getPoi(pos):viewModel.getSub(pos)}'
                     android:singleLine="true"
                     android:focusable="true"
-                    android:textColor="@color/whitegray"
+                    android:textColor="@color/gray"
                     android:textStyle="bold"/>
 
 
@@ -110,7 +110,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/white">
+            android:background="@color/lightgray">
         </TextView>
 
     </LinearLayout>

@@ -41,9 +41,9 @@ class AddressViewModel : ViewModel() {
     var itemsAddr: ConcurrentHashMap<Int, Addrdata>? = null
     var adapterAddr: RecyclerAdapterAddr? = null
     var selection : MutableLiveData<String> = MutableLiveData()
-    var searchTxt = ""
-    var detailsearchTxt : MutableLiveData<String> = MutableLiveData()
+    var searchTxt : MutableLiveData<String> = MutableLiveData()
     var detailtxt : MutableLiveData<String> = MutableLiveData()
+    var hinttxt : MutableLiveData<String> = MutableLiveData()
     var addr = Addrdata()
     var from : MutableLiveData<Int> = MutableLiveData() // 0:작업중이아님, 1:검색중, 2:검색완료, 3:검색실패, 4:주소선택, 5:상세주소만변경
     var fromtext : MutableLiveData<String> = MutableLiveData() // 0:작업중이아님, 1:검색중, 2:검색완료, 3:검색실패, 4:주소선택, 5:상세주소만변경
@@ -90,7 +90,7 @@ class AddressViewModel : ViewModel() {
     }
 
     fun initfirst(){
-        searchTxt = ""
+        searchTxt.value = ""
         detailtxt.value = ""
         itemsAddr!!.clear()
         foc.value = true
@@ -101,7 +101,6 @@ class AddressViewModel : ViewModel() {
 
     fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         //  스피너의 선택 내용이 바뀌면 호출된다
-        Log.e("aaaaaaaa","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         if(!first) {
             for (i in 0 until itemsdong.value!!.size) {
                 if (itemsdong.value!![i] == dong.value) {
@@ -110,14 +109,14 @@ class AddressViewModel : ViewModel() {
                 }
             } //스피너의 초기값을 알기위해 번지수를 찾아야됨!
 
-            (parent.getChildAt(0) as TextView).setTextColor(Color.WHITE)
+            (parent.getChildAt(0) as TextView).setTextColor(Color.BLACK)
             (parent.getChildAt(0) as TextView).textSize = 20f
 
             first = true
         }
         else
         {
-            (parent.getChildAt(0) as TextView).setTextColor(Color.WHITE)
+            (parent.getChildAt(0) as TextView).setTextColor(Color.BLACK)
             (parent.getChildAt(0) as TextView).textSize = 20f
 
             dong.value = itemsdong.value?.get(position)
@@ -145,8 +144,7 @@ class AddressViewModel : ViewModel() {
             item.CustomerShortAddrNoRoad.indexOf(" ")
         )
 
-        title.value = "$si ${item.CustomerAddrData}"
-        sub.value = "$si $road"
+        title.value = "${item.CustomerLongAddr}"
         detailtxt.value = item.CustomerDetailAddr
 
         var shorttmp: SortedMap<String, Any> = Vars.dongList.toSortedMap() // 가나다 순이요~
@@ -171,7 +169,7 @@ class AddressViewModel : ViewModel() {
         }
 
         selection.value = "Road"
-        searchTxt = road
+        searchTxt.value = road
         searchAddr()
     }
 
@@ -209,19 +207,13 @@ class AddressViewModel : ViewModel() {
 
     fun afterTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
     {
-        searchTxt = s.toString()
-    }
-
-    fun afterTextChanged2(s: CharSequence?, start: Int, before: Int, count: Int)
-    {
-        detailsearchTxt.value = s.toString()
+        searchTxt.value = s.toString()
     }
 
     fun afterTextChanged3(s: CharSequence?, start: Int, before: Int, count: Int)
     {
         detailtxt.value = s.toString()
     }
-
 
     fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?) : Boolean
     {
@@ -233,8 +225,9 @@ class AddressViewModel : ViewModel() {
 
     fun searchAddr()
     {
-        Log.e("aaaaa","${selection.value} $dongcode $searchTxt")
-        if(searchTxt.isNotEmpty() && dong.value!!.length > 1)
+        closeKeyboard()
+        Log.e("aaaaa","${selection.value} $dongcode $searchTxt.value")
+        if(searchTxt.value!!.isNotEmpty() && dong.value!!.length > 1)
         {
             itemsAddr!!.clear()
             onCreateAddr()
@@ -247,16 +240,28 @@ class AddressViewModel : ViewModel() {
             var temp : HashMap<Int, String> = HashMap()
             temp[0] = selection.value.toString()
             temp[1] = dongcode
-            temp[2] = searchTxt
+            temp[2] = searchTxt.value.toString()
             Vars.MainsHandler!!.obtainMessage(Finals.SEARCH_ADDR, temp).sendToTarget()
         }
     }
 
     fun onCheckedChanged(group : RadioGroup, checkedId : Int)
     {
-        if(checkedId == R.id.Road) selection.value = "Road"
-        else if(checkedId == R.id.Build) selection.value = "Build"
-        else if(checkedId == R.id.jibun) selection.value = "Jibun"
+        if(checkedId == R.id.Road)
+        {
+            selection.value = "Road"
+            hinttxt.value = "도로명주소를 입력해주세요."
+        }
+        else if(checkedId == R.id.Build)
+        {
+            selection.value = "Build"
+            hinttxt.value = "건물명을 입력해주세요."
+        }
+        else if(checkedId == R.id.jibun)
+        {
+            selection.value = "Jibun"
+            hinttxt.value = "지번주소를 입력해주세요."
+        }
 
         searchAddr()
     }
@@ -288,9 +293,9 @@ class AddressViewModel : ViewModel() {
         }
         itemsAddr!![pos]!!.use = itemsAddr!![pos]!!.use != true
         addr = itemsAddr!![pos]!!
-        if(itemsAddr!![pos]!!.JibunAddr.length > itemsAddr!![pos]!!.Jibun.length)
-            detailsearchTxt.value = itemsAddr!![pos]!!.JibunAddr.substring(itemsAddr!![pos]!!.Jibun.length + 1)
-        else detailsearchTxt.value = ""
+        if(itemsAddr!![pos]!!.JibunAddr.length > itemsAddr!![pos]!!.Jibun.length && from.value != 5)
+            detailtxt.value = itemsAddr!![pos]!!.JibunAddr.substring(itemsAddr!![pos]!!.Jibun.length + 1)
+        else if(from.value != 5) detailtxt.value = ""
 
         onCreateAddr()
         closeKeyboard()
@@ -301,35 +306,21 @@ class AddressViewModel : ViewModel() {
         Vars.MainsHandler!!.obtainMessage(Finals.CHANGE_CLOSE).sendToTarget()
     }
 
-    fun setMode(){
-        if(from.value == 5)
-        {
-            from.value = 0
-            selection.value = ""
-            searchTxt = ""
-        }
+    fun setMode()
+    {
+        from.value = 0
+        selection.value = ""
+        searchTxt.value = ""
+        hinttxt.value = ""
     }
 
     fun click_finish(){
 
-        if(from.value == 5)
-        {
-            addr.Addr = "${addr.CityName} ${addr.CountyName} ${addr.LawTownName} ${addr.Jibun}"
-            addr.detailAddress = detailtxt.value.toString()
-        }
-        else
-        {
-            addr.Addr = "${addr.CityName} ${addr.CountyName} ${addr.LawTownName} ${addr.Jibun}"
-            addr.detailAddress = detailsearchTxt.value.toString()
-        }
+        addr.Addr = "${addr.CityName} ${addr.CountyName} ${addr.LawTownName} ${addr.Jibun}"
+        addr.detailAddress = detailtxt.value.toString()
         Vars.MainsHandler!!.obtainMessage(Finals.CHANGE_ADDR, addr).sendToTarget()
         Vars.MainsHandler!!.obtainMessage(Finals.CHANGE_CLOSE).sendToTarget()
     }
-
-    override fun onCleared() {
-        super.onCleared()
-    }
-
     fun closeKeyboard()
     {
         foc.value = false
@@ -337,7 +328,7 @@ class AddressViewModel : ViewModel() {
 
     fun click_choice(){
         from.value = 4
-        fromtext.value = "${addr.CityName} ${addr.CountyName} ${addr.LawTownName} ${addr.Jibun} [${addr.Road}]"
+        title.value = "${addr.CityName} ${addr.CountyName} ${addr.LawTownName} ${addr.Jibun} [${addr.Road}]"
 
         if(mapInstance != null) makeMarker()
     }

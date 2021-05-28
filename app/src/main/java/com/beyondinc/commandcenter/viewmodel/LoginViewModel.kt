@@ -48,6 +48,7 @@ open class LoginViewModel() : ViewModel() {
 
     private var downloadID: Long = -1
     private lateinit var file: File
+    private lateinit var delpath: File
     private var downloadManager: DownloadManager? = null
 
     init {
@@ -203,10 +204,18 @@ open class LoginViewModel() : ViewModel() {
         intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
         Vars.lContext!!.registerReceiver(completeReceiver, intentFilter)
 
+        var filearry = arrayOf(Vars.lContext!!.getExternalFilesDir(null))
+        for(d in filearry)
+        {
+            d!!.delete()
+        }
+        //일단 쓸대없는 이전버전등의 파일은 전체 삭제 진행
+
         downloadManager = Vars.lContext!!.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 
         val fileName = "${BuildConfig.FLAVOR}_manager_${Logindata.MSG}.apk"
         file = File(Vars.lContext!!.getExternalFilesDir(null), fileName)
+
         val fileUri = Uri.fromFile(file)
         val downloadUrl = "${Vars.lContext!!.getString(R.string.app_down_url)}${Logindata.appID}"
 
