@@ -136,7 +136,7 @@ class Mains : AppCompatActivity(), MainsFun {
 
         fragmentTransactionSub!!.add(R.id.mL02, checkfrag!!)
         fragmentTransactionSub!!.show(checkfrag!!)
-        fragmentTransactionSub!!.commit()
+        fragmentTransactionSub!!.commitAllowingStateLoss()
 
 
         //뷰를 선로드 및 재활용을 통해서 빠른 화면전환 기대할 수 있음
@@ -144,7 +144,7 @@ class Mains : AppCompatActivity(), MainsFun {
         fragmentTransaction!!.add(R.id.mL01, mapfrag!!)
         fragmentTransaction!!.hide(oderfrag!!)
         fragmentTransaction!!.show(mapfrag!!)
-        fragmentTransaction!!.commit()
+        fragmentTransaction!!.commitAllowingStateLoss()
 
         viewModel = ViewModelProvider(this).get(MainsViewModel::class.java)
         binding!!.lifecycleOwner = this
@@ -190,13 +190,13 @@ class Mains : AppCompatActivity(), MainsFun {
         {
             val ft = supportFragmentManager.beginTransaction()
             ft!!.hide(oderfrag!!)
-            ft!!.show(mapfrag!!).commit()
+            ft!!.show(mapfrag!!).commitAllowingStateLoss()
         }
         else if(viewModel!!.layer.value == Finals.SELECT_ORDER)
         {
             val ft = supportFragmentManager.beginTransaction()
             ft!!.hide(mapfrag!!)
-            ft!!.show(oderfrag!!).commit()
+            ft!!.show(oderfrag!!).commitAllowingStateLoss()
         }
     }
 

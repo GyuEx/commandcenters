@@ -321,6 +321,7 @@ class AddressViewModel : ViewModel() {
         Vars.MainsHandler!!.obtainMessage(Finals.CHANGE_ADDR, addr).sendToTarget()
         Vars.MainsHandler!!.obtainMessage(Finals.CHANGE_CLOSE).sendToTarget()
     }
+
     fun closeKeyboard()
     {
         foc.value = false

@@ -169,11 +169,15 @@ class MainThread() : Thread() , ThreadFun{
                                     Vars.MainsHandler!!.obtainMessage(Finals.CALL_ORDER).sendToTarget() // 5번정도 안맞으면 전체리스트 땡겨와
                                     allcnt = 0 // 전체리스트를 두번씩 땡길 필요는 없지
                                 }
-                                else
+                                else if(allcnt > 0)
                                 {
                                     allcnt++
                                     Vars.MainsHandler!!.obtainMessage(Finals.DISCONN_ALRAM).sendToTarget() // 갯수가 안맞으면 알람을 꺼버림
                                     Vars.timecntOT = 10 // 갯수조회 카운터를 한시적으로 10초로 변경
+                                }
+                                else
+                                {
+                                    allcnt++ // 바로 진행하니 부득이한 경우가 생겨서 1회정도는 그냥 체크타임으로 땡기는것이 좋을듯 안맞으면 이 구문 삭제
                                 }
                                 Vars.MainsHandler!!.obtainMessage(Finals.CHECK_TIME).sendToTarget() // 데이터가 안맞으면 마지막시간으로 던져서 확인해!
                                 Log.e("MainThread" , "일치하지 않음")
