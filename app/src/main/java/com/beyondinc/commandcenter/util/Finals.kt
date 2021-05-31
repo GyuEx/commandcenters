@@ -4,12 +4,22 @@ import com.beyondinc.commandcenter.R
 
 object Finals {
 
+    val VIEW_MAIN = 1
+    val VIEW_ITEM = 2
+    val VIEW_LOGIN = 3
+    val VIEW_ADDRESS = 4
+    val VIEW_SUBITEM = 5
+    val VIEW_SUBRIDER = 6
+    val VIEW_CHECK = 7
+    val VIEW_MAP = 8
+    val VIEW_ASSIGN = 9
+
     //View Codes
     val NOT_USE_CODE : Int = 0
-    val SELECT_EMPTY : Int = 1
-    val SELECT_BRIFE : Int = 2
-    val SELECT_STORE : Int = 3
-    val SELECT_RIDER : Int = 4
+    val SELECT_EMPTY : Int = 301
+    val SELECT_BRIFE : Int = 302
+    val SELECT_STORE : Int = 303
+    val SELECT_RIDER : Int = 304
 
     val CHECK_TIME : Int = 6
     val CHECK_COUNT : Int = 7

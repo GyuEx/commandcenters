@@ -61,7 +61,7 @@ class BriefViewModel : ViewModel() {
 
     fun onClick(pos: Int){
         //Log.e("PopUp","click event" + items!![pos]!!.name)
-        Vars.ItemHandler!!.obtainMessage(Finals.ORDER_ASSIGN, items!![pos]!!.realId).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM, Finals.ORDER_ASSIGN, 0, items!![pos]!!.realId).sendToTarget()
     }
 
     fun onCreate() {
@@ -85,6 +85,6 @@ class BriefViewModel : ViewModel() {
     }
 
     fun close(){
-        Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_DIALOG).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_DIALOG,0).sendToTarget()
     }
 }

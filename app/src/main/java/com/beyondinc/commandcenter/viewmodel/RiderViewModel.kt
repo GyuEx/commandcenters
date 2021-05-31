@@ -69,7 +69,7 @@ class RiderViewModel : ViewModel() {
     }
 
     fun onClick(pos: Int){
-        Vars.ItemHandler!!.obtainMessage(Finals.RIDER_ITEM_SELECT,items!![pos]!!.riderName).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.RIDER_ITEM_SELECT,0, items!![pos]!!.riderName).sendToTarget()
     }
 
     fun onCreate() {
@@ -93,6 +93,6 @@ class RiderViewModel : ViewModel() {
     }
 
     fun close(){
-        Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_DIALOG).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_DIALOG,0).sendToTarget()
     }
 }

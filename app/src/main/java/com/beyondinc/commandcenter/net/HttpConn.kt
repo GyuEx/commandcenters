@@ -86,8 +86,8 @@ class HttpConn : Thread(), ThreadFun {
                     code = jsonMessage.keys.iterator().next()
                     val data = jsonMessage[code]
 
-                    Log.e("Connect", "" + code)
-                    Log.e("Connect", "" + data)
+//                    Log.e("Connect", "" + code)
+//                    Log.e("Connect", "" + data)
 
                     val requestCipherKey = Crypto.generateMD5Hash(Vars.lContext!!.resources.getString(R.string.default_token))!!.toLowerCase(Locale.getDefault())
                     val responseCipherKey = Crypto.generateMD5Hash(Crypto.getCurrentTimeKey())!!.toLowerCase(Locale.getDefault())
@@ -145,7 +145,7 @@ class HttpConn : Thread(), ThreadFun {
 
                         if(dofalseConn > 5)
                         {
-                            Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_LOADING).sendToTarget()
+                            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_LOADING,0).sendToTarget()
                             dofalseConn = 0
                         }
 
@@ -156,19 +156,19 @@ class HttpConn : Thread(), ThreadFun {
                 }
 
             } catch (e: Exception) {
-                if (code == Procedures.LOGIN) Vars.LoginHandler!!.obtainMessage(Finals.LOGIN_FAIL).sendToTarget()
+                if (code == Procedures.LOGIN) Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.LOGIN_FAIL,0).sendToTarget()
                 else
                 {
                     if(dofalseConn == 5)
                     {
-                        Vars.MainsHandler!!.obtainMessage(Finals.HTTP_ERROR).sendToTarget()
+                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.HTTP_ERROR,0).sendToTarget()
                         dofalseConn++
                     }
                     else
                     {
                         dofalseConn++
                     }
-                    Vars.MainsHandler!!.obtainMessage(Finals.DISCONN_ALRAM).sendToTarget() // 데이터전송실패시 알람을 꺼버림
+                    Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.DISCONN_ALRAM,0).sendToTarget() // 데이터전송실패시 알람을 꺼버림
                     Vars.timecntOT = 10 // 갯수조회 카운터를 한시적으로 10초로 변경
                 }
             }

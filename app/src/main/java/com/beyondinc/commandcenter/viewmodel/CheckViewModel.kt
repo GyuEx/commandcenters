@@ -34,12 +34,12 @@ class CheckViewModel : ViewModel() {
             adapter = RecyclerAdapterCheck(this)
         }
 
-        Vars.CheckHandler = @SuppressLint("HandlerLeak") object : Handler() {
-            override fun handleMessage(msg: Message) {
-                if (msg.what == Finals.INSERT_STORE) insertStore()
-            }
-        }
-        Vars.MainsHandler!!.obtainMessage(Finals.CALL_CENTER).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CALL_CENTER,0).sendToTarget()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Vars.CheckVm = null
     }
 
     fun insertStore() {
@@ -72,7 +72,7 @@ class CheckViewModel : ViewModel() {
                 Vars.centerNick[Vars.centerList[itt]!!.centerName!!] = str.toString()
             }
 
-            Vars.MainsHandler!!.obtainMessage(Finals.CALL_RIDER).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CALL_RIDER,0).sendToTarget()
             Logindata.CenterList = true
         }
     }
@@ -125,14 +125,13 @@ class CheckViewModel : ViewModel() {
         {
             if(items!![i]!!.use == false) Vars.f_center.add(items!![i]!!.centerId.toString())
         }
-        Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget() //리스트 새로그리고
-        Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget() //리스트 새로그리고
-        //Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER).sendToTarget() //리스트 새로그리고
-        Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_CHECK).sendToTarget() //뷰 닫기
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget() //리스트 새로그리고
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBITEM,Finals.INSERT_ORDER,0).sendToTarget() //리스트 새로그리고
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_CHECK,0).sendToTarget() //뷰 닫기
     }
 
     fun click_cancel()
     {
-        Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_CHECK).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_CHECK,0).sendToTarget()
     }
 }

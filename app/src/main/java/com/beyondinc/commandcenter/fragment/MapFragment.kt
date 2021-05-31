@@ -12,13 +12,13 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.databinding.FragmentMapBinding
+import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.MapViewModel
 import com.naver.maps.map.*
 import com.naver.maps.map.MapFragment
 
 class MapFragment : Fragment() , OnMapReadyCallback {
     var binding: FragmentMapBinding? = null
-    var viewModel: MapViewModel? = null
 
     companion object {
         var mapFragment: MapFragment? = null
@@ -37,8 +37,8 @@ class MapFragment : Fragment() , OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         //Log.e("MapFragment", "onCreate")
         binding = DataBindingUtil.bind(view)
-        viewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
-        binding!!.viewModel = viewModel
+        if(Vars.MapVm == null) Vars.MapVm = MapViewModel()
+        binding!!.viewModel = Vars.MapVm
         binding!!.lifecycleOwner = requireActivity()
 
         NaverMapSdk.getInstance(requireActivity()).client = NaverMapSdk.NaverCloudPlatformClient("lb5lxom6no")
@@ -73,7 +73,7 @@ class MapFragment : Fragment() , OnMapReadyCallback {
 
     override fun onMapReady(p0: NaverMap) {
         //Log.e("MAP","On Map Ready?")
-        viewModel?.mapInstance = p0
-        viewModel?.Mapclick()
+        Vars.MapVm?.mapInstance = p0
+        Vars.MapVm?.Mapclick()
     }
 }

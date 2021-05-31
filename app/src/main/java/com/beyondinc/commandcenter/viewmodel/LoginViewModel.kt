@@ -32,7 +32,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-open class LoginViewModel() : ViewModel() {
+class LoginViewModel() : ViewModel() {
 
     var id : MutableLiveData<String> = MutableLiveData()
     var pw : MutableLiveData<String> = MutableLiveData()
@@ -77,45 +77,11 @@ open class LoginViewModel() : ViewModel() {
 
         //getPhoneNum()
 
-        Vars.LoginHandler = @SuppressLint("HandlerLeak") object : Handler() {
-            override fun handleMessage(msg: Message) {
-                if (msg.what == Finals.LOGIN_SUCESS)
-                {
-                    (Vars.lContext as LoginsFun).LoginSuccess()
-                }
-                else if (msg.what == Finals.LOGIN_FAIL)
-                {
-                    if(Logindata.MSG == null)
-                    {
-                        var toast : Toast = Toast.makeText(
-                            Vars.lContext,
-                            "서버접속실패, 다시 시도해주세요.",
-                            Toast.LENGTH_SHORT
-                        )
-                            toast.setGravity(Gravity.TOP, 0, 300)
-                            toast.show()
-                    }
-                    else
-                    {
-                        var toast : Toast = Toast.makeText(
-                            Vars.lContext,
-                            Logindata.MSG,
-                            Toast.LENGTH_SHORT
-                        )
-                        toast.setGravity(Gravity.TOP, 0, 300)
-                        toast.show()
-                    }
-                    (Vars.lContext as LoginsFun).LoginFail()
-                }
-                else if(msg.what == Finals.APK_UPDATE)
-                {
-                        updateTxt.value = "업데이트가 있어요! \n 꼭 설치버튼을 눌러주세요."
-                        infotxt.value = "- 안 내 - \n 업데이트 도중에 WIFI 또는 무선데이터 연결을 해제하지 마십시오.\n 본 화면이 오랫동안 지속되면 앱을 강제로 종료 후 다시 실행하여 주십시오."
-                        downloadApk()
-                }
-                else if(msg.what == Finals.DOWNLOADVALUE) proVal.value = msg.what
-            }
-        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Vars.LoginVm = null
     }
 
     fun Login() {
@@ -178,6 +144,34 @@ open class LoginViewModel() : ViewModel() {
         ed.apply()
     }
 
+    fun LoginSucess(){
+        (Vars.lContext as LoginsFun).LoginSuccess()
+    }
+
+    fun LoginFail(){
+        if(Logindata.MSG == null)
+        {
+            var toast : Toast = Toast.makeText(
+                Vars.lContext,
+                "서버접속실패, 다시 시도해주세요.",
+                Toast.LENGTH_SHORT
+            )
+            toast.setGravity(Gravity.TOP, 0, 300)
+            toast.show()
+        }
+        else
+        {
+            var toast : Toast = Toast.makeText(
+                Vars.lContext,
+                Logindata.MSG,
+                Toast.LENGTH_SHORT
+            )
+            toast.setGravity(Gravity.TOP, 0, 300)
+            toast.show()
+        }
+        (Vars.lContext as LoginsFun).LoginFail()
+    }
+
     fun getPhoneNum(){
         var tel : TelephonyManager = Vars.lContext!!.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         if (ActivityCompat.checkSelfPermission(Vars.lContext!!, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED &&
@@ -199,6 +193,9 @@ open class LoginViewModel() : ViewModel() {
 
         (Vars.lContext as LoginsFun).closeLoading()
         (Vars.lContext as LoginsFun).showDownLoading()
+
+        updateTxt.value = "업데이트가 있어요! \n 꼭 설치버튼을 눌러주세요."
+        infotxt.value = "- 안 내 - \n 업데이트 도중에 WIFI 또는 무선데이터 연결을 해제하지 마십시오.\n 본 화면이 오랫동안 지속되면 앱을 강제로 종료 후 다시 실행하여 주십시오."
 
         val intentFilter = IntentFilter()
         intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE)

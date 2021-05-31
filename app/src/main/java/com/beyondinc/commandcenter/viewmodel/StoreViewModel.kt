@@ -69,7 +69,7 @@ class StoreViewModel : ViewModel() {
     }
 
     fun onClick(pos: Int){
-        Vars.ItemHandler!!.obtainMessage(Finals.STORE_ITEM_SELECT, items!![pos]!!.agencyName).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.STORE_ITEM_SELECT, 0,items!![pos]!!.agencyName).sendToTarget()
     }
 
     fun onCreate() {
@@ -93,6 +93,6 @@ class StoreViewModel : ViewModel() {
     }
 
     fun close(){
-        Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_DIALOG).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_DIALOG,0).sendToTarget()
     }
 }

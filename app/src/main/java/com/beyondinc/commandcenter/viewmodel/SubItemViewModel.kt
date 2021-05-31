@@ -34,17 +34,11 @@ class SubItemViewModel : ViewModel() {
         if (adapter == null) {
             adapter = RecyclerAdapterSub(this)
         }
+    }
 
-        Vars.SubItemHandler = @SuppressLint("HandlerLeak") object : Handler() {
-            override fun handleMessage(msg: Message) {
-                //Log.e("SubItemHandler",msg.what.toString())
-                if (msg.what == Finals.INSERT_ORDER) insertLogic()
-                else if(msg.what == Finals.SELECT_ORDER) select.value = Finals.SELECT_ORDER
-                else if(msg.what == Finals.SELECT_EMPTY) selectEmpte()
-                else if(msg.what == Finals.ORDER_ASSIGN_LIST) orderassignlist(msg.obj as String)
-                else if(msg.what == Finals.ALL_CLEAR) allClear()
-            }
-        }
+    override fun onCleared() {
+        super.onCleared()
+        Vars.SubItemVm = null
     }
 
     fun allClear(){
@@ -62,9 +56,9 @@ class SubItemViewModel : ViewModel() {
                 makeArray.add(itemss!![i]!!.OrderId)
             }
         }
-        if(makeArray.size < 1) Vars.MainsHandler!!.obtainMessage(Finals.ORDER_TOAST_SHOW,"선택된 오더가 없습니다.").sendToTarget()
+        if(makeArray.size < 1) Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.ORDER_TOAST_SHOW,0,"선택된 오더가 없습니다.").sendToTarget()
         else makeHash[id] = makeArray
-        Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ASSIGN_LIST, makeHash).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.ORDER_ASSIGN_LIST, 0,makeHash).sendToTarget()
     }
 
     fun insertLogic()
@@ -115,8 +109,8 @@ class SubItemViewModel : ViewModel() {
 
         var forstr = "배:${cntre} 픽:${cntpi} 완:${cntco}"
 
-        Vars.MainsHandler!!.obtainMessage(Finals.INSERT_ORDER_COUNT, forstr).sendToTarget()
-        Vars.MapHandler!!.obtainMessage(Finals.INSERT_ORDER_COUNT,cntbr).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.INSERT_ORDER_COUNT, 0,forstr).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.INSERT_ORDER_COUNT,0,cntbr).sendToTarget()
 
         if(finalMap.keys.size < itemss!!.keys.size)
         {
@@ -136,19 +130,19 @@ class SubItemViewModel : ViewModel() {
         if(itemss!![pos]!!.use)
         {
             itemss!![pos]!!.use = false
-            Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_ASSIGN_REMOVE, itemss!![pos]!!).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.MAP_FOR_ASSIGN_REMOVE, 0,itemss!![pos]!!).sendToTarget()
         }
         else
         {
             itemss!![pos]!!.use = true
-            Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_ASSIGN_CREATE, itemss!![pos]!!).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.MAP_FOR_ASSIGN_CREATE, 0,itemss!![pos]!!).sendToTarget()
         }
         onCreate()
     }
 
     fun onCreate() {
 
-        Vars.MapHandler!!.obtainMessage(Finals.INSERT_ORDER_COUNT,itemss!!.keys.size).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.INSERT_ORDER_COUNT,0,itemss!!.keys.size).sendToTarget()
 
         var cnt = 0
         for(i in 0 until itemss!!.keys.size)
@@ -161,8 +155,8 @@ class SubItemViewModel : ViewModel() {
             }
         }
 
-        if(cnt > 0) Vars.MapHandler!!.obtainMessage(Finals.SELECT_ORDER).sendToTarget()
-        else Vars.MapHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
+        if(cnt > 0) Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.SELECT_ORDER,0).sendToTarget()
+        else Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.SELECT_EMPTY,0).sendToTarget()
         adapter!!.notifyDataSetChanged()
     }
 

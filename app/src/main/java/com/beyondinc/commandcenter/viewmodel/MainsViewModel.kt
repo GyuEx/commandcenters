@@ -45,7 +45,6 @@ class MainsViewModel : ViewModel() {
     var briteLayer = MutableLiveData<Int>()
 
     var proTxt = MutableLiveData<String>()
-    var dongArray = MutableLiveData<ArrayList<String>>()
 
     var Item : MutableLiveData<Orderdata> = MutableLiveData()
     var showDetail : Boolean = false
@@ -81,60 +80,22 @@ class MainsViewModel : ViewModel() {
 
         layer.postValue(Finals.SELECT_ORDER)
         select.postValue(Finals.SELECT_EMPTY)
+        // 위 두줄 포스트벨류로 안넣으면 초기 맵 선로딩이 안될 경우가 더 많음(라이브데이터 속도차이)
         drawer.value = false
+    }
 
-        //핸들러를 init에서 분리하고싶으나 이상하게 코틀린은 뷰모델이 2개가 쓰레드에서 실행이됨... 어쩔수없이 init와 함께 로드
-        //모델과 뷰모델을 따로 분리해야되나..
-        Vars.MainsHandler = @SuppressLint("HandlerLeak") object : Handler() {
-            override fun handleMessage(msg: Message) {
-                //Log.e("Main Hanldler" , "" + msg.what)
-                if(msg.what == Finals.CALL_RIDER) getRiderList()
-                else if(msg.what == Finals.INSERT_RIDER) insertRider()
-                else if(msg.what == Finals.CALL_CENTER) getCenterList()
-                else if(msg.what == Finals.CALL_ORDER) getOrderList()
-                else if(msg.what == Finals.CLOSE_CHECK) checkview.value = Finals.SELECT_EMPTY
-                else if(msg.what == Finals.ORDER_ITEM_SELECT)showOrderDetail(msg.obj as Orderdata)
-                else if(msg.what == Finals.HTTP_ERROR) HttpError()
-                else if(msg.what == Finals.CLOSE_KEYBOARD) closeKeyBoard()
-                else if(msg.what == Finals.INSERT_ORDER_COUNT) order_count.postValue(msg.obj as String)
-                else if(msg.what == Finals.INSERT_RIDER_COUNT) rider_count.postValue(msg.obj as String)
-                else if(msg.what == Finals.SET_BRIGHT) setBright()
-                else if(msg.what == Finals.CANCEL_MESSAGE) closeMessage()
-                else if(msg.what == Finals.SUCCESS_MESSAGE) successMessage(msg.obj as String)
-                else if(msg.what == Finals.ORDER_ASSIGN) orderAssign(msg.obj as String)
-                else if(msg.what == Finals.ORDER_ASSIGN_LIST) orderAssignList(msg.obj as ConcurrentHashMap<String, ArrayList<String>>)
-                else if(msg.what == Finals.ORDER_TOAST_SHOW) showToast(msg.obj as String)
-                else if(msg.what == Finals.CLOSE_POPUP) closeDialogHidden()
-                else if(msg.what == Finals.CLOSE_DIALOG) closeDialog()
-                else if(msg.what == Finals.SEND_TELEPHONE) send_call(msg.obj as String)
-                else if(msg.what == Finals.MAP_FOR_SOPEN) showSelectDialog(msg.obj as Orderdata)
-                else if(msg.what == Finals.CALL_GPS) getRiderGPS()
-                else if(msg.what == Finals.SEND_ITEM) getItemsend(msg.obj as Orderdata)
-                else if(msg.what == Finals.CHANGE_ADDRESS) showAddress()
-                else if(msg.what == Finals.CHECK_TIME) checkOrderLastTime()
-                else if(msg.what == Finals.CHECK_COUNT) checkOrderCount()
-                else if(msg.what == Finals.CONN_ALRAM) connenctAlram()
-                else if(msg.what == Finals.CLOSE_DETAIL) closeDetail()
-                else if(msg.what == Finals.SHOW_LOADING) showLoading()
-                else if(msg.what == Finals.CLOSE_LOADING) closeLoading()
-                else if(msg.what == Finals.DISCONN_ALRAM) disconnectAlram()
-                else if(msg.what == Finals.SHOW_MESSAGE) showMessage(msg.obj as String,"0")
-                else if(msg.what == Finals.CHANGE_CLOSE) changeClose()
-                else if(msg.what == Finals.SEARCH_ADDR) getAddress(msg.obj as HashMap<Int, String>)
-                else if(msg.what == Finals.CHANGE_ADDR) changeAddr(msg.obj as Addrdata)
-                else if(msg.what == Finals.INSERT_ADDR) insertAddr()
-                else if(msg.what == Finals.SHOW_ADDR) insertDetailAddr()
-            }
-        }
+    override fun onCleared() {
+        super.onCleared()
+        Vars.MainVm = null
     }
 
     fun insertAddr(){
-        if(Vars.AddressHandler != null) Vars.AddressHandler!!.obtainMessage(Finals.INSERT_ADDR,Item.value).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ADDRESS,Finals.INSERT_ADDR,0,Item.value).sendToTarget()
     }
 
     fun insertDetailAddr()
     {
-        if(Vars.AddressHandler != null) Vars.AddressHandler!!.obtainMessage(Finals.INSERT_ADDR,Item.value).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ADDRESS,Finals.INSERT_ADDR,0,Item.value).sendToTarget()
         (Vars.mContext as MainsFun).closeMessage()
         (Vars.mContext as MainsFun).showAddress()
     }
@@ -289,7 +250,7 @@ class MainsViewModel : ViewModel() {
     fun closeSelectDialog(){
         Item.value = null
         (Vars.mContext as MainsFun).closeSelect()
-        Vars.AssignHandler!!.obtainMessage(Finals.ORDER_DETAIL_CLOSE).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ASSIGN,Finals.ORDER_DETAIL_CLOSE,0).sendToTarget()
     }
 
     private fun proceedAlarmCallback(alarmList: ArrayList<Alarmdata>) {
@@ -323,10 +284,10 @@ class MainsViewModel : ViewModel() {
 
     fun setBright(){
         briteLayer.value = Vars.Bright
-        Vars.CheckHandler!!.obtainMessage(Finals.INSERT_STORE).sendToTarget()
-        Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
-        Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
-        Vars.MapHandler!!.obtainMessage(Finals.INSERT_RIDER).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_CHECK,Finals.INSERT_STORE,0).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBITEM,Finals.INSERT_ORDER,0).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.INSERT_RIDER,0).sendToTarget()
     }
 
     fun insertRider()
@@ -334,7 +295,7 @@ class MainsViewModel : ViewModel() {
         getRiderGPS()
         if(!Logindata.RiderList)
         {
-            Vars.MainsHandler!!.obtainMessage(Finals.CALL_ORDER).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CALL_ORDER,0).sendToTarget()
             Logindata.RiderList = true
         }
     }
@@ -442,48 +403,39 @@ class MainsViewModel : ViewModel() {
     fun getSelectOder(): Int? {
         return Finals.SELECT_ORDER
     }
-    fun getSelectCheck(): Int? {
-        return Finals.SELECT_CHECK
-    }
-    fun getSelectRider(): Int? {
-        return Finals.SELECT_RIDER
-    }
-    fun getSelectStore(): Int? {
-        return Finals.SELECT_STORE
-    }
     fun getSelectBrife(): Int? {
         return Finals.SELECT_BRIFE
     }
 
     fun MapDrOpen(){
-        Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_DOPEN).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.MAP_FOR_DOPEN,0).sendToTarget()
     }
 
     fun MapOrderOpen(){
-        Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_REMOVE).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.MAP_FOR_REMOVE,0).sendToTarget()
     }
 
     fun click_brife() {
         if (select.value == Finals.SELECT_BRIFE) {
             select.value = Finals.SELECT_EMPTY
-            Vars.ItemHandler!!.obtainMessage(Finals.DESABLE_SELECT).sendToTarget()
-            Vars.ItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
-            Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.DESABLE_SELECT,0).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.SELECT_EMPTY,0).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget()
         } else {
             select.value = Finals.SELECT_BRIFE
-            Vars.ItemHandler!!.obtainMessage(Finals.SELECT_BRIFE).sendToTarget()
-            Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.SELECT_BRIFE,0).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget()
         }
     }
 
     fun click_store() {
         if (select.value == Finals.SELECT_STORE) {
-            Vars.ItemHandler!!.obtainMessage(Finals.DESABLE_SELECT).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.DESABLE_SELECT,0).sendToTarget()
             select.value = Finals.SELECT_EMPTY
         }
         else if(select.value == Finals.SELECT_BRIFE) {
-            Vars.ItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
-            Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.SELECT_EMPTY,0).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget()
             select.value = Finals.SELECT_STORE
             showDialog(2)
         }
@@ -495,11 +447,11 @@ class MainsViewModel : ViewModel() {
 
     fun click_rider() {
         if (select.value == Finals.SELECT_RIDER) {
-            Vars.ItemHandler!!.obtainMessage(Finals.DESABLE_SELECT).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.DESABLE_SELECT,0).sendToTarget()
             select.value = Finals.SELECT_EMPTY
         }else if(select.value == Finals.SELECT_BRIFE) {
-            Vars.ItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
-            Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.SELECT_EMPTY,0).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget()
             select.value = Finals.SELECT_RIDER
             showDialog(3)
         }
@@ -515,17 +467,17 @@ class MainsViewModel : ViewModel() {
             layer.value = Finals.SELECT_MAP
             Vars.mLayer = Finals.SELECT_MAP // 쓰레드가 현재 메인레이어를 뭘보고 있는지 알고싶어함
             select.value = Finals.SELECT_EMPTY
-            Vars.ItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
-            Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.SELECT_EMPTY,0).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBITEM,Finals.INSERT_ORDER,0).sendToTarget()
             // empty를 먼저 던져줘야 맵이 초기화가 됨
         }
         else
         {
             layer.value = Finals.SELECT_ORDER
             Vars.mLayer = Finals.SELECT_ORDER // 쓰레드가 현재 메인레이어를 뭘보고 있는지 알고싶어함
-            Vars.SubItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
-            Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
-            Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_DCLOSE).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBITEM,Finals.SELECT_EMPTY,0).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.MAP_FOR_DCLOSE,0).sendToTarget()
             // empty를 먼저 던져줘야 맵이 초기화가 됨
         }
     }
@@ -603,8 +555,8 @@ class MainsViewModel : ViewModel() {
         (Vars.mContext as MainsFun).closeOderdetail()
         //Item.value = null
         showDetail = false
-        Vars.ItemHandler!!.obtainMessage(Finals.ORDER_DETAIL_CLOSE).sendToTarget()
-        Vars.AssignHandler!!.obtainMessage(Finals.ORDER_DETAIL_CLOSE).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.ORDER_DETAIL_CLOSE,0).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ASSIGN,Finals.ORDER_DETAIL_CLOSE,0).sendToTarget()
         (Vars.mContext as MainsFun).closeSelect()
     }
 

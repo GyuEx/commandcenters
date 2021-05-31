@@ -21,7 +21,6 @@ import com.naver.maps.map.OnMapReadyCallback
 class DetailDialog : DialogFragment() , OnMapReadyCallback {
 
     var binding: ActivityOderDetailBinding? = null
-    var viewModel: MainsViewModel? = null
 
     companion object {
         var oderfrag: Fragment? = null
@@ -39,7 +38,7 @@ class DetailDialog : DialogFragment() , OnMapReadyCallback {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         Log.e("Dialog","Dissmiss")
-        viewModel!!.closeDetail()
+        Vars.MainVm?.closeDetail()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -53,8 +52,8 @@ class DetailDialog : DialogFragment() , OnMapReadyCallback {
         Vars.dContext = this.context
 
         binding = DataBindingUtil.bind(view)
-        viewModel = ViewModelProvider(requireActivity()).get(MainsViewModel::class.java)
-        binding!!.viewModel = viewModel
+        if(Vars.MainVm == null) Vars.MainVm = MainsViewModel()
+        binding!!.viewModel = Vars.MainVm
         binding!!.lifecycleOwner = requireActivity()
 
         fragmentTransaction = childFragmentManager.beginTransaction()
@@ -74,7 +73,7 @@ class DetailDialog : DialogFragment() , OnMapReadyCallback {
 
     fun setFragment(i : Int) {
         code = i
-        if(viewModel!!.DetailsSelect.value == Finals.DETAIL_MAP)
+        if(Vars.MainVm?.DetailsSelect!!.value == Finals.DETAIL_MAP)
         {
             fragmentTransaction = childFragmentManager.beginTransaction()
             mapfrag = MapFragment()
@@ -82,7 +81,7 @@ class DetailDialog : DialogFragment() , OnMapReadyCallback {
             fragmentTransaction!!.commitAllowingStateLoss()
             mapfrag!!.getMapAsync(this)
         }
-        else if(viewModel!!.DetailsSelect.value == Finals.DETAIL_DETAIL)
+        else if(Vars.MainVm?.DetailsSelect!!.value == Finals.DETAIL_DETAIL)
         {
             fragmentTransaction = childFragmentManager.beginTransaction()
             oderfrag = DetailFragment()
@@ -92,7 +91,7 @@ class DetailDialog : DialogFragment() , OnMapReadyCallback {
     }
 
     override fun onMapReady(p0: NaverMap) {
-        viewModel?.mapInstance = p0
-        viewModel?.makeMarker(code)
+        Vars.MainVm?.mapInstance = p0
+        Vars.MainVm?.makeMarker(code)
     }
 }

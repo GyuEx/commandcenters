@@ -18,7 +18,6 @@ import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 class LoginLoadingDialog : DialogFragment() {
 
     var binding: FragmentLoginLoadingBinding? = null
-    var viewModel: LoginViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +33,8 @@ class LoginLoadingDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DataBindingUtil.bind(view)
-        viewModel = ViewModelProvider(requireActivity()).get(LoginViewModel::class.java)
-        binding!!.viewModel = viewModel
+        if(Vars.LoginVm == null) Vars.LoginVm = LoginViewModel()
+        binding!!.viewModel = Vars.LoginVm
         binding!!.lifecycleOwner = requireActivity()
 
         var ani : AnimationDrawable = binding!!.anima.background as AnimationDrawable

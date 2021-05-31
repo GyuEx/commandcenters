@@ -7,12 +7,12 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.databinding.FragmentDownloadingBinding
+import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.LoginViewModel
 
 class DownloadingDialog : DialogFragment() {
 
     var binding: FragmentDownloadingBinding? = null
-    var viewModel: LoginViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +30,8 @@ class DownloadingDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DataBindingUtil.bind(view)
-        viewModel = ViewModelProvider(requireActivity()).get(LoginViewModel::class.java)
-        binding!!.viewModel = viewModel
+        if(Vars.LoginVm == null) Vars.LoginVm = LoginViewModel()
+        binding!!.viewModel = Vars.LoginVm
         binding!!.lifecycleOwner = requireActivity()
     }
 }

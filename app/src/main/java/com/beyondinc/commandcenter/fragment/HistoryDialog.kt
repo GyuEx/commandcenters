@@ -15,7 +15,6 @@ import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 class HistoryDialog : DialogFragment() {
 
     var binding: DetailsPopupBinding? = null
-    var viewModel: MainsViewModel? = null
 
     companion object {
         var fr: Fragment? = null
@@ -37,8 +36,8 @@ class HistoryDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DataBindingUtil.bind(view)
-        viewModel = ViewModelProvider(requireActivity()).get(MainsViewModel::class.java)
-        binding!!.viewModel = viewModel
+        if(Vars.MainVm == null) Vars.MainVm = MainsViewModel()
+        binding!!.viewModel = Vars.MainVm
         binding!!.lifecycleOwner = requireActivity()
 
         fragmentTransaction = childFragmentManager.beginTransaction()

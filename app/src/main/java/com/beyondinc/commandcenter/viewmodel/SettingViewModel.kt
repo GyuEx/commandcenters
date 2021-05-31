@@ -65,7 +65,7 @@ class SettingViewModel : ViewModel() {
         ed.putInt("fontsize", fontsize.value!!)
         ed.apply()
 
-        Vars.MainsHandler!!.obtainMessage(Finals.SET_BRIGHT).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.SET_BRIGHT,0).sendToTarget()
 
         exit()
     }

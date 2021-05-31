@@ -18,6 +18,7 @@ import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.databinding.AddressDialogBinding
 import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.AddressViewModel
+import com.beyondinc.commandcenter.viewmodel.AssignViewModel
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
@@ -26,7 +27,6 @@ import com.naver.maps.map.OnMapReadyCallback
 class AddressDialog() : DialogFragment(), OnMapReadyCallback {
 
     var binding: AddressDialogBinding? = null
-    var viewModel: AddressViewModel? = null
     var mapfrag: MapFragment? = null
     var fragmentTransaction: FragmentTransaction? = null
 
@@ -50,8 +50,8 @@ class AddressDialog() : DialogFragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
 
         binding = DataBindingUtil.bind(view)
-        viewModel = ViewModelProvider(requireActivity()).get(AddressViewModel::class.java)
-        binding!!.viewModel = viewModel
+        if(Vars.AddressVm == null) Vars.AddressVm = AddressViewModel()
+        binding!!.viewModel = Vars.AddressVm
         binding!!.lifecycleOwner = requireActivity()
 
         fragmentTransaction = childFragmentManager.beginTransaction()
@@ -75,7 +75,7 @@ class AddressDialog() : DialogFragment(), OnMapReadyCallback {
 
     override fun onMapReady(p0: NaverMap) {
         Log.e("On Map","Ready?")
-        viewModel?.mapInstance = p0
-        viewModel?.makeMarker()
+        Vars.AddressVm?.mapInstance = p0
+        Vars.AddressVm?.makeMarker()
     }
 }

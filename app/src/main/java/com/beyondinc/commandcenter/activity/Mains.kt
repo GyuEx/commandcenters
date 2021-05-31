@@ -23,9 +23,9 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.R
-import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.databinding.ActivityMainBinding
 import com.beyondinc.commandcenter.fragment.*
+import com.beyondinc.commandcenter.handler.HandlerCallBack
 import com.beyondinc.commandcenter.service.AppActivateService
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
@@ -37,7 +37,6 @@ import java.security.NoSuchAlgorithmException
 
 class Mains : AppCompatActivity(), MainsFun {
     var binding: ActivityMainBinding? = null
-    var viewModel: MainsViewModel? = null
     private val Tag = "Mains Activity"
     private val serviceIntent = Intent(AppActivateService.ACTION_FOREGROUND)
 
@@ -101,7 +100,7 @@ class Mains : AppCompatActivity(), MainsFun {
         Log.e(Tag, "Restart")
     }
 
-    override fun onConfigurationChanged(newConfig : Configuration) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig);
 
         if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -146,9 +145,9 @@ class Mains : AppCompatActivity(), MainsFun {
         fragmentTransaction!!.show(mapfrag!!)
         fragmentTransaction!!.commitAllowingStateLoss()
 
-        viewModel = ViewModelProvider(this).get(MainsViewModel::class.java)
+        if(Vars.MainVm == null) Vars.MainVm = MainsViewModel()
         binding!!.lifecycleOwner = this
-        binding!!.viewModel = viewModel
+        binding!!.viewModel = Vars.MainVm
 
         getKeyHash(this)
         getDeviceSize()
@@ -186,13 +185,13 @@ class Mains : AppCompatActivity(), MainsFun {
     }
 
     override fun setFragment() {
-        if(viewModel!!.layer.value == Finals.SELECT_MAP)
+        if(Vars.MainVm?.layer!!.value == Finals.SELECT_MAP)
         {
             val ft = supportFragmentManager.beginTransaction()
             ft!!.hide(oderfrag!!)
             ft!!.show(mapfrag!!).commitAllowingStateLoss()
         }
-        else if(viewModel!!.layer.value == Finals.SELECT_ORDER)
+        else if(Vars.MainVm?.layer!!.value == Finals.SELECT_ORDER)
         {
             val ft = supportFragmentManager.beginTransaction()
             ft!!.hide(mapfrag!!)

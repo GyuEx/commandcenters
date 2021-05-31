@@ -46,8 +46,8 @@ class MainThread() : Thread() , ThreadFun{
                     val code = rdata.keys.iterator().next()
                     val data = rdata[code]
 
-                    Log.e("Recive", "" + code)
-                    Log.e("Recive", "" + data + " // " + data!!.size + " // " )
+//                    Log.e("Recive", "" + code)
+//                    Log.e("Recive", "" + data + " // " + data!!.size + " // " )
 
                     if(code == Procedures.LOGIN)
                     {
@@ -55,7 +55,7 @@ class MainThread() : Thread() , ThreadFun{
                         if(data!![0]["CODE"] == "-1000")
                         {
                             Logindata.MSG = data!![0]["MSG"]
-                            Vars.LoginHandler!!.obtainMessage(Finals.APK_UPDATE).sendToTarget()
+                            Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.APK_UPDATE,0).sendToTarget()
                         }
                         else if(data!![0]["MSG"] == "로그인 성공!")
                         {
@@ -66,12 +66,12 @@ class MainThread() : Thread() , ThreadFun{
                             Logindata.UserDesc=data!![0]["UserDesc"]
                             Logindata.LastLoginDT=data!![0]["LastLoginDT"]
                             Logindata.MSG=data!![0]["MSG"]
-                            Vars.LoginHandler!!.obtainMessage(Finals.LOGIN_SUCESS).sendToTarget()
+                            Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.LOGIN_SUCESS,0).sendToTarget()
                         }
                         else
                         {
                             Logindata.MSG = data!![0]["MSG"]
-                            Vars.LoginHandler!!.obtainMessage(Finals.LOGIN_FAIL).sendToTarget()
+                            Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.LOGIN_FAIL,0).sendToTarget()
                         }
                     }
                     else if(code == Procedures.CENTER_LIST)
@@ -88,7 +88,7 @@ class MainThread() : Thread() , ThreadFun{
                                 Vars.centerList[ct.centerId!!] = ct
                             }
                         }
-                        Vars.CheckHandler!!.obtainMessage(Finals.INSERT_STORE).sendToTarget()
+                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_CHECK,Finals.INSERT_STORE,0).sendToTarget()
                     }
                     else if(code == Procedures.RIDER_LIST_IN_CENTER)
                     {
@@ -105,7 +105,7 @@ class MainThread() : Thread() , ThreadFun{
                         }
 
                         Vars.riderList.putAll(ridertemp)
-                        Vars.MainsHandler!!.obtainMessage(Finals.INSERT_RIDER).sendToTarget()
+                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.INSERT_RIDER,0).sendToTarget()
                     }
                     else if(code == Procedures.ORDER_LIST_IN_CENTER)
                     {
@@ -131,13 +131,8 @@ class MainThread() : Thread() , ThreadFun{
                                     var ft = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                                     var now = ft.parse(or.ModDT)
                                     var nt = ft.parse(Vars.centerLastTime[or.RcptCenterId])
-                                    Log.e(
-                                        "Time",
-                                        "${or.ModDT} 이거랑 ${Vars.centerLastTime[or.RcptCenterId]}"
-                                    )
                                     if (now.time > nt.time) {
                                         Vars.centerLastTime[or.RcptCenterId] = or.ModDT
-                                        Log.e("Time", "들어왔다!")
                                     }
                                 }
                                 else
@@ -155,7 +150,7 @@ class MainThread() : Thread() , ThreadFun{
                             {
                                 Vars.timecntOT = 60 // 체크 주기 다시 1분으로 변경하고
                                 allcnt = 0 // 재시도 횟수 0으로 초기화
-                                Vars.MainsHandler!!.obtainMessage(Finals.CONN_ALRAM).sendToTarget() // 알람켜기
+                                Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CONN_ALRAM,0).sendToTarget() // 알람켜기
                                 Log.e("MainThread" , "일치할걸?")
                             }
                             else
@@ -164,33 +159,33 @@ class MainThread() : Thread() , ThreadFun{
                                 {
                                     Log.e("MainThread" , "올 클리어 진행")
                                     Vars.orderList.clear() // 마감시간때는 무조건 갯수가 안맞게 되니 하지만 "난" 마감시간을 알수 없음 그러므로 초기화
-                                    Vars.ItemHandler!!.obtainMessage(Finals.ALL_CLEAR).sendToTarget() // 메인아이템뷰 클리어 진행
-                                    Vars.SubItemHandler!!.obtainMessage(Finals.ALL_CLEAR).sendToTarget() // 서브아이템뷰 클리어 진행
-                                    Vars.MainsHandler!!.obtainMessage(Finals.CALL_ORDER).sendToTarget() // 5번정도 안맞으면 전체리스트 땡겨와
+                                    Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.ALL_CLEAR,0).sendToTarget() // 메인아이템뷰 클리어 진행
+                                    Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBITEM,Finals.ALL_CLEAR,0).sendToTarget() // 서브아이템뷰 클리어 진행
+                                    Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CALL_ORDER,0).sendToTarget() // 5번정도 안맞으면 전체리스트 땡겨와
                                     allcnt = 0 // 전체리스트를 두번씩 땡길 필요는 없지
                                 }
                                 else if(allcnt > 0)
                                 {
                                     allcnt++
-                                    Vars.MainsHandler!!.obtainMessage(Finals.DISCONN_ALRAM).sendToTarget() // 갯수가 안맞으면 알람을 꺼버림
+                                    Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.DISCONN_ALRAM,0).sendToTarget() // 갯수가 안맞으면 알람을 꺼버림
                                     Vars.timecntOT = 10 // 갯수조회 카운터를 한시적으로 10초로 변경
                                 }
                                 else
                                 {
                                     allcnt++ // 바로 진행하니 부득이한 경우가 생겨서 1회정도는 그냥 체크타임으로 땡기는것이 좋을듯 안맞으면 이 구문 삭제
                                 }
-                                Vars.MainsHandler!!.obtainMessage(Finals.CHECK_TIME).sendToTarget() // 데이터가 안맞으면 마지막시간으로 던져서 확인해!
+                                Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CHECK_TIME,0).sendToTarget() // 데이터가 안맞으면 마지막시간으로 던져서 확인해!
                                 Log.e("MainThread" , "일치하지 않음")
                             }
                         }
 
                         Vars.orderList.putAll(centertemp)
 
-                        if(Vars.mLayer == Finals.SELECT_ORDER && !inToday) Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+                        if(Vars.mLayer == Finals.SELECT_ORDER && !inToday) Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget()
                         else if(Vars.mLayer == Finals.SELECT_MAP && !inToday)
                         {
-                            Vars.SubItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
-                            Vars.SubRiderHandler!!.obtainMessage(Finals.MAP_FOR_REFRASH).sendToTarget()
+                            Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBITEM,Finals.INSERT_ORDER,0).sendToTarget()
+                            Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBRIDER,Finals.MAP_FOR_REFRASH,0).sendToTarget()
                         }
                     }
                     else if(code == Procedures.RIDER_LOCATION_IN_CENTER)
@@ -215,7 +210,7 @@ class MainThread() : Thread() , ThreadFun{
                         for(i in 0 until data!!.size) {
                             msg = data!![i]["MSG"].toString()
                         }
-                        Vars.MainsHandler!!.obtainMessage(Finals.ORDER_TOAST_SHOW,msg).sendToTarget()
+                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.ORDER_TOAST_SHOW,0,msg).sendToTarget()
                     }
                     else if(code == Procedures.EDIT_ORDER_INFO)
                     {
@@ -256,23 +251,23 @@ class MainThread() : Thread() , ThreadFun{
                         }
                         if(sub == 0 && msg != "조회결과가 존재하지 않습니다.")
                         {
-                            Vars.MainsHandler!!.obtainMessage(Finals.ORDER_TOAST_SHOW,msg).sendToTarget()
+                            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.ORDER_TOAST_SHOW,0,msg).sendToTarget()
                         }
                         if(sub == 0 && msg == "조회결과가 존재하지 않습니다.")
                         {
-                            if(Vars.AddressHandler != null) Vars.AddressHandler!!.obtainMessage(Finals.MESSAGE_ADDR).sendToTarget()
+                            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ADDRESS,Finals.MESSAGE_ADDR,0).sendToTarget()
                         }
                         else if(sub == 4)
                         {
                             Vars.dongList.clear() // 한번전체삭제 하고
                             Vars.dongList.putAll(arrayList)
-                            Vars.MainsHandler?.obtainMessage(Finals.SHOW_ADDR)?.sendToTarget()
+                            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.SHOW_ADDR,0)?.sendToTarget()
                         }
                         else if(sub == 13)
                         {
                             Vars.AddrList.clear() // 한번전체삭제 하고
                             Vars.AddrList.putAll(arrayList)
-                            Vars.AddressHandler?.obtainMessage(Finals.SEARCH_ADDR)?.sendToTarget() //Addr은 Null이 널일수 있음!
+                            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ADDRESS,Finals.SEARCH_ADDR,0).sendToTarget()
                         }
                     }
                 }

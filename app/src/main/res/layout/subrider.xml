@@ -3,18 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="text_color" type="int"/>
-        <variable name="text_color_string" type="String"/>
-        <variable name="back_color" type="String"/>
-
         <variable
             name="viewModel"
             type="com.beyondinc.commandcenter.viewmodel.SubRiderViewModel" />
-
         <variable
             name="pos"
             type="Integer" />
-
     </data>
 
     <LinearLayout

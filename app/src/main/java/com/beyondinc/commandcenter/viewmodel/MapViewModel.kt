@@ -69,25 +69,11 @@ class MapViewModel : ViewModel()
         //Log.e("MapViewModel", "MapViewModel init")
         Drawer.value = false
         Lrawer.value = false
+    }
 
-        Vars.MapHandler = @SuppressLint("HandlerLeak") object : Handler() {
-            override fun handleMessage(msg: Message) {
-                //Log.e("Map View", "" + msg.what)
-                if (msg.what == Finals.CREATE_RIDER_MARKER && msg.obj != null) createRider(msg.obj as Riderdata)
-                else if (msg.what == Finals.UPDATE_RIDER_MARKER && msg.obj != null) updateRider(msg.obj as Riderdata)
-                else if (msg.what == Finals.REMOVE_RIDER_MARKER && msg.obj != null) removeRider(msg.obj as Riderdata)
-                else if(msg.what == Finals.MAP_FOR_DOPEN) OpenDrawer()
-                else if(msg.what == Finals.MAP_FOR_DCLOSE) dclose()
-                else if(msg.what == Finals.MAP_MOVE_FOCUS) MapFocusSet(msg.obj as Riderdata)
-                else if(msg.what == Finals.MAP_FOR_REMOVE) CancelRider()
-                else if(msg.what == Finals.SELECT_ORDER) selectOr()
-                else if(msg.what == Finals.SELECT_EMPTY) emptyOr()
-                else if(msg.what == Finals.INSERT_ORDER_COUNT) subitemsize.value = msg.obj as Int
-                else if(msg.what == Finals.MAP_FOR_ASSIGN_CREATE) createAssign(msg.obj as Orderdata)
-                else if(msg.what == Finals.MAP_FOR_ASSIGN_REMOVE) removeAssign(msg.obj as Orderdata)
-                else if(msg.what == Finals.ORDER_ASSIGN) to_assgin_click()
-            }
-        }
+    override fun onCleared() {
+        super.onCleared()
+        Vars.MapVm = null
     }
 
     fun dclose(){
@@ -100,7 +86,7 @@ class MapViewModel : ViewModel()
     fun to_assgin_click(){
         if(Item.value != null)
         {
-            Vars.SubItemHandler!!.obtainMessage(Finals.ORDER_ASSIGN_LIST, Item!!.value!!.id).sendToTarget() //아이디는 그냥 주는거임
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBITEM,Finals.ORDER_ASSIGN_LIST, 0,Item!!.value!!.id).sendToTarget() //아이디는 그냥 주는거임
             removeAssignMaker()
         }
         else
@@ -125,7 +111,7 @@ class MapViewModel : ViewModel()
 
     fun click_assign(){
         var msg = "${Item.value!!.name} 라이더에게 배정"
-        Vars.MainsHandler!!.obtainMessage(Finals.SHOW_MESSAGE,msg).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.SHOW_MESSAGE,0,msg).sendToTarget()
     }
 
     fun mapFocusing(){
@@ -264,7 +250,7 @@ class MapViewModel : ViewModel()
         {
             createAccept(onMove)
             createPikup(onMove)
-            Vars.AssignHandler!!.obtainMessage(Finals.INSERT_ORDER,tempmap).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ASSIGN,Finals.INSERT_ORDER,0,tempmap).sendToTarget()
         }
     }
 
@@ -282,8 +268,8 @@ class MapViewModel : ViewModel()
         removeOrderMaker()
         Olayer.value = Finals.MAP_FOR_REMOVE
         Item.value = null
-        Vars.SubRiderHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
-        Vars.AssignHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBRIDER,Finals.SELECT_EMPTY,0).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ASSIGN,Finals.SELECT_EMPTY,0).sendToTarget()
         CloseLowLayer()
         MarkerThread().start()
 //        for (marker in markerList.keys)
@@ -347,7 +333,7 @@ class MapViewModel : ViewModel()
         Lselect = false
         Lrawer.value = false
         removeAssignMaker()
-        Vars.SubItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBITEM,Finals.SELECT_EMPTY,0).sendToTarget()
         if(Drawer.value == false) Drawer.value = true
         else CloseDrawer()
     }
@@ -355,15 +341,15 @@ class MapViewModel : ViewModel()
     fun CloseDrawer(){
         Drawer.value = false
         Dselect = false
-        if(!Lselect) Vars.SubItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
-        Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_KEYBOARD).sendToTarget()
+        if(!Lselect) Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBITEM,Finals.SELECT_EMPTY,0).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_KEYBOARD,0).sendToTarget()
     }
 
     fun CloseLowLayer(){
         Lrawer.value = false
         Lselect = false
         removeAssignMaker()
-        if(!Dselect) Vars.SubItemHandler!!.obtainMessage(Finals.SELECT_EMPTY).sendToTarget()
+        if(!Dselect) Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBITEM,Finals.SELECT_EMPTY,0).sendToTarget()
     }
 
     fun LowLayerClick(){
@@ -372,7 +358,7 @@ class MapViewModel : ViewModel()
         Drawer.value = false
         if(Lrawer.value == false) {
             Lrawer.value = true
-             Vars.SubItemHandler!!.obtainMessage(Finals.SELECT_ORDER).sendToTarget()
+             Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBITEM,Finals.SELECT_ORDER,0).sendToTarget()
         }
         else CloseLowLayer()
     }
@@ -381,7 +367,7 @@ class MapViewModel : ViewModel()
     {
         marker.MakerID!!.map = mapInstance
         markerList[marker.MakerID!!] = marker
-        Vars.SubRiderHandler!!.obtainMessage(Finals.INSERT_RIDER,marker).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBRIDER,Finals.INSERT_RIDER,0,marker).sendToTarget()
     }
 
     fun updateRider(marker: Riderdata)
@@ -400,13 +386,13 @@ class MapViewModel : ViewModel()
         {
             riderTitle.value = "${Item.value!!.name} : 배정 ${Item.value!!.assignCount} / 픽업 ${Item.value!!.pickupCount} / 완료 ${Item.value!!.completeCount}"
         }
-        Vars.SubRiderHandler!!.obtainMessage(Finals.INSERT_RIDER,marker).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBRIDER,Finals.INSERT_RIDER,0,marker).sendToTarget()
     }
 
     fun removeRider(marker: Riderdata)
     {
         marker.MakerID!!.map = null
-        Vars.SubRiderHandler!!.obtainMessage(Finals.REMOVE_RIDER_MARKER,marker).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBRIDER,Finals.REMOVE_RIDER_MARKER,0,marker).sendToTarget()
     }
 
     fun createPikup(move : Boolean)

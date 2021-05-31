@@ -25,15 +25,11 @@ class AssignViewModel : ViewModel() {
         if (adapter == null) {
             adapter = RecyclerAdapterAssign(this)
         }
+    }
 
-        Vars.AssignHandler = @SuppressLint("HandlerLeak") object : Handler() {
-            override fun handleMessage(msg: Message) {
-                //Log.e("SubriderHandler",msg.what.toString())
-                if (msg.what == Finals.INSERT_ORDER) insertLogic(msg.obj as ConcurrentHashMap<Int,Orderdata>)
-                else if(msg.what == Finals.SELECT_EMPTY) clearLogic()
-                else if(msg.what == Finals.ORDER_DETAIL_CLOSE) maincloseDetail()
-            }
-        }
+    override fun onCleared() {
+        super.onCleared()
+        Vars.AssignVm = null
     }
 
     fun maincloseDetail(){
@@ -41,7 +37,7 @@ class AssignViewModel : ViewModel() {
     }
 
     fun click_list(pos: Int){
-        Vars.MainsHandler!!.obtainMessage(Finals.MAP_FOR_SOPEN,items!![pos]!!).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.MAP_FOR_SOPEN,0,items!![pos]!!).sendToTarget()
         sendedItem = items!![pos]!!
     }
 
@@ -61,7 +57,7 @@ class AssignViewModel : ViewModel() {
         if(sendedItem != null)
         {
             sendedItem = Vars.orderList[sendedItem!!.OrderId]
-            Vars.MainsHandler!!.obtainMessage(Finals.SEND_ITEM,sendedItem).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.SEND_ITEM,0,sendedItem).sendToTarget()
         }
         adapter!!.notifyDataSetChanged()
     }

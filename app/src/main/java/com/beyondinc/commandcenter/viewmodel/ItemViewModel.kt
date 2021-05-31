@@ -44,6 +44,11 @@ class ItemViewModel : ViewModel() {
     var setAgencyfilter : String = ""
     var setRiderfilter : String = ""
 
+    override fun onCleared() {
+        super.onCleared()
+        Vars.ItemVm = null
+    }
+
     init {
         Log.e("ItemView", "Memo call")
 
@@ -74,21 +79,6 @@ class ItemViewModel : ViewModel() {
         }
 
         select.value = Finals.SELECT_EMPTY
-
-        Vars.ItemHandler = @SuppressLint("HandlerLeak") object : Handler() {
-            override fun handleMessage(msg: Message) {
-                //Log.e("ItemHandler", msg.what.toString())
-                if(msg.what == Finals.INSERT_ORDER) insertLogic()
-                else if(msg.what == Finals.SELECT_EMPTY) select.value = Finals.SELECT_EMPTY
-                else if(msg.what == Finals.SELECT_BRIFE) select.value = Finals.SELECT_BRIFE
-                else if(msg.what == Finals.ORDER_ASSIGN) OrderAssign(msg.obj as String)
-                else if(msg.what == Finals.ORDER_DETAIL_CLOSE) maincloseDetail()
-                else if(msg.what == Finals.STORE_ITEM_SELECT) storeSelect(msg.obj as String)
-                else if(msg.what == Finals.RIDER_ITEM_SELECT) riderSelect(msg.obj as String)
-                else if(msg.what == Finals.DESABLE_SELECT) desableSelect()
-                else if(msg.what == Finals.ALL_CLEAR) allClear()
-            }
-        }
     }
 
     fun allClear(){
@@ -99,17 +89,17 @@ class ItemViewModel : ViewModel() {
     fun desableSelect(){
         setAgencyfilter = ""
         setRiderfilter = ""
-        Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget()
     }
     fun storeSelect(t : String){
         setAgencyfilter = t
-        Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_POPUP).sendToTarget()
-        Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_POPUP,0).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget()
     }
     fun riderSelect(t : String){
         setRiderfilter = t
-        Vars.MainsHandler!!.obtainMessage(Finals.CLOSE_POPUP).sendToTarget()
-        Vars.ItemHandler!!.obtainMessage(Finals.INSERT_ORDER).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_POPUP,0).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget()
     }
 
     fun insertLogic()
@@ -214,7 +204,7 @@ class ItemViewModel : ViewModel() {
 
         var forstr = "배:${cntre} 픽:${cntpi} 완:${cntco}"
 
-        Vars.MainsHandler!!.obtainMessage(Finals.INSERT_ORDER_COUNT, forstr).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.INSERT_ORDER_COUNT, 0,forstr).sendToTarget()
 
         if(finalMap.keys.size < items!!.keys.size)
         {
@@ -241,7 +231,7 @@ class ItemViewModel : ViewModel() {
         if(sendedItem != null)
         {
             sendedItem = Vars.orderList[sendedItem!!.OrderId]
-            Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ITEM_SELECT,sendedItem).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.ORDER_ITEM_SELECT,0,sendedItem).sendToTarget()
         }
 
         for(i in 0 until items!!.keys.size)
@@ -262,7 +252,7 @@ class ItemViewModel : ViewModel() {
         if(!Logindata.OrderList)
         {
             Logindata.OrderList = true
-            Vars.MainsHandler!!.obtainMessage(Finals.CONN_ALRAM).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CONN_ALRAM,0).sendToTarget()
         }
     }
 
@@ -341,7 +331,7 @@ class ItemViewModel : ViewModel() {
         }
         else
         {
-            Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ITEM_SELECT, items?.get(pos)).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.ORDER_ITEM_SELECT, 0,items?.get(pos)).sendToTarget()
             sendedItem = items?.get(pos)
         }
     }
@@ -421,12 +411,6 @@ class ItemViewModel : ViewModel() {
         }
     }
 
-    fun onLongClickOnHeading(v: View?, pos: Int): Boolean {
-        Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ITEM_SELECT, items?.get(pos)).sendToTarget()
-        sendedItem = items?.get(pos)
-        return true
-    }
-
     fun maincloseDetail(){
         sendedItem = null
     }
@@ -438,7 +422,7 @@ class ItemViewModel : ViewModel() {
     fun OrderAssign(s: String){
         if (select.value == Finals.SELECT_EMPTY)
         {
-            Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ASSIGN, s).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.ORDER_ASSIGN, 0,s).sendToTarget()
         }
         else if (select.value == Finals.SELECT_BRIFE)
         {
@@ -452,7 +436,7 @@ class ItemViewModel : ViewModel() {
                 }
             }
             makeHash[s] = makeArray
-            Vars.MainsHandler!!.obtainMessage(Finals.ORDER_ASSIGN_LIST, makeHash).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.ORDER_ASSIGN_LIST, 0,makeHash).sendToTarget()
         }
     }
 }

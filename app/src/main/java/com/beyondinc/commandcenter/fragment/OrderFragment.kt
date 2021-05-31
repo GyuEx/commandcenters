@@ -21,7 +21,6 @@ import com.beyondinc.commandcenter.util.Vars
 
 class OrderFragment : Fragment() {
     var binding: FragmentOrderBinding? = null
-    var viewModel: MainsViewModel? = null
 
     companion object {
         var fr: Fragment? = null
@@ -37,8 +36,8 @@ class OrderFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DataBindingUtil.bind(view)
-        viewModel = ViewModelProvider(requireActivity()).get(MainsViewModel::class.java)
-        binding!!.viewModel = viewModel
+        if(Vars.MainVm == null) Vars.MainVm = MainsViewModel()
+        binding!!.viewModel = Vars.MainVm
         binding!!.lifecycleOwner = requireActivity()
 
         fragmentTransaction = childFragmentManager.beginTransaction()

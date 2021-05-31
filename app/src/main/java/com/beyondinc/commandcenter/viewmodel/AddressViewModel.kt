@@ -70,15 +70,12 @@ class AddressViewModel : ViewModel() {
             adapterAddr = RecyclerAdapterAddr(this)
         }
 
-        Vars.AddressHandler = @SuppressLint("HandlerLeak") object : Handler() {
-            override fun handleMessage(msg: Message) {
-                if (msg.what == Finals.INSERT_ADDR) insertdong(msg.obj as Orderdata)
-                else if(msg.what == Finals.SEARCH_ADDR) insertAddr()
-                else if(msg.what == Finals.MESSAGE_ADDR) showMsg()
-            }
-        }
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.INSERT_ADDR,0).sendToTarget()
+    }
 
-        Vars.MainsHandler!!.obtainMessage(Finals.INSERT_ADDR).sendToTarget()
+    override fun onCleared() {
+        super.onCleared()
+        Vars.AddressVm = null
     }
 
     fun showMsg(){
@@ -226,7 +223,6 @@ class AddressViewModel : ViewModel() {
     fun searchAddr()
     {
         closeKeyboard()
-        Log.e("aaaaa","${selection.value} $dongcode $searchTxt.value")
         if(searchTxt.value!!.isNotEmpty() && dong.value!!.length > 1)
         {
             itemsAddr!!.clear()
@@ -241,7 +237,7 @@ class AddressViewModel : ViewModel() {
             temp[0] = selection.value.toString()
             temp[1] = dongcode
             temp[2] = searchTxt.value.toString()
-            Vars.MainsHandler!!.obtainMessage(Finals.SEARCH_ADDR, temp).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.SEARCH_ADDR,0, temp).sendToTarget()
         }
     }
 
@@ -303,7 +299,7 @@ class AddressViewModel : ViewModel() {
 
     fun click_cancel()
     {
-        Vars.MainsHandler!!.obtainMessage(Finals.CHANGE_CLOSE).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CHANGE_CLOSE,0).sendToTarget()
     }
 
     fun setMode()
@@ -318,8 +314,8 @@ class AddressViewModel : ViewModel() {
 
         addr.Addr = "${addr.CityName} ${addr.CountyName} ${addr.LawTownName} ${addr.Jibun}"
         addr.detailAddress = detailtxt.value.toString()
-        Vars.MainsHandler!!.obtainMessage(Finals.CHANGE_ADDR, addr).sendToTarget()
-        Vars.MainsHandler!!.obtainMessage(Finals.CHANGE_CLOSE).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CHANGE_ADDR,0, addr).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CHANGE_CLOSE,0).sendToTarget()
     }
 
     fun closeKeyboard()

@@ -8,12 +8,12 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.databinding.FragmentLoadingBinding
+import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 
 class LoadingDialog : DialogFragment() {
 
     var binding: FragmentLoadingBinding? = null
-    var viewModel: MainsViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +29,8 @@ class LoadingDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DataBindingUtil.bind(view)
-        viewModel = ViewModelProvider(requireActivity()).get(MainsViewModel::class.java)
-        binding!!.viewModel = viewModel
+        if(Vars.MainVm == null) Vars.MainVm = MainsViewModel()
+        binding!!.viewModel = Vars.MainVm
         binding!!.lifecycleOwner = requireActivity()
 
         var ani : AnimationDrawable = binding!!.anima.background as AnimationDrawable

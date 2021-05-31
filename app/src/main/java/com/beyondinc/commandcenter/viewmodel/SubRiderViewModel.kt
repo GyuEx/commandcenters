@@ -36,7 +36,7 @@ class SubRiderViewModel : ViewModel() {
     var list = LinkedHashMap<String,Riderdata>()
 
     init {
-        //Log.e("Memo", "Memo call")
+        Log.e("SUBRIDER", "Memo call")
 
         select.value = Finals.SELECT_EMPTY
         searchtxt.value = ""
@@ -47,22 +47,17 @@ class SubRiderViewModel : ViewModel() {
         if (adapter == null) {
             adapter = RecyclerAdapterSubRider(this)
         }
+    }
 
-        Vars.SubRiderHandler = @SuppressLint("HandlerLeak") object : Handler() {
-            override fun handleMessage(msg: Message) {
-                //Log.e("SubriderHandler",msg.what.toString())
-                if (msg.what == Finals.INSERT_RIDER) insertLogic(msg.obj as Riderdata)
-                else if(msg.what == Finals.SELECT_RIDER) select.value = Finals.SELECT_RIDER
-                else if(msg.what == Finals.SELECT_EMPTY)
-                {
-                    select.value = Finals.SELECT_EMPTY
-                    selectedRider = null
-                }
-                else if(msg.what == Finals.MAP_FOR_CALL_RIDER) getRider(msg.obj)
-                else if(msg.what == Finals.REMOVE_RIDER_MARKER) removeRider(msg.obj as Riderdata)
-                else if(msg.what == Finals.MAP_FOR_REFRASH) refrashrider()
-            }
-        }
+    override fun onCleared() {
+        super.onCleared()
+        Vars.SubRiderVm = null
+    }
+
+    fun selectEmpty()
+    {
+        select.value = Finals.SELECT_EMPTY
+        selectedRider = null
     }
 
     fun getRider(obj:Any)
@@ -74,7 +69,7 @@ class SubRiderViewModel : ViewModel() {
 //            var itt = it.next()
 //            if(items!![itt] == Mid)
 //            {
-                Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS, obj as Riderdata).sendToTarget()
+                Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.MAP_MOVE_FOCUS, 0,obj as Riderdata).sendToTarget()
                 selectedRider = obj
 //                break // 그만행
 //            }
@@ -82,7 +77,7 @@ class SubRiderViewModel : ViewModel() {
     }
 
     fun refrashrider(){
-        if(selectedRider != null) Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS,selectedRider).sendToTarget()
+        if(selectedRider != null) Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.MAP_MOVE_FOCUS,0,selectedRider).sendToTarget()
     }
 
     fun removeRider(obj : Riderdata){
@@ -102,12 +97,12 @@ class SubRiderViewModel : ViewModel() {
     }
 
     fun ListClick(pos: Int) {
-        Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS, items!![pos]).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.MAP_MOVE_FOCUS,0, items!![pos]).sendToTarget()
         selectedRider = items!![pos]
     }
 
     fun clickClose(){
-        Vars.MapHandler!!.obtainMessage(Finals.MAP_FOR_DOPEN).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.MAP_FOR_DOPEN,0).sendToTarget()
     }
 
     fun onCreate() {
@@ -167,7 +162,7 @@ class SubRiderViewModel : ViewModel() {
 
         if(items?.keys?.size!! > 0 && !first)
         {
-            Vars.MapHandler!!.obtainMessage(Finals.MAP_MOVE_FOCUS, items?.get(0)).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.MAP_MOVE_FOCUS, 0,items?.get(0)).sendToTarget()
             first = true
         }
     }

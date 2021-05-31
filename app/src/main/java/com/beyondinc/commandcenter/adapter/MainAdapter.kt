@@ -70,28 +70,28 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("text_color_breif")
     fun setTextBrief(view: TextView, velue: Int) {
-        if (velue == True) view.setTextColor(Vars.mContext!!.getColor(R.color.white))
+        if (velue == Finals.SELECT_BRIFE) view.setTextColor(Vars.mContext!!.getColor(R.color.white))
         else view.setTextColor(Vars.mContext!!.getColor(R.color.gray))
     }
 
     @JvmStatic
     @BindingAdapter("text_color_store")
     fun setTextStore(view: TextView, velue: Int) {
-        if (velue == True) view.setTextColor(Vars.mContext!!.getColor(R.color.white))
+        if (velue == Finals.SELECT_STORE) view.setTextColor(Vars.mContext!!.getColor(R.color.white))
         else view.setTextColor(Vars.mContext!!.getColor(R.color.gray))
     }
 
     @JvmStatic
     @BindingAdapter("text_color_rider")
     fun setTextRider(view: TextView, velue: Int) {
-        if (velue == True) view.setTextColor(Vars.mContext!!.getColor(R.color.white))
+        if (velue == Finals.SELECT_RIDER) view.setTextColor(Vars.mContext!!.getColor(R.color.white))
         else view.setTextColor(Vars.mContext!!.getColor(R.color.gray))
     }
 
     @JvmStatic
     @BindingAdapter("text_color_map")
     fun setTextMaptoOder(view: TextView, velue: Int) {
-        if (velue == True)
+        if (velue == Finals.SELECT_MAP)
         {
             (Vars.mContext as MainsFun).setFragment()
             view.setBackgroundResource(R.drawable.order_btn)
@@ -120,7 +120,7 @@ object MainAdapter {
     @BindingAdapter("layout_check")
     fun setLayoutcheck(view: LinearLayout, height: Int) {
         val layoutParams = view.layoutParams as ConstraintLayout.LayoutParams
-        if (height == True) {
+        if (height == Finals.SELECT_CHECK) {
             layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
             layoutParams.height = LinearLayout.LayoutParams.MATCH_PARENT
             view.layoutParams = layoutParams

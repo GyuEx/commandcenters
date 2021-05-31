@@ -8,11 +8,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.databinding.FragmentListAssignBinding
+import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.AssignViewModel
 
 class AssignFragment : Fragment() {
     private var binding: FragmentListAssignBinding? = null
-    private var viewModel: AssignViewModel? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -22,8 +22,8 @@ class AssignFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DataBindingUtil.bind(view)
-        viewModel = AssignViewModel()
-        binding!!.viewModel = viewModel
+        if(Vars.AssignVm == null) Vars.AssignVm = AssignViewModel()
+        binding!!.viewModel = Vars.AssignVm
         binding!!.lifecycleOwner = requireActivity()
     }
 

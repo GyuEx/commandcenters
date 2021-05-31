@@ -11,6 +11,7 @@ import android.net.ConnectivityManager.TYPE_MOBILE
 import android.net.ConnectivityManager.TYPE_WIFI
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -24,10 +25,7 @@ import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.databinding.ActivityLoginsBinding
 import com.beyondinc.commandcenter.fragment.DownloadingDialog
 import com.beyondinc.commandcenter.fragment.LoginLoadingDialog
-import com.beyondinc.commandcenter.handler.AlarmThread
-import com.beyondinc.commandcenter.handler.CheckThread
-import com.beyondinc.commandcenter.handler.MainThread
-import com.beyondinc.commandcenter.handler.MarkerThread
+import com.beyondinc.commandcenter.handler.*
 import com.beyondinc.commandcenter.net.HttpConn
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.MakeJsonParam
@@ -41,7 +39,6 @@ import java.util.concurrent.ConcurrentHashMap
 
 class Logins : AppCompatActivity() , LoginsFun {
     var binding: ActivityLoginsBinding? = null
-    var viewModel: LoginViewModel? = null
     var isLogin = false
     var loading:LoginLoadingDialog? = null
     var downloading:DownloadingDialog? = null
@@ -87,22 +84,13 @@ class Logins : AppCompatActivity() , LoginsFun {
             Vars.CheckThread!!.start()
         } // 주기적으로 서버에 요청할 쓰레드 (뷰모델에 타이머를 줬더니 힘들어하는것 같아서 뺌)
 
+        if(Vars.DataHandler == null) Vars.DataHandler = Handler(HandlerCallBack()) // 모델 데이터 처리 핸들러
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_logins)
-        viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+        if(Vars.LoginVm == null) Vars.LoginVm = LoginViewModel()
         binding!!.lifecycleOwner = this
-        binding!!.viewModel = viewModel
+        binding!!.viewModel = Vars.LoginVm
 
-    }
-
-
-    override fun onStart() {
-        super.onStart()
-        //Log.e("OnCreate", "OnStart")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        //Log.e(Tag, "Destory")
     }
 
     override fun Login(id: String, pw: String) {

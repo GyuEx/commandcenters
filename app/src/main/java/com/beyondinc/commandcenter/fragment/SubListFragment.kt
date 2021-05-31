@@ -19,7 +19,6 @@ import com.beyondinc.commandcenter.viewmodel.SubItemViewModel
 
 class SubListFragment : Fragment() {
     private var binding: FragmentListSubBinding? = null
-    private var viewModel: SubItemViewModel? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -29,8 +28,8 @@ class SubListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DataBindingUtil.bind(view)
-        viewModel = SubItemViewModel()
-        binding!!.viewModel = viewModel
+        if(Vars.SubItemVm == null) Vars.SubItemVm = SubItemViewModel()
+        binding!!.viewModel = Vars.SubItemVm
         binding!!.lifecycleOwner = requireActivity()
     }
 

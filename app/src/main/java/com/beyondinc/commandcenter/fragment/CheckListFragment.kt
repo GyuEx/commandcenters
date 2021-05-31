@@ -8,12 +8,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.databinding.FragmentListCheckBinding
+import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.CheckViewModel
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 
 class CheckListFragment : Fragment() {
     private var binding: FragmentListCheckBinding? = null
-    private var viewModel: CheckViewModel? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -24,8 +24,8 @@ class CheckListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DataBindingUtil.bind(view)
-        viewModel = CheckViewModel()
-        binding!!.viewModel = viewModel
+        if(Vars.CheckVm == null) Vars.CheckVm = CheckViewModel()
+        binding!!.viewModel = Vars.CheckVm
         binding!!.lifecycleOwner = requireActivity()
     }
 }

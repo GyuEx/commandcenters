@@ -23,7 +23,6 @@ import com.beyondinc.commandcenter.viewmodel.SubRiderViewModel
 
 class SubRiderListFragment : Fragment() {
     private var binding: FragmentListSubRiderBinding? = null
-    private var viewModel: SubRiderViewModel? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -33,8 +32,8 @@ class SubRiderListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DataBindingUtil.bind(view)
-        viewModel = SubRiderViewModel()
-        binding!!.viewModel = viewModel
+        if(Vars.SubRiderVm == null) Vars.SubRiderVm = SubRiderViewModel()
+        binding!!.viewModel = Vars.SubRiderVm
         binding!!.lifecycleOwner = requireActivity()
     }
 

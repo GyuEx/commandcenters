@@ -12,6 +12,7 @@ import com.beyondinc.commandcenter.net.DACallerInterface
 import com.beyondinc.commandcenter.repository.database.entity.Centerdata
 import com.beyondinc.commandcenter.repository.database.entity.Dongdata
 import com.beyondinc.commandcenter.repository.database.entity.Riderdata
+import com.beyondinc.commandcenter.viewmodel.*
 import com.naver.maps.map.overlay.Marker
 import com.vasone.deliveryalarm.DAClient
 import org.json.simple.JSONArray
@@ -53,15 +54,17 @@ object Vars {
     var centerLastTime: ConcurrentHashMap<String,String> = ConcurrentHashMap()
     var centerOrderCount : ConcurrentHashMap<String,String> = ConcurrentHashMap()
 
-    var MainsHandler : Handler? = null
-    var ItemHandler : Handler? = null
-    var SubItemHandler : Handler? = null
-    var LoginHandler : Handler? = null
-    var CheckHandler : Handler? = null
-    var MapHandler : Handler? = null
-    var SubRiderHandler : Handler? = null
-    var AssignHandler : Handler? = null
-    var AddressHandler : Handler? = null
+    var ItemVm : ItemViewModel? = null
+    var LoginVm : LoginViewModel? = null
+    var SubItemVm : SubItemViewModel? = null
+    var CheckVm : CheckViewModel? = null
+    var MapVm : MapViewModel? = null
+    var SubRiderVm : SubRiderViewModel? = null
+    var AssignVm : AssignViewModel? = null
+    var AddressVm : AddressViewModel? = null
+    var MainVm : MainsViewModel? = null
+
+    var DataHandler : Handler? = null
 
     var MainThread : Thread? = null
     var HttpThread : Thread? = null

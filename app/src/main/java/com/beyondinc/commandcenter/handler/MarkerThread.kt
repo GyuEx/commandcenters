@@ -82,28 +82,28 @@ class MarkerThread : Thread() , ThreadFun {
                     if(Vars.riderList[itt]!!.assignCount!!.toInt() == 0 && Vars.riderList[itt]!!.pickupCount!!.toInt() == 0) marker.icon = imgBlue
                     else marker.icon = imgGray
                     marker.setOnClickListener {
-                        Vars.SubRiderHandler!!.obtainMessage(Finals.MAP_FOR_CALL_RIDER, Vars.riderList[itt]!!).sendToTarget()
+                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBRIDER,Finals.MAP_FOR_CALL_RIDER, 0,Vars.riderList[itt]!!).sendToTarget()
                         true
                     }
                     Vars.riderList[itt]!!.MakerID = marker // 라이더에게 마커를 지정해줌
 
-                    if(Vars.riderList[itt]!!.workingStateCode == Codes.RIDER_ON_WORK) Vars.MapHandler!!.obtainMessage(Finals.CREATE_RIDER_MARKER, Vars.riderList[itt]!!).sendToTarget()
+                    if(Vars.riderList[itt]!!.workingStateCode == Codes.RIDER_ON_WORK) Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.CREATE_RIDER_MARKER, 0, Vars.riderList[itt]!!).sendToTarget()
                 }
                 else if(Vars.riderList[itt]!!.MakerID != null)
                 {
                     if(Vars.riderList[itt]!!.workingStateCode != Codes.RIDER_ON_WORK || Vars.f_center.contains(Vars.riderList[itt]!!.centerID))
                     {
-                        Vars.MapHandler!!.obtainMessage(Finals.REMOVE_RIDER_MARKER, Vars.riderList[itt]!!).sendToTarget()
+                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.REMOVE_RIDER_MARKER, 0,Vars.riderList[itt]!!).sendToTarget()
                     }
                     else
                     {
-                        Vars.MapHandler!!.obtainMessage(Finals.UPDATE_RIDER_MARKER, Vars.riderList[itt]!!).sendToTarget()
+                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.UPDATE_RIDER_MARKER, 0,Vars.riderList[itt]!!).sendToTarget()
                     }
                 }
             }
 
             var forstr = "전:${cntj} 운:${cntu} 대:${cntd} 식:${cnts} 퇴:${cntt}"
-            Vars.MainsHandler!!.obtainMessage(Finals.INSERT_RIDER_COUNT, forstr).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.INSERT_RIDER_COUNT, 0,forstr).sendToTarget()
         }
     }
 }
