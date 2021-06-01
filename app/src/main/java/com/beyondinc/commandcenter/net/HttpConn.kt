@@ -96,8 +96,6 @@ class HttpConn : Thread(), ThreadFun {
                     val requestBody = Crypto.AES256.encrypt(requestPlainString, requestCipherKey)
                     var receiveDoc = StringBuilder()
 
-                    //Log.e("ResultSand", "" + requestPlainString)
-
                     val url = URL(Vars.lContext!!.resources.getString(R.string.remote_connect_url) + Vars.lContext!!.resources.getString(R.string.remote_endpoint_url))
                     val con: HttpURLConnection = url.openConnection() as HttpURLConnection
                     con.connectTimeout = 3000 //서버에 연결되는 Timeout 시간 설정
@@ -143,7 +141,7 @@ class HttpConn : Thread(), ThreadFun {
                         temp[code!!] = returnData
                         Vars.receiveList.add(temp)
 
-                        if(dofalseConn > 5)
+                        if(dofalseConn > 5) // 여기까지 왔다면 통신이 되었다는 이야기므로 통신불능안내창을 종료하고 카운터를 0으로 변경 Exceptin부분에 통신이상 구현
                         {
                             Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_LOADING,0).sendToTarget()
                             dofalseConn = 0
@@ -159,10 +157,10 @@ class HttpConn : Thread(), ThreadFun {
                 if (code == Procedures.LOGIN) Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.LOGIN_FAIL,0).sendToTarget()
                 else
                 {
-                    if(dofalseConn == 5)
+                    if(dofalseConn == 5) // 통신불능시 해당 Exception을 타게됨, 카운터를 줘서 5회 이상이면 통신장애안내창 띄움
                     {
                         Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.HTTP_ERROR,0).sendToTarget()
-                        dofalseConn++
+                        dofalseConn++ // 창을 두세번띄울 필요는 없으므로 카운터는 계속 진행-- 상단에서 초기화
                     }
                     else
                     {

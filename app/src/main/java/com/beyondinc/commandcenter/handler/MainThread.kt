@@ -55,7 +55,7 @@ class MainThread() : Thread() , ThreadFun{
                         if(data!![0]["CODE"] == "-1000")
                         {
                             Logindata.MSG = data!![0]["MSG"]
-                            Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.APK_UPDATE,0).sendToTarget()
+                            Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.APK_UPDATE,0).sendToTarget() // 업데이트 시작
                         }
                         else if(data!![0]["MSG"] == "로그인 성공!")
                         {
@@ -190,6 +190,13 @@ class MainThread() : Thread() , ThreadFun{
                     }
                     else if(code == Procedures.RIDER_LOCATION_IN_CENTER)
                     {
+                        var it = Vars.riderList.keys.iterator()
+                        while (it.hasNext())
+                        {
+                            var itt = it.next()
+                            Vars.riderList[itt]?.workingStateCode = Codes.RIDER_OFF_WORK
+                        } // 라이더 종료 알람이 잘안들어와서 일단 다 종료로 변경하고 하단에 로케이션 없는것만 불러옴
+
                         for (i in 0 until data!!.size) {
 
                             var id = data[i]["DriverId"].toString()
@@ -219,7 +226,7 @@ class MainThread() : Thread() , ThreadFun{
                         var sub = 0
                         for(i in 0 until data!!.size)
                         {
-                            if(data!![i].size == 4)
+                            if(data!![i].size == 4) // 주소검색할때 헤더가 같아서 파라미터 갯수로 구분함 4개는 동검색
                             {
                                 sub = 4
                                 var dd = Dongdata()
@@ -227,7 +234,7 @@ class MainThread() : Thread() , ThreadFun{
                                 dd.name = data!![i]["LawTownName"].toString()
                                 arrayList[dd.name!!] = dd
                             }
-                            else if(data!![i].size == 13)
+                            else if(data!![i].size == 13) // 13개는 주소상세검색
                             {
                                 sub = 13
                                 var ad = Addrdata()
@@ -249,21 +256,21 @@ class MainThread() : Thread() , ThreadFun{
                                 msg = data!![i]["MSG"].toString()
                             }
                         }
-                        if(sub == 0 && msg != "조회결과가 존재하지 않습니다.")
+                        if(sub == 0 && msg.indexOf("조회결과") == 0) // result가 동일하므로, 메세지로 구분함 (주소검색이 아닌경우)
                         {
                             Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.ORDER_TOAST_SHOW,0,msg).sendToTarget()
                         }
-                        if(sub == 0 && msg == "조회결과가 존재하지 않습니다.")
+                        if(sub == 0 && msg.indexOf("조회결과") > 1) // 주소검색인경우, 서버상태에 따라서 스트링이 변경되면 호출안될수있으니 좋은 방안 필요함 indexOf로 처리할까?
                         {
                             Vars.DataHandler!!.obtainMessage(Finals.VIEW_ADDRESS,Finals.MESSAGE_ADDR,0).sendToTarget()
                         }
-                        else if(sub == 4)
+                        else if(sub == 4) // 위와 동일 "동검색"
                         {
                             Vars.dongList.clear() // 한번전체삭제 하고
                             Vars.dongList.putAll(arrayList)
                             Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.SHOW_ADDR,0)?.sendToTarget()
                         }
-                        else if(sub == 13)
+                        else if(sub == 13) // 위와 동일 "주소검색"
                         {
                             Vars.AddrList.clear() // 한번전체삭제 하고
                             Vars.AddrList.putAll(arrayList)

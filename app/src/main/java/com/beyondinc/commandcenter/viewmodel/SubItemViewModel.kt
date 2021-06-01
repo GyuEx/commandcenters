@@ -15,9 +15,9 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.HashMap
 
 class SubItemViewModel : ViewModel() {
-    var itemss: ConcurrentHashMap<Int,Orderdata>? = null
-    var Realitemss: ConcurrentHashMap<String,Orderdata>? = null
-    var adapter: RecyclerAdapterSub? = null
+    var itemss: ConcurrentHashMap<Int,Orderdata>? = null // 보여줄 아이템 목록
+    var Realitemss: ConcurrentHashMap<String,Orderdata>? = null // 가공할 아이템 목록 (보여주지않음)
+    var adapter: RecyclerAdapterSub? = null // 리스트 어뎁터
 
     var select = MutableLiveData<Int>()
 
@@ -176,7 +176,8 @@ class SubItemViewModel : ViewModel() {
     }
 
     fun getUsetime(pos: Int): String? {
-        return itemss!![pos]?.AgencyRequestTime
+        return if(itemss!![pos]!!.PackingCompleteYn == "N") itemss!![pos]?.AgencyRequestTime
+        else "포장완료"
     }
 
     fun getResttime(pos: Int): String? {

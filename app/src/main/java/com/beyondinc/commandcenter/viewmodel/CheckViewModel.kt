@@ -19,9 +19,9 @@ import java.util.concurrent.ConcurrentHashMap
 
 class CheckViewModel : ViewModel() {
 
-    var items: ConcurrentHashMap<Int, Checkdata>? = null
-    var adapter: RecyclerAdapterCheck? = null
-    var allcheck = MutableLiveData<Boolean>()
+    var items: ConcurrentHashMap<Int, Checkdata>? = null // 리스트에 보여줄 목록
+    var adapter: RecyclerAdapterCheck? = null // 리스트 어뎁터
+    var allcheck = MutableLiveData<Boolean>() // 전체선택, 전체해제 여부 저장
 
     init {
         //Log.e("CheckView", "CheckView Enable")

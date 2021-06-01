@@ -23,7 +23,7 @@ class PlaySoundThread(private val oid:Int, private val sid:Int) : Thread(), Thre
             var Agencyname : String = ""
             var Ridername : String = ""
 
-            while (isKeep)
+            while (isKeep) // 알람수신후 오더가 어떤것인지 모르기 때문에 오더가 들어올때까지 루프를 탄다
             {
                 Thread.sleep(1000) // 첫딜레이 및 루프진행
                 if(Vars.orderList.containsKey(oid.toString()))

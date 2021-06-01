@@ -10,9 +10,9 @@ import com.beyondinc.commandcenter.util.Vars
 import java.util.concurrent.ConcurrentHashMap
 
 class RiderViewModel : ViewModel() {
-    var items: ConcurrentHashMap<Int, AgencyRiderdata>? = null
-    var adapter: RecyclerAdapterRider? = null
-    var searchtxt = MutableLiveData<String>()
+    var items: ConcurrentHashMap<Int, AgencyRiderdata>? = null // 보여줄 아이템 목록
+    var adapter: RecyclerAdapterRider? = null // 리스트 어뎁터
+    var searchtxt = MutableLiveData<String>() //  검색텍스트
 
     init {
         if (items == null) {

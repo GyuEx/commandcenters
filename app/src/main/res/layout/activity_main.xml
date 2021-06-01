@@ -121,7 +121,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="0dp"
                                         android:layout_weight="0"
-                                        app:layout="@{viewModel.layer == viewModel.getSelectOder ? 1 : 0}"
+                                        app:layout_form="@{viewModel.layer == viewModel.getSelectOder ? 1 : 0}"
                                         android:orientation="horizontal">
 
                                         <TextView
@@ -165,7 +165,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="0dp"
                                         android:orientation="vertical"
-                                        app:layout="@{viewModel.layer == viewModel.getSelectMap ? 1 : 0}"
+                                        app:layout_form="@{viewModel.layer == viewModel.getSelectMap ? 1 : 0}"
                                         android:layout_weight="0">
 
                                         <LinearLayout

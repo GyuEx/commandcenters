@@ -23,17 +23,17 @@ import kotlin.collections.LinkedHashMap
 import kotlin.concurrent.timer
 
 class SubRiderViewModel : ViewModel() {
-    var items: ConcurrentHashMap<Int,Riderdata>? = null
-    var adapter: RecyclerAdapterSubRider? = null
+    var items: ConcurrentHashMap<Int,Riderdata>? = null // 보여줄 아이템 목록
+    var adapter: RecyclerAdapterSubRider? = null // 리스트 어뎁터
 
-    var first: Boolean = false
+    var first: Boolean = false // 처음인지 여부, 처음 로그인시 가장 첫 라이더의 좌표로 지도를 이동시키기 위함, 디폴트는 "서울시청"
 
-    var select = MutableLiveData<Int>()
-    var selectedRider : Riderdata? = null
+    var select = MutableLiveData<Int>() // 오더를 선택했는지 여부 복수이므로 불리언이아니라 인트
+    var selectedRider : Riderdata? = null // 선택된 라이더
 
-    var searchtxt = MutableLiveData<String>()
+    var searchtxt = MutableLiveData<String>() // 검색주소
 
-    var list = LinkedHashMap<String,Riderdata>()
+    var list = LinkedHashMap<String,Riderdata>() // 해시맵은 순서가 뒤죽박죽이라 갱신시마다 순서가 이상하게 변하므로 링크를 줘서 목록변화엔 지장없게
 
     init {
         Log.e("SUBRIDER", "Memo call")

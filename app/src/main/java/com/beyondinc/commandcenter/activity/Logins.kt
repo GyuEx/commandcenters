@@ -51,7 +51,7 @@ class Logins : AppCompatActivity() , LoginsFun {
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        checkpermission()
+        checkpermission() // 퍼미션 가져오기
 
         if(Vars.MainThread == null)
         {

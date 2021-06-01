@@ -26,6 +26,8 @@ class httpSub : AsyncTask<LatLng, Void, ArrayList<LatLng>>() {
         var Agency = params[0]
         var Customer = params[1]
 
+        // 실거리 계산 용도로 구현만 하고 실제로 사용할지 여부는 잘 모르겠음..
+
         //Log.e("Poi" , Agency.latitude.toString() + " // " + Agency.longitude.toString())
 
         val url = URL("https://naveropenapi.apigw.ntruss.com/map-direction/v1/driving?start=${Agency.longitude},${Agency.latitude}&goal=${Customer.longitude},${Customer.latitude}&option=trafast")

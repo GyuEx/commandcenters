@@ -12,17 +12,16 @@ import java.util.concurrent.ConcurrentHashMap
 
 class SettingViewModel : ViewModel() {
 
-    var usenick : MutableLiveData<Boolean> = MutableLiveData()
-    var useTime : MutableLiveData<Boolean> = MutableLiveData()
-    var useGana :MutableLiveData<Boolean> = MutableLiveData()
-    var useTTS : MutableLiveData<Boolean> = MutableLiveData()
-    var useJ : MutableLiveData<Boolean> = MutableLiveData()
-    var useB : MutableLiveData<Boolean> = MutableLiveData()
-    var useW : MutableLiveData<Boolean> = MutableLiveData()
-    var useC : MutableLiveData<Boolean> = MutableLiveData()
-    var bright : MutableLiveData<Int> = MutableLiveData()
-    var fontsize : MutableLiveData<Int> = MutableLiveData()
-    var nick : MutableLiveData<ConcurrentHashMap<String, String>> = MutableLiveData()
+    var usenick : MutableLiveData<Boolean> = MutableLiveData() // 닉네임 사용여부
+    var useTime : MutableLiveData<Boolean> = MutableLiveData() // 시간정렬 사용여부
+    var useGana :MutableLiveData<Boolean> = MutableLiveData() // 라이더 가나다순 정렬사용여부
+    var useTTS : MutableLiveData<Boolean> = MutableLiveData() // TTS사용 여부
+    var useJ : MutableLiveData<Boolean> = MutableLiveData() // 접수안내 사용여부
+    var useB : MutableLiveData<Boolean> = MutableLiveData() // 배정안내
+    var useW : MutableLiveData<Boolean> = MutableLiveData() // 완료안내
+    var useC : MutableLiveData<Boolean> = MutableLiveData() // 취소안내
+    var bright : MutableLiveData<Int> = MutableLiveData() // 화면 밝기
+    var fontsize : MutableLiveData<Int> = MutableLiveData() // 글씨크기
 
     init
     {

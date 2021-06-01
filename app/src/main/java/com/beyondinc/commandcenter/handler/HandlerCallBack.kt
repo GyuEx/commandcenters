@@ -1,9 +1,7 @@
 package com.beyondinc.commandcenter.handler
 
-import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Message
-import android.util.Log
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.repository.database.entity.Addrdata
 import com.beyondinc.commandcenter.repository.database.entity.Riderdata
@@ -19,7 +17,7 @@ class HandlerCallBack : Handler.Callback {
         // 모든 뷰모델은 View Destory시 null 일수 있으므로, "뷰모델?" 형태로 전달
         when (msg.what)
         {
-            Finals.VIEW_ITEM -> when (msg.arg1)
+            Finals.VIEW_ITEM -> when (msg.arg1) // 메인 오더리스트 뷰모델
             {
                 Finals.INSERT_ORDER -> Vars.ItemVm?.insertLogic()
                 Finals.SELECT_EMPTY -> Vars.ItemVm?.select!!.value = Finals.SELECT_EMPTY
@@ -31,19 +29,19 @@ class HandlerCallBack : Handler.Callback {
                 Finals.DESABLE_SELECT -> Vars.ItemVm?.desableSelect()
                 Finals.ALL_CLEAR -> Vars.ItemVm?.allClear()
             }
-            Finals.VIEW_ASSIGN -> when (msg.arg1)
+            Finals.VIEW_ASSIGN -> when (msg.arg1) // 지도 라이더 배정 리스트 뷰모델
             {
                 Finals.INSERT_ORDER -> Vars.AssignVm?.insertLogic(msg.obj as ConcurrentHashMap<Int, Orderdata>)
                 Finals.SELECT_EMPTY -> Vars.AssignVm?.clearLogic()
                 Finals.ORDER_DETAIL_CLOSE -> Vars.AssignVm?.maincloseDetail()
             }
-            Finals.VIEW_LOGIN -> when (msg.arg1)
+            Finals.VIEW_LOGIN -> when (msg.arg1) // 로그인 뷰모델
             {
                 Finals.LOGIN_SUCESS -> Vars.LoginVm?.LoginSucess()
                 Finals.APK_UPDATE -> Vars.LoginVm?.downloadApk()
                 Finals.LOGIN_FAIL -> Vars.LoginVm?.LoginFail()
             }
-            Finals.VIEW_SUBITEM -> when (msg.arg1)
+            Finals.VIEW_SUBITEM -> when (msg.arg1) // 지도 하단 접수목록 뷰모델
             {
                 Finals.INSERT_ORDER -> Vars.SubItemVm?.insertLogic()
                 Finals.SELECT_ORDER -> Vars.SubItemVm?.select!!.value = Finals.SELECT_ORDER
@@ -51,7 +49,7 @@ class HandlerCallBack : Handler.Callback {
                 Finals.ORDER_ASSIGN_LIST -> Vars.SubItemVm?.orderassignlist(msg.obj as String)
                 Finals.ALL_CLEAR -> Vars.SubItemVm?.allClear()
             }
-            Finals.VIEW_SUBRIDER -> when (msg.arg1)
+            Finals.VIEW_SUBRIDER -> when (msg.arg1) // 지도 좌측 드로워 라이더 목록 뷰모델
             {
                 Finals.INSERT_RIDER -> Vars.SubRiderVm?.insertLogic(msg.obj as Riderdata)
                 Finals.SELECT_RIDER -> Vars.SubRiderVm?.select!!.value = Finals.SELECT_RIDER
@@ -60,11 +58,11 @@ class HandlerCallBack : Handler.Callback {
                 Finals.REMOVE_RIDER_MARKER -> Vars.SubRiderVm?.removeRider(msg.obj as Riderdata)
                 Finals.MAP_FOR_REFRASH -> Vars.SubRiderVm?.refrashrider()
             }
-            Finals.VIEW_CHECK -> when (msg.arg1)
+            Finals.VIEW_CHECK -> when (msg.arg1) // 센터목록 뷰모델
             {
                 Finals.INSERT_STORE -> Vars.CheckVm?.insertStore()
             }
-            Finals.VIEW_MAP -> when (msg.arg1)
+            Finals.VIEW_MAP -> when (msg.arg1) // 메인 지도 뷰모델
             {
                 Finals.CREATE_RIDER_MARKER -> if(msg.obj != null) Vars.MapVm?.createRider(msg.obj as Riderdata)
                 Finals.UPDATE_RIDER_MARKER -> if(msg.obj != null) Vars.MapVm?.updateRider(msg.obj as Riderdata)
@@ -80,13 +78,13 @@ class HandlerCallBack : Handler.Callback {
                 Finals.MAP_FOR_ASSIGN_REMOVE -> Vars.MapVm?.removeAssign(msg.obj as Orderdata)
                 Finals.ORDER_ASSIGN -> Vars.MapVm?.to_assgin_click()
             }
-            Finals.VIEW_ADDRESS -> when (msg.arg1)
+            Finals.VIEW_ADDRESS -> when (msg.arg1) // 주소검색 뷰모델
             {
                 Finals.INSERT_ADDR -> Vars.AddressVm?.insertdong(msg.obj as Orderdata)
                 Finals.SEARCH_ADDR -> Vars.AddressVm?.insertAddr()
                 Finals.MESSAGE_ADDR -> Vars.AddressVm?.showMsg()
             }
-            Finals.VIEW_MAIN -> when (msg.arg1)
+            Finals.VIEW_MAIN -> when (msg.arg1) //메인 뷰모델
             {
                 Finals.CALL_RIDER -> Vars.MainVm?.getRiderList()
                 Finals.INSERT_RIDER -> Vars.MainVm?.insertRider()

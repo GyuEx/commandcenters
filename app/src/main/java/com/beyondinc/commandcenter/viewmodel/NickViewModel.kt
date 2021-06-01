@@ -24,9 +24,9 @@ import kotlin.collections.HashMap
 import kotlin.concurrent.timer
 
 class NickViewModel : ViewModel() {
-    var items: ConcurrentHashMap<Int,String>? = null
-    var nicks = MutableLiveData<ConcurrentHashMap<String,String>>()
-    var adapter: RecyclerAdapterNick? = null
+    var items: ConcurrentHashMap<Int,String>? = null // 보여줄 리스트 목록
+    var nicks = MutableLiveData<ConcurrentHashMap<String,String>>() // 보여줄 닉네임 목록
+    var adapter: RecyclerAdapterNick? = null // 리스트 어뎁터
 
     init{
         if (items == null) {

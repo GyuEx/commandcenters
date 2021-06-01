@@ -36,28 +36,28 @@ import java.util.concurrent.ConcurrentHashMap
 
 class MainsViewModel : ViewModel() {
     var Tag = "MainsViewModel"
-    var mapInstance: NaverMap? = null
+    var mapInstance: NaverMap? = null // 네이버맵
 
-    var layer = MutableLiveData<Int>()
-    var select = MutableLiveData<Int>()
-    var checkview = MutableLiveData<Int>()
-    var drawer = MutableLiveData<Boolean>()
-    var briteLayer = MutableLiveData<Int>()
+    var layer = MutableLiveData<Int>() // 메인 레이어 표시 나타냄, 오더,배정,맵
+    var select = MutableLiveData<Int>() // 메인메뉴 선택을 나타냄, 배정,가맹점,라이더
+    var checkview = MutableLiveData<Int>() // 센터목록뷰를 보여주는지 여부
+    var drawer = MutableLiveData<Boolean>() // 좌측 드로워 메뉴가 열려있는지 여부
+    var briteLayer = MutableLiveData<Int>() // 화면밝기 조절값
 
-    var proTxt = MutableLiveData<String>()
+    var proTxt = MutableLiveData<String>() // 업데이트시 프로그래스바 값
 
-    var Item : MutableLiveData<Orderdata> = MutableLiveData()
-    var showDetail : Boolean = false
+    var Item : MutableLiveData<Orderdata> = MutableLiveData() // 선택한 오더를 임시로 저장함
+    var showDetail : Boolean = false // 현재 오더의 디테일 화면을 나타내는지 여부
     var payselect = 1 // 1:물품금액 , 2: 배달금액
-    var dropitem = ""
-    var pay : MutableLiveData<String> = MutableLiveData()
+    var dropitem = "" // 드롭다운 아이템 목록 "미사용"
+    var pay : MutableLiveData<String> = MutableLiveData() // 금액수정시 임시저장 변수
 
-    var DetailsSelect = MutableLiveData(Finals.DETAIL_DETAIL)
+    var DetailsSelect = MutableLiveData(Finals.DETAIL_DETAIL) // 오더 상세화면에서 무엇을 선택했는지 여부 (지도,상세등)
 
-    var order_count : MutableLiveData<String> = MutableLiveData()
-    var rider_count : MutableLiveData<String> = MutableLiveData()
+    var order_count : MutableLiveData<String> = MutableLiveData() // 전체 오더 카운터
+    var rider_count : MutableLiveData<String> = MutableLiveData() // 전체 라이더 카운터
 
-    private lateinit var alarmCallback: (ArrayList<Alarmdata>)-> Unit?
+    private lateinit var alarmCallback: (ArrayList<Alarmdata>)-> Unit? // 알람
 
     init {
         Log.e(Tag, "ViewModel Enable Mains")

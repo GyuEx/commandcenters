@@ -12,8 +12,8 @@ import com.beyondinc.commandcenter.util.Vars
 import kotlin.collections.ArrayList
 
 class HistoryViewModel : ViewModel() {
-    var items: ArrayList<Historydata>? = null
-    var adapter: RecyclerAdapterHistory? = null
+    var items: ArrayList<Historydata>? = null // 리스트에 보여줄 목록
+    var adapter: RecyclerAdapterHistory? = null // 리스트 어뎁터
 
     init {
         //Log.e("Memo", "Memo call")

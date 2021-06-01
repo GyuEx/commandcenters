@@ -21,28 +21,28 @@ import kotlin.collections.ArrayList
 import kotlin.concurrent.timer
 
 class ItemViewModel : ViewModel() {
-    var Realitems: ConcurrentHashMap<String, Orderdata>? = null
-    var items: ConcurrentHashMap<Int, Orderdata>? = null
-    var passList: ConcurrentHashMap<Int, Orderdata>? = null
-    var scrolls = MutableLiveData<Int>()
-    var adapter: RecyclerAdapter? = null
+    var Realitems: ConcurrentHashMap<String, Orderdata>? = null // 데이터를 가공할 임시 리스트 (보여주지않음)
+    var items: ConcurrentHashMap<Int, Orderdata>? = null // 보여주는 리스트
+    var passList: ConcurrentHashMap<Int, Orderdata>? = null // 맵뷰에 라인을 그린 후 저장하는 목록
+    var scrolls = MutableLiveData<Int>() // 해당부분에 값을 true로 지정하면 뷰의 스크롤을 최상단으로 올림
+    var adapter: RecyclerAdapter? = null // 리스트 어뎁터
 
-    var state_brifes = MutableLiveData<Boolean>()
-    var state_recive = MutableLiveData<Boolean>()
-    var state_pikup = MutableLiveData<Boolean>()
-    var state_complete = MutableLiveData<Boolean>()
-    var state_cancel = MutableLiveData<Boolean>()
+    var state_brifes = MutableLiveData<Boolean>() // 접수필터 선택여부
+    var state_recive = MutableLiveData<Boolean>() // 배정필터 선택여부
+    var state_pikup = MutableLiveData<Boolean>() // 픽업필터 선택여부
+    var state_complete = MutableLiveData<Boolean>() // 완료필터 선택여부
+    var state_cancel = MutableLiveData<Boolean>() // 취소필터 선택여부
 
-    var count_briefes = MutableLiveData<Int>()
-    var count_recive = MutableLiveData<Int>()
-    var count_pikup = MutableLiveData<Int>()
-    var count_complete = MutableLiveData<Int>()
-    var count_cancel = MutableLiveData<Int>()
+    var count_briefes = MutableLiveData<Int>() // 접수 총 갯수
+    var count_recive = MutableLiveData<Int>() // 배정 총 갯수
+    var count_pikup = MutableLiveData<Int>() // 픽업 총 갯수
+    var count_complete = MutableLiveData<Int>() // 완료 총 갯수
+    var count_cancel = MutableLiveData<Int>() // 취소 총 갯수
 
-    var select = MutableLiveData<Int>()
-    var sendedItem : Orderdata? = null
-    var setAgencyfilter : String = ""
-    var setRiderfilter : String = ""
+    var select = MutableLiveData<Int>() // 현재 메인화면에 "배정하기"상태인지?
+    var sendedItem : Orderdata? = null // 선택시 보내줄 오더 저장 클래스
+    var setAgencyfilter : String = "" // 가맹점 필터 선택시 가맹점명 저장
+    var setRiderfilter : String = "" // 라이더 필터 선택시 라이더명 저장
 
     override fun onCleared() {
         super.onCleared()

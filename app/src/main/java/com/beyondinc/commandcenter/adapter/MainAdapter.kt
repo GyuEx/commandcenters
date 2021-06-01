@@ -104,7 +104,7 @@ object MainAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter("layout")
+    @BindingAdapter("layout_form")
     fun setLayout(view: LinearLayout, height: Int) {
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
         if (height == True) {
@@ -115,6 +115,20 @@ object MainAdapter {
             view.layoutParams = layoutParams
         }
     }
+
+    @JvmStatic
+    @BindingAdapter("layout_breif")
+    fun setLayout_breif(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == Finals.SELECT_BRIFE) {
+            layoutParams.weight = 1f
+            view.layoutParams = layoutParams
+        } else {
+            layoutParams.weight = 0f
+            view.layoutParams = layoutParams
+        }
+    }
+
 
     @JvmStatic
     @BindingAdapter("layout_check")

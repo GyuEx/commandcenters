@@ -11,9 +11,9 @@ import com.beyondinc.commandcenter.util.Vars
 import java.util.concurrent.ConcurrentHashMap
 
 class BriefViewModel : ViewModel() {
-    var items: ConcurrentHashMap<Int, Dialogdata>? = null
-    var adapter: RecyclerAdapterPopup? = null
-    var searchtxt = MutableLiveData<String>()
+    var items: ConcurrentHashMap<Int, Dialogdata>? = null // 리스트에 보여줄 목록
+    var adapter: RecyclerAdapterPopup? = null // 리스트 어뎁터
+    var searchtxt = MutableLiveData<String>() // 검색 텍스트
 
     init {
         if (items == null) {

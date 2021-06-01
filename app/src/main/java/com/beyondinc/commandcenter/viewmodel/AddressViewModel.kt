@@ -37,28 +37,28 @@ import kotlin.collections.HashMap
 
 class AddressViewModel : ViewModel() {
 
-    var itemsdong: MutableLiveData<Array<String>> = MutableLiveData()
-    var itemsAddr: ConcurrentHashMap<Int, Addrdata>? = null
-    var adapterAddr: RecyclerAdapterAddr? = null
-    var selection : MutableLiveData<String> = MutableLiveData()
-    var searchTxt : MutableLiveData<String> = MutableLiveData()
-    var detailtxt : MutableLiveData<String> = MutableLiveData()
-    var hinttxt : MutableLiveData<String> = MutableLiveData()
-    var addr = Addrdata()
+    var itemsdong: MutableLiveData<Array<String>> = MutableLiveData() // 동목록 저장변수
+    var itemsAddr: ConcurrentHashMap<Int, Addrdata>? = null // 주소목록 저장 변수
+    var adapterAddr: RecyclerAdapterAddr? = null // 주소표시 목록뷰 어뎁터
+    var selection : MutableLiveData<String> = MutableLiveData() // 주소검색 "지번,도로명"등 선택 저장 변수
+    var searchTxt : MutableLiveData<String> = MutableLiveData() // 검색 텍스트
+    var detailtxt : MutableLiveData<String> = MutableLiveData() // 상세주소(기입형) 텍스트
+    var hinttxt : MutableLiveData<String> = MutableLiveData() // 상세주소 힌트
+    var addr = Addrdata() // 주소선택시 저장클래스
     var from : MutableLiveData<Int> = MutableLiveData() // 0:작업중이아님, 1:검색중, 2:검색완료, 3:검색실패, 4:주소선택, 5:상세주소만변경
     var fromtext : MutableLiveData<String> = MutableLiveData() // 0:작업중이아님, 1:검색중, 2:검색완료, 3:검색실패, 4:주소선택, 5:상세주소만변경
-    var foc : MutableLiveData<Boolean> = MutableLiveData()
-    var mapInstance: NaverMap? = null
+    var foc : MutableLiveData<Boolean> = MutableLiveData() // TEXT VIEW 포커스 여부, False로 변경시 키보드가 자동으로 내려가게 함수 구현되어있음
+    var mapInstance: NaverMap? = null // 네이버맵
 
-    var dong : MutableLiveData<String> = MutableLiveData()
-    var dongcode = ""
-    var title : MutableLiveData<String> = MutableLiveData()
-    var sub : MutableLiveData<String> = MutableLiveData()
-    var spindefult : MutableLiveData<Int> = MutableLiveData()
-    var item = Orderdata()
-    var first : Boolean = false
+    var dong : MutableLiveData<String> = MutableLiveData() // 표시되는 동
+    var dongcode = "" // 검색시 활용할 동 코드
+    var title : MutableLiveData<String> = MutableLiveData() // 표시되는 주소
+    var sub : MutableLiveData<String> = MutableLiveData() // 표시되는 도로명 "사용안함"
+    var spindefult : MutableLiveData<Int> = MutableLiveData() // 동과 동일한 목록번지를 가져올 스피너의 목록번지
+    var item = Orderdata() // 선택된 오더의 저장 클래스
+    var first : Boolean = false // 처음인지? 스피너는 처음에 목록번지를 지정하면 0번지가 자동선택되기 때문에 해당 부분 방지용
 
-    val CustMarker = Marker()
+    val CustMarker = Marker() // 지도 맵 마커
 
     init {
         Log.e("AddrssView", "CheckView Enable")

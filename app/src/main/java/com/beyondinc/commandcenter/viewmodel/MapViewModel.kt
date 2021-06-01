@@ -29,39 +29,39 @@ import java.util.concurrent.ConcurrentHashMap
 
 class MapViewModel : ViewModel()
 {
-    var mapInstance: NaverMap? = null
-    var first: Boolean? = false
+    var mapInstance: NaverMap? = null // 네이버맵
+    var first: Boolean? = false // 처음인지 여부 최초 로그인시 쓰레드에 의해서 불필요한 요청을 줄일 수 있음
 
-    var Item : MutableLiveData<Riderdata> = MutableLiveData()
-    var ItemAc : ConcurrentHashMap<Int, Orderdata> = ConcurrentHashMap()
-    var ItemPc : ConcurrentHashMap<Int, Orderdata> = ConcurrentHashMap()
+    var Item : MutableLiveData<Riderdata> = MutableLiveData() // 맵에 보여줄 라이더 목록
+    var ItemAc : ConcurrentHashMap<Int, Orderdata> = ConcurrentHashMap() // 라이더의 배정 카운터
+    var ItemPc : ConcurrentHashMap<Int, Orderdata> = ConcurrentHashMap() // 라이더의 픽업 카운터
 
-    var Dselect : Boolean = false
-    var Lselect : Boolean = false
+    var Dselect : Boolean = false // 좌측 드로워 선택여부
+    var Lselect : Boolean = false // 하단 드로워 선택여부
 
-    var Olayer : MutableLiveData<Int> = MutableLiveData()
+    var Olayer : MutableLiveData<Int> = MutableLiveData() // 라이더 선택시 오더목록 레이어가 열린 상태인지?
 
-    var Drawer : MutableLiveData<Boolean> = MutableLiveData(false)
-    var Lrawer : MutableLiveData<Boolean> = MutableLiveData(false)
+    var Drawer : MutableLiveData<Boolean> = MutableLiveData(false) // 좌측 드로워가 열린 상태인지?
+    var Lrawer : MutableLiveData<Boolean> = MutableLiveData(false) // 하단 드로워가 열린 상태인지?
 
-    var riderTitle : MutableLiveData<String> = MutableLiveData()
-    var selectOr : MutableLiveData<Int> = MutableLiveData()
+    var riderTitle : MutableLiveData<String> = MutableLiveData() // 라이더 상단 표시 텍스트
+    var selectOr : MutableLiveData<Int> = MutableLiveData() // 라이더 선택후 표시된 목록을 선택하였는지 여부
     var selectRi : MutableLiveData<Int> = MutableLiveData()
 
-    var markerList: ConcurrentHashMap<Marker,Riderdata> = ConcurrentHashMap()
-    var markerPikupList : ArrayList<Marker> = ArrayList()
-    var markerAccesList : ArrayList<Marker> = ArrayList()
-    var linePikup : ArrayList<PolylineOverlay> = arrayListOf()
-    var lineAcces : ArrayList<PolylineOverlay> = arrayListOf()
+    var markerList: ConcurrentHashMap<Marker,Riderdata> = ConcurrentHashMap() // 라이더 마커 리스트
+    var markerPikupList : ArrayList<Marker> = ArrayList() // 픽업마커 리스트
+    var markerAccesList : ArrayList<Marker> = ArrayList() // 배정마커 리스트
+    var linePikup : ArrayList<PolylineOverlay> = arrayListOf() // 픽업마커 라인 리스트
+    var lineAcces : ArrayList<PolylineOverlay> = arrayListOf() // 배정마커 라인 리스트
 
-    var markerAssignAgencyList : HashMap<Orderdata,Marker> = HashMap()
-    var markerAssignCustList : HashMap<Orderdata,Marker> = HashMap()
-    var lineAssign : HashMap<Orderdata,PolylineOverlay> = HashMap()
+    var markerAssignAgencyList : HashMap<Orderdata,Marker> = HashMap() // 접수마커 가맹점 리스트
+    var markerAssignCustList : HashMap<Orderdata,Marker> = HashMap() // 접수마커 고객 리스트
+    var lineAssign : HashMap<Orderdata,PolylineOverlay> = HashMap() //  접수마커 라인 리스트
 
-    var subitemsize : MutableLiveData<Int> = MutableLiveData()
+    var subitemsize : MutableLiveData<Int> = MutableLiveData() // 하단레이어에 보여줄 접수 총갯수
 
-    var imgGray = OverlayImage.fromResource(R.drawable.ic_marker_assigned_rider)
-    var imgBlue = OverlayImage.fromResource(R.drawable.ic_marker_idle_rider)
+    var imgGray = OverlayImage.fromResource(R.drawable.ic_marker_assigned_rider) // 라이더 마커 이미지
+    var imgBlue = OverlayImage.fromResource(R.drawable.ic_marker_idle_rider) //  라이더 마커 이미지
     //오버레이 재활용 안하면 메모리릭이 심하다고함, 네이버지도 개발가이드 발췌
 
     init
@@ -193,7 +193,7 @@ class MapViewModel : ViewModel()
 
         var onMove : Boolean = false
 
-        if(Item.value?.id != obj.id)
+        if(Item.value?.id != obj.id) // 같은 라이더는 포커스를 갱신할 필요가 없음
         {
             onMove = true
             Item.value = obj
@@ -271,6 +271,7 @@ class MapViewModel : ViewModel()
         Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBRIDER,Finals.SELECT_EMPTY,0).sendToTarget()
         Vars.DataHandler!!.obtainMessage(Finals.VIEW_ASSIGN,Finals.SELECT_EMPTY,0).sendToTarget()
         CloseLowLayer()
+        mapInstance?.moveCamera(CameraUpdate.zoomTo(13.0))
         MarkerThread().start()
 //        for (marker in markerList.keys)
 //        {
@@ -420,7 +421,7 @@ class MapViewModel : ViewModel()
                 agencyMarker.captionText = ItemPc[itk]!!.AgencyName
                 agencyMarker.setCaptionAligns(Align.Top)
                 agencyMarker.map = mapInstance
-                agencyMarker.globalZIndex = 300000
+                agencyMarker.globalZIndex = 300002
                 markerPikupList.add(agencyMarker)
 
                 val customerLatitude = ItemPc[itk]!!.CustomerLatitude?.toDouble()
@@ -434,7 +435,7 @@ class MapViewModel : ViewModel()
                     customerMarker.captionText = ItemPc[itk]!!.CustomerShortAddrNoRoad
                     customerMarker.setCaptionAligns(Align.Top)
                     customerMarker.map = mapInstance
-                    customerMarker.globalZIndex = 300000
+                    customerMarker.globalZIndex = 300002
                     markerPikupList.add(customerMarker)
 
                     val path = PolylineOverlay()
@@ -442,7 +443,7 @@ class MapViewModel : ViewModel()
 //                    path.coords = task.execute(agencyPosition,customerPosition).get() // 실경로
                     path.coords = listOf(agencyPosition,customerPosition)
                     path.width = 10
-                    path.globalZIndex = 300000
+                    path.globalZIndex = 300001
                     path.color = Vars.mContext!!.getColor(R.color.pickup)
                     path.map = mapInstance
                     linePikup.add(path)
@@ -478,7 +479,7 @@ class MapViewModel : ViewModel()
                 agencyMarker.captionText = ItemAc[itk]!!.AgencyName
                 agencyMarker.setCaptionAligns(Align.Top)
                 agencyMarker.map = mapInstance
-                agencyMarker.globalZIndex = 300000
+                agencyMarker.globalZIndex = 300002
                 markerAccesList.add(agencyMarker)
 
                 val customerLatitude = ItemAc[itk]!!.CustomerLatitude?.toDouble()
@@ -492,7 +493,7 @@ class MapViewModel : ViewModel()
                     customerMarker.captionText = ItemAc[itk]!!.CustomerShortAddrNoRoad
                     customerMarker.setCaptionAligns(Align.Top)
                     customerMarker.map = mapInstance
-                    customerMarker.globalZIndex = 300000
+                    customerMarker.globalZIndex = 300002
                     markerAccesList.add(customerMarker)
 
                     val path = PolylineOverlay()
@@ -500,7 +501,7 @@ class MapViewModel : ViewModel()
 //                    path.coords = task.execute(agencyPosition,customerPosition).get()//실경로
                     path.coords = listOf(agencyPosition,customerPosition)//직선경로
                     path.width = 10
-                    path.globalZIndex = 300000
+                    path.globalZIndex = 300001
                     path.color = Vars.mContext!!.getColor(R.color.recive)
                     path.map = mapInstance
                     lineAcces.add(path)
@@ -529,7 +530,7 @@ class MapViewModel : ViewModel()
             agencyMarker.captionText = assorder!!.AgencyName
             agencyMarker.setCaptionAligns(Align.Top)
             agencyMarker.map = mapInstance
-            agencyMarker.globalZIndex = 300000
+            agencyMarker.globalZIndex = 300002
             markerAssignAgencyList[assorder] = agencyMarker
 
             if (customerLatitude != null && customerLongitude != null)
@@ -541,7 +542,7 @@ class MapViewModel : ViewModel()
                 customerMarker.captionText = assorder!!.CustomerShortAddrNoRoad
                 customerMarker.setCaptionAligns(Align.Top)
                 customerMarker.map = mapInstance
-                customerMarker.globalZIndex = 300000
+                customerMarker.globalZIndex = 300002
                 markerAssignCustList[assorder] = (customerMarker)
 
                 val path = PolylineOverlay()
@@ -549,7 +550,7 @@ class MapViewModel : ViewModel()
 //                path.coords = task.execute(agencyPosition,customerPosition).get()//실경로
                 path.coords = listOf(agencyPosition,customerPosition)//직선경로
                 path.width = 10
-                path.globalZIndex = 300000
+                path.globalZIndex = 300001
                 path.color = Vars.mContext!!.getColor(R.color.brief)
                 path.map = mapInstance
                 lineAssign[assorder] = path

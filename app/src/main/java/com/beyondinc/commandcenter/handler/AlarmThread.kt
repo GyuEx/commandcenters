@@ -66,10 +66,10 @@ class AlarmThread() : Thread() , ThreadFun{
                         {
                             when (rdata.mnDeliveryState)
                             {
-                                1 -> Vars.riderList[rdata.mnOrderId.toString()]!!.workingStateCode = Codes.RIDER_ON_WORK
-                                2 -> Vars.riderList[rdata.mnOrderId.toString()]!!.workingStateCode = Codes.RIDER_OFF_WORK
-                                3 -> Vars.riderList[rdata.mnOrderId.toString()]!!.workingStateCode = Codes.RIDER_ON_EAT
-                                4 -> Vars.riderList[rdata.mnOrderId.toString()]!!.workingStateCode = Codes.RIDER_ON_WORK
+                                AlarmCodes.RIDER_WORK_STATE_ON_WORK -> Vars.riderList[rdata.mnOrderId.toString()]!!.workingStateCode = Codes.RIDER_ON_WORK
+                                AlarmCodes.RIDER_WORK_STATE_OFF_WORK -> Vars.riderList[rdata.mnOrderId.toString()]!!.workingStateCode = Codes.RIDER_OFF_WORK
+                                AlarmCodes.RIDER_WORK_STATE_START_EAT_TIME -> Vars.riderList[rdata.mnOrderId.toString()]!!.workingStateCode = Codes.RIDER_ON_EAT
+                                AlarmCodes.RIDER_WORK_STATE_END_EAT_TIME -> Vars.riderList[rdata.mnOrderId.toString()]!!.workingStateCode = Codes.RIDER_ON_WORK
                             }
                         }
                     }

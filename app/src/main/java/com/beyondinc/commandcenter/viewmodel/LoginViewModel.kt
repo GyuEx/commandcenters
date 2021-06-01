@@ -34,21 +34,20 @@ import java.util.*
 
 class LoginViewModel() : ViewModel() {
 
-    var id : MutableLiveData<String> = MutableLiveData()
-    var pw : MutableLiveData<String> = MutableLiveData()
+    var id : MutableLiveData<String> = MutableLiveData() // 아이디
+    var pw : MutableLiveData<String> = MutableLiveData() // 패스워드
 
-    var saveId : MutableLiveData<Boolean> = MutableLiveData()
-    var savePw : MutableLiveData<Boolean> = MutableLiveData()
+    var saveId : MutableLiveData<Boolean> = MutableLiveData() // 저장아이디
+    var savePw : MutableLiveData<Boolean> = MutableLiveData() // 저장패스워드
 
-    var updateTxt = MutableLiveData<String>()
-    var infotxt = MutableLiveData<String>()
+    var updateTxt = MutableLiveData<String>() // 업데이트시 보여줄 텍스트
+    var infotxt = MutableLiveData<String>() // 업데이트시 보여줄 안내 텍스트
 
-    var ver = MutableLiveData<String>()
-    var proVal = MutableLiveData<Int>()
+    var ver = MutableLiveData<String>() // 버전정보
+    var proVal = MutableLiveData<Int>() // 업데이트 프로그래시브바 벨류
 
-    private var downloadID: Long = -1
+    private var downloadID: Long = -1 // 다운로드 리퀘스트 아이디
     private lateinit var file: File
-    private lateinit var delpath: File
     private var downloadManager: DownloadManager? = null
 
     init {
@@ -75,7 +74,7 @@ class LoginViewModel() : ViewModel() {
             pw.value = pref.getString("pw", "")
         }
 
-        //getPhoneNum()
+        //getPhoneNum() // 핸드폰 번호 및 단말기명 가져오기
 
     }
 

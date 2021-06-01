@@ -83,6 +83,8 @@ class MarkerThread : Thread() , ThreadFun {
                     else marker.icon = imgGray
                     marker.setOnClickListener {
                         Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBRIDER,Finals.MAP_FOR_CALL_RIDER, 0,Vars.riderList[itt]!!).sendToTarget()
+                        // 메인맵이 아니라 서브에 주는 이유는 어짜피 서브에서 선택하는형태로 주기 위함임, 메인라이더, 서브라이더 별개로 운영하면 중복이 되거나 오더가 잘못 내려갈 소지가 있음
+                        // 1. 접수오더는 메인맵뷰모델에서 제어하기 때문 ,  2. 커스텀마커는 마커ID만으로 동기배열(전체삭제,전체생성)을 반복하지 않는이상 찾을 방법이 없음
                         true
                     }
                     Vars.riderList[itt]!!.MakerID = marker // 라이더에게 마커를 지정해줌
@@ -103,7 +105,7 @@ class MarkerThread : Thread() , ThreadFun {
             }
 
             var forstr = "전:${cntj} 운:${cntu} 대:${cntd} 식:${cnts} 퇴:${cntt}"
-            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.INSERT_RIDER_COUNT, 0,forstr).sendToTarget()
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.INSERT_RIDER_COUNT, 0,forstr).sendToTarget() // 메인뷰에 전체 카운터를 제공한다
         }
     }
 }

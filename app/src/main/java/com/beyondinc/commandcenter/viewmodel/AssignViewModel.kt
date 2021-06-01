@@ -14,9 +14,9 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.HashMap
 
 class AssignViewModel : ViewModel() {
-    var items: ConcurrentHashMap<Int,Orderdata>? = null
-    var adapter: RecyclerAdapterAssign? = null
-    var sendedItem : Orderdata? = null
+    var items: ConcurrentHashMap<Int,Orderdata>? = null // 리스트에 보여줄 아이템 목록
+    var adapter: RecyclerAdapterAssign? = null // 리스트 어뎁터
+    var sendedItem : Orderdata? = null // 선택된 오더 저장 클래스
 
     init{
         if (items == null) {

@@ -8,8 +8,8 @@ import com.beyondinc.commandcenter.util.Vars
 
 class MessageViewModel : ViewModel() {
 
-    var msg : MutableLiveData<String> = MutableLiveData()
-    var num = ""
+    var msg : MutableLiveData<String> = MutableLiveData() // 메세지
+    var num = "" // 전화걸기시 전화번호 넘어올 변수
 
     init {
         //Log.e("Message","viewModel Init")

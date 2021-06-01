@@ -4,10 +4,6 @@
 
     <data>
         <variable
-            name="layout"
-            type="int" />
-
-        <variable
             name="viewModel"
             type="com.beyondinc.commandcenter.viewmodel.MainsViewModel" />
     </data>
@@ -24,12 +20,11 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/ofL01"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0"
                 android:background="@color/white"
-                app:layout="@{viewModel.select == viewModel.getSelectBrife ? 1 : 0}">
+                app:layout_breif="@{viewModel.select}">
 
                 <TextView
                     android:layout_width="0dp"

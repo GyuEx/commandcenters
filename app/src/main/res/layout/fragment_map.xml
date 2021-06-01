@@ -50,7 +50,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:background="@color/trans_black"
-                        app:layout="@{viewModel.Olayer == viewModel.getMapforOrder ? 1 : 0}"
+                        app:layout_form="@{viewModel.Olayer == viewModel.getMapforOrder ? 1 : 0}"
                         android:layout_weight="1">
 
                         <TextView
