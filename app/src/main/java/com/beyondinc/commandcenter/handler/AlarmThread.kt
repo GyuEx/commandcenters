@@ -30,7 +30,7 @@ class AlarmThread() : Thread() , ThreadFun{
 
                     var rdata = Vars.alarmList.removeAt(0)
 
-                    //Log.e("Alram" , "" + rdata.mnAlarmType + " // " + rdata.mnOrderId)
+                    Log.e("Alram" , "" + rdata.mnAlarmType + " // " + rdata.mnOrderId)
 
                     if(rdata.mnAlarmType == AlarmCodes.ALARM_TYPE_ORDER)
                     {

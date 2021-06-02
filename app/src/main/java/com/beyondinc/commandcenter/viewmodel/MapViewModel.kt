@@ -2,6 +2,7 @@ package com.beyondinc.commandcenter.viewmodel
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Handler
 import android.os.Message
 import android.util.Log
@@ -53,10 +54,13 @@ class MapViewModel : ViewModel()
     var markerAccesList : ArrayList<Marker> = ArrayList() // 배정마커 리스트
     var linePikup : ArrayList<PolylineOverlay> = arrayListOf() // 픽업마커 라인 리스트
     var lineAcces : ArrayList<PolylineOverlay> = arrayListOf() // 배정마커 라인 리스트
+    var mkPikup : ArrayList<Marker> = arrayListOf()
+    var mkAcces : ArrayList<Marker> = arrayListOf()
 
     var markerAssignAgencyList : HashMap<Orderdata,Marker> = HashMap() // 접수마커 가맹점 리스트
     var markerAssignCustList : HashMap<Orderdata,Marker> = HashMap() // 접수마커 고객 리스트
     var lineAssign : HashMap<Orderdata,PolylineOverlay> = HashMap() //  접수마커 라인 리스트
+    var kmAssign : HashMap<Orderdata,Marker> = HashMap()
 
     var subitemsize : MutableLiveData<Int> = MutableLiveData() // 하단레이어에 보여줄 접수 총갯수
 
@@ -293,6 +297,10 @@ class MapViewModel : ViewModel()
         for (marker in linePikup) {
             marker.map = null
         }
+        for (marker in mkPikup) {
+            marker.map = null
+        }
+        mkPikup.clear()
     }
 
     fun removeAssignMaker()
@@ -311,6 +319,11 @@ class MapViewModel : ViewModel()
             marker.value.map = null
         }
         lineAssign.clear()
+
+        for (marker in mkAcces) {
+            marker.map = null
+        }
+        mkAcces.clear()
     }
 
     fun Mapclick(){
@@ -373,6 +386,8 @@ class MapViewModel : ViewModel()
 
     fun updateRider(marker: Riderdata)
     {
+        /* 하단부분도 쓰레드에 담을 수 있지만 쓰레드에 담게되면 class 오류가남(지도뷰를 생성하지 않은 쓰레드에서는 마커를 재활용 할 수 없음) */
+
         if(marker.MakerID!!.map == null && Item.value == null) createRider(marker) //지워졌을경우에 다시 그려줌
 
         val latitude = marker.latitude!!.toDouble()
@@ -407,6 +422,11 @@ class MapViewModel : ViewModel()
             marker.map = null
         }
         linePikup.clear()
+
+        for (marker in mkPikup) {
+            marker.map = null
+        }
+        mkPikup.clear()
 
         var it : Iterator<Int> = ItemPc.keys.iterator()
         while (it.hasNext()) {
@@ -447,6 +467,15 @@ class MapViewModel : ViewModel()
                     path.color = Vars.mContext!!.getColor(R.color.pickup)
                     path.map = mapInstance
                     linePikup.add(path)
+
+                    val mk = Marker()
+                    var x = (agencylatitude + customerLatitude) / 2
+                    var y = (agencylongitude + customerLongitude) / 2
+                    mk.icon = OverlayImage.fromView(FixedkmView(Vars.mContext!!,ItemAc[itk]?.DeliveryDistance.toString(),Vars.mContext!!.getColor(R.color.pickup)))
+                    mk.position = LatLng(x,y)
+                    mk.map = mapInstance
+                    mk.globalZIndex = 300000
+                    mkPikup.add(mk)
                 }
             }
         }
@@ -465,6 +494,11 @@ class MapViewModel : ViewModel()
             marker.map = null
         }
         lineAcces.clear()
+
+        for (marker in mkAcces) {
+            marker.map = null
+        }
+        mkAcces.clear()
 
         var it : Iterator<Int> = ItemAc.keys.iterator()
         while (it.hasNext()) {
@@ -505,6 +539,15 @@ class MapViewModel : ViewModel()
                     path.color = Vars.mContext!!.getColor(R.color.recive)
                     path.map = mapInstance
                     lineAcces.add(path)
+
+                    val mk = Marker()
+                    var x = (agencylatitude + customerLatitude) / 2
+                    var y = (agencylongitude + customerLongitude) / 2
+                    mk.icon = OverlayImage.fromView(FixedkmView(Vars.mContext!!,ItemAc[itk]?.DeliveryDistance.toString(),Vars.mContext!!.getColor(R.color.recive)))
+                    mk.position = LatLng(x,y)
+                    mk.globalZIndex = 300000
+                    mk.map = mapInstance
+                    mkAcces.add(mk)
                 }
             }
         }
@@ -554,6 +597,16 @@ class MapViewModel : ViewModel()
                 path.color = Vars.mContext!!.getColor(R.color.brief)
                 path.map = mapInstance
                 lineAssign[assorder] = path
+
+                val mk = Marker()
+                var x = (agencylatitude + customerLatitude) / 2
+                var y = (agencylongitude + customerLongitude) / 2
+                mk.icon = OverlayImage.fromView(FixedkmView(Vars.mContext!!,assorder.DeliveryDistance,Vars.mContext!!.getColor(R.color.brief)))
+                mk.position = LatLng(x,y)
+                mk.globalZIndex = 300000
+                mk.map = mapInstance
+                kmAssign[assorder] = mk
+
             }
         }
         mapFocusing()
@@ -567,6 +620,8 @@ class MapViewModel : ViewModel()
         markerAssignCustList.remove(assorder)
         lineAssign[assorder]!!.map = null
         lineAssign.remove(assorder)
+        kmAssign[assorder]!!.map = null
+        kmAssign.remove(assorder)
     }
 
     class FixedMarkerViewBrief(context: Context, isStartPosition: Boolean = false) : ConstraintLayout(context) {
@@ -599,6 +654,16 @@ class MapViewModel : ViewModel()
                 if (isStartPosition) R.string.text_start
                 else R.string.text_arrival
             titleField.setText(titleResourceID)
+        }
+    }
+
+    class FixedkmView(context: Context, km : String, color : Int) : ConstraintLayout(context) {
+        init {
+            val view: View = View.inflate(context, R.layout.view_km_marker, this)
+            val titleField: TextView = findViewById(R.id.positionKm)
+            titleField.setTextColor(color)
+            titleField.setTypeface(null, Typeface.BOLD)
+            titleField.text = km
         }
     }
 }

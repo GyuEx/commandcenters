@@ -70,10 +70,22 @@ class PlaySoundThread(private val oid:Int, private val sid:Int) : Thread(), Thre
     }
 
     fun ttsSpeak(strTTS : String){
+        Vars.tts?.setSpeechRate(Vars.speechrate)
+        Vars.tts?.setPitch(Vars.speechpitch)
         Vars.tts?.speak(strTTS, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
     override fun stopThread() {
         TODO("Not yet implemented")
+    }
+
+    override fun destroy() {
+        super.destroy()
+
+        if(soundPool != null)
+        {
+            soundPool?.release()
+            soundPool = null
+        }
     }
 }

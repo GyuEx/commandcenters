@@ -73,6 +73,12 @@ class MainsViewModel : ViewModel() {
         Vars.UseC = pref.getBoolean("useC", false)
         Vars.Bright = pref.getInt("bright", 10)
         Vars.FontSize = pref.getInt("fontsize", 15)
+        Vars.speechrate = pref.getFloat("rate",1.0f)
+        Vars.speechpitch = pref.getFloat("tone",1.0f)
+        Vars.speechrateinfo = pref.getString("rateinfo","보통").toString()
+        Vars.speechpitchinfo = pref.getString("toneinfo","보통").toString()
+        Vars.rateseek = pref.getInt("rateseek",5)
+        Vars.toneseek = pref.getInt("toneseek",5)
 
         briteLayer.value = Vars.Bright
 

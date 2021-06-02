@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -20,12 +19,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.databinding.ActivityMainBinding
 import com.beyondinc.commandcenter.fragment.*
-import com.beyondinc.commandcenter.handler.HandlerCallBack
 import com.beyondinc.commandcenter.service.AppActivateService
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
@@ -149,9 +146,9 @@ class Mains : AppCompatActivity(), MainsFun {
         binding!!.lifecycleOwner = this
         binding!!.viewModel = Vars.MainVm
 
-        getKeyHash(this)
-        getDeviceSize()
-        showLoading()
+        getKeyHash(this) // 해시키 얻기
+        getDeviceSize() // 단말기 화면 사이즈 얻기
+        showLoading() // 최초 로딩화면 보여주기
     }
 
     fun getKeyHash(context: Context) {
