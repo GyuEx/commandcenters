@@ -500,7 +500,6 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("spin_bun")
     fun spin_bun(view: Spinner, height: Int) {
-        Log.e("호출시점","호출시점은 바로 지금이야" + "${height}")
         view.setSelection(height)
         view.setSelection(height)
     }

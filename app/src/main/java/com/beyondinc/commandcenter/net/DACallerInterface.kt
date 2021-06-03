@@ -49,7 +49,7 @@ class DACallerInterface(
     ) {
         val sMsg = String.format(Locale.KOREA, "TotalCnt:%d Seq:%d AlarmId:%d AlarmType:%d OrderId:%d DeliveryState:%d SelfAssign:%d"
                 ,nTotalCnt, nSeq, nAlarmId, nAlarmType, nOrderId, nDeliveryState, nSelfAssign)
-        //Log.e("AlarmTest", sMsg)
+        Log.e("AlarmTest", sMsg)
 
         // TotalCnt와 Seq와 같을때까지 전달한 값들을 저장해 둔다.
         val alarmInfo = Alarmdata(nTotalCnt, nSeq, nAlarmId, nAlarmType, nOrderId, nDeliveryState, nSelfAssign, sServerTime, sLaunchingTime)

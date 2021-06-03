@@ -26,7 +26,9 @@ import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.*
+import java.lang.Math.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.math.pow
 
 class MapViewModel : ViewModel()
 {
@@ -300,7 +302,9 @@ class MapViewModel : ViewModel()
         for (marker in mkPikup) {
             marker.map = null
         }
-        mkPikup.clear()
+        for (maker in mkAcces) {
+            maker.map = null
+        }
     }
 
     fun removeAssignMaker()
@@ -320,10 +324,10 @@ class MapViewModel : ViewModel()
         }
         lineAssign.clear()
 
-        for (marker in mkAcces) {
-            marker.map = null
+        for (marker in kmAssign) {
+            marker.value.map = null
         }
-        mkAcces.clear()
+        kmAssign.clear()
     }
 
     fun Mapclick(){
@@ -471,10 +475,11 @@ class MapViewModel : ViewModel()
                     val mk = Marker()
                     var x = (agencylatitude + customerLatitude) / 2
                     var y = (agencylongitude + customerLongitude) / 2
-                    mk.icon = OverlayImage.fromView(FixedkmView(Vars.mContext!!,ItemAc[itk]?.DeliveryDistance.toString(),Vars.mContext!!.getColor(R.color.pickup)))
+                    var dist = getDistance(agencyPosition,customerPosition)
+                    mk.icon = OverlayImage.fromView(FixedkmView(Vars.mContext!!,dist,Vars.mContext!!.getColor(R.color.pickup)))
                     mk.position = LatLng(x,y)
                     mk.map = mapInstance
-                    mk.globalZIndex = 300000
+                    mk.globalZIndex = 300005
                     mkPikup.add(mk)
                 }
             }
@@ -543,9 +548,10 @@ class MapViewModel : ViewModel()
                     val mk = Marker()
                     var x = (agencylatitude + customerLatitude) / 2
                     var y = (agencylongitude + customerLongitude) / 2
-                    mk.icon = OverlayImage.fromView(FixedkmView(Vars.mContext!!,ItemAc[itk]?.DeliveryDistance.toString(),Vars.mContext!!.getColor(R.color.recive)))
+                    var dist = getDistance(agencyPosition,customerPosition)
+                    mk.icon = OverlayImage.fromView(FixedkmView(Vars.mContext!!,dist,Vars.mContext!!.getColor(R.color.recive)))
                     mk.position = LatLng(x,y)
-                    mk.globalZIndex = 300000
+                    mk.globalZIndex = 300005
                     mk.map = mapInstance
                     mkAcces.add(mk)
                 }
@@ -601,9 +607,10 @@ class MapViewModel : ViewModel()
                 val mk = Marker()
                 var x = (agencylatitude + customerLatitude) / 2
                 var y = (agencylongitude + customerLongitude) / 2
-                mk.icon = OverlayImage.fromView(FixedkmView(Vars.mContext!!,assorder.DeliveryDistance,Vars.mContext!!.getColor(R.color.brief)))
+                var dist = getDistance(agencyPosition,customerPosition)
+                mk.icon = OverlayImage.fromView(FixedkmView(Vars.mContext!!,dist,Vars.mContext!!.getColor(R.color.brief)))
                 mk.position = LatLng(x,y)
-                mk.globalZIndex = 300000
+                mk.globalZIndex = 300005
                 mk.map = mapInstance
                 kmAssign[assorder] = mk
 
@@ -662,8 +669,32 @@ class MapViewModel : ViewModel()
             val view: View = View.inflate(context, R.layout.view_km_marker, this)
             val titleField: TextView = findViewById(R.id.positionKm)
             titleField.setTextColor(color)
+            titleField.textSize = 17f
             titleField.setTypeface(null, Typeface.BOLD)
             titleField.text = km
         }
+    }
+
+    fun getDistance(pos1 : LatLng, pos2 : LatLng): String {
+
+        //오더내용안에 distance가 존재하지만,, 안맞는경우도 많고 null인경우도 많아서 그냥 자체 계산해서 사용
+        //단거리 계산에는 오차가 거이 없음
+
+        var lat1 = pos1.latitude
+        var lon1 = pos1.longitude
+        var lat2 = pos2.latitude
+        var lon2 = pos2.longitude
+
+        val R = 6372.8 * 1000 // 계수
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLon = Math.toRadians(lon2 - lon1)
+        val a = kotlin.math.sin(dLat / 2).pow(2.0) + kotlin.math.sin(dLon / 2).pow(2.0) * kotlin.math.cos(
+            toRadians(lat1)
+        ) * kotlin.math.cos(toRadians(lat2))
+        val c = 2 * kotlin.math.asin(kotlin.math.sqrt(a))
+        val r = (R * c).toInt()
+
+        return if(r < 999) r.toString() + "m"
+        else (r.toDouble()/1000).toString() + "km"
     }
 }

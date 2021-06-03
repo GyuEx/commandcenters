@@ -519,6 +519,7 @@ class MainsViewModel : ViewModel() {
     }
 
     fun click_center_call(){
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.SEND_TELEPHONE,0,"1899-4231").sendToTarget()
     }
 
     fun click_kakao_call(){
