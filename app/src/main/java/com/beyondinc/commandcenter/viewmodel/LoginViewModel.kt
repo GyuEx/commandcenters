@@ -53,8 +53,6 @@ class LoginViewModel() : ViewModel() {
     init {
         Logindata.isLogin = false
 
-        Log.e("오오오","오오오오오오오")
-
         saveId.value = false
         savePw.value = false
 
