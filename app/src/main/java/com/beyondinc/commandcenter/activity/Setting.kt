@@ -45,13 +45,17 @@ class Setting : AppCompatActivity(), SettingFun {
     }
 
     override fun showDialog() {
-        runOnUiThread {
-            if (dialog != null) {
-                dialog!!.dismiss()
-                dialog = null
+        try {
+            runOnUiThread {
+                if (dialog != null) {
+                    dialog!!.dismiss()
+                    dialog = null
+                }
+                dialog = NickDialog()
+                dialog!!.show(supportFragmentManager, "Nick")
             }
-            dialog = NickDialog()
-            dialog!!.show(supportFragmentManager, "Nick")
+        }catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 

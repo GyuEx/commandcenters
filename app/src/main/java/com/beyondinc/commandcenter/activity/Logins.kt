@@ -114,26 +114,34 @@ class Logins : AppCompatActivity() , LoginsFun {
     }
 
     override fun showLoading() {
-        runOnUiThread {
-            if (loading != null) {
-                loading!!.dismiss()
-                loading = null
+        try {
+            runOnUiThread {
+                if (loading != null) {
+                    loading!!.dismiss()
+                    loading = null
+                }
+                loading = LoginLoadingDialog()
+                loading!!.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.BBB)
+                loading!!.show(supportFragmentManager, "Loading")
             }
-            loading = LoginLoadingDialog()
-            loading!!.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.BBB)
-            loading!!.show(supportFragmentManager, "Loading")
+        }catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 
     override fun showDownLoading() {
-        runOnUiThread {
-            if (downloading != null) {
-                downloading!!.dismiss()
-                downloading = null
+        try {
+            runOnUiThread {
+                if (downloading != null) {
+                    downloading!!.dismiss()
+                    downloading = null
+                }
+                downloading = DownloadingDialog()
+                downloading!!.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.BBB)
+                downloading!!.show(supportFragmentManager, "DownLoading")
             }
-            downloading = DownloadingDialog()
-            downloading!!.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.BBB)
-            downloading!!.show(supportFragmentManager, "DownLoading")
+        }catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 

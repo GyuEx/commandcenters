@@ -262,59 +262,79 @@ class Mains : AppCompatActivity(), MainsFun {
 
 
     override fun showDialogBrief() {
-        runOnUiThread {
-            if (dialog != null) {
-                dialog!!.dismiss()
-                dialog = null
+        try {
+            runOnUiThread {
+                if (dialog != null) {
+                    dialog!!.dismiss()
+                    dialog = null
+                }
+                dialog = BriefDialog()
+                dialog!!.show(supportFragmentManager, "dialog")
             }
-            dialog = BriefDialog()
-            dialog!!.show(supportFragmentManager, "dialog")
+        } catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 
     override fun showDialogStore() {
-        runOnUiThread {
-            if (dialog != null) {
-                dialog!!.dismiss()
-                dialog = null
+        try {
+            runOnUiThread {
+                if (dialog != null) {
+                    dialog!!.dismiss()
+                    dialog = null
+                }
+                dialog = StoreDialog()
+                dialog!!.show(supportFragmentManager, "dialog")
             }
-            dialog = StoreDialog()
-            dialog!!.show(supportFragmentManager, "dialog")
+        } catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 
     override fun showDialogRider() {
-        runOnUiThread {
-            if (dialog != null) {
-                dialog!!.dismiss()
-                dialog = null
+        try{
+            runOnUiThread {
+                if (dialog != null) {
+                    dialog!!.dismiss()
+                    dialog = null
+                }
+                dialog = RiderDialog()
+                dialog!!.show(supportFragmentManager, "dialog")
             }
-            dialog = RiderDialog()
-            dialog!!.show(supportFragmentManager, "dialog")
+        } catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 
     override fun showOderdetail() {
-        runOnUiThread {
-            if (detail != null) {
-                detail!!.dismiss()
-                detail = null
+        try {
+            runOnUiThread {
+                if (detail != null) {
+                    detail!!.dismiss()
+                    detail = null
+                }
+                detail = DetailDialog()
+                detail!!.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light)
+                detail!!.show(supportFragmentManager, "Details")
             }
-            detail = DetailDialog()
-            detail!!.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light)
-            detail!!.show(supportFragmentManager, "Details")
+        }catch (e: Exception) {
+        //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 
     override fun showLoading() {
-        runOnUiThread {
-            if (loading != null) {
-                loading!!.dismiss()
-                loading = null
+        try {
+            runOnUiThread {
+                if (loading != null) {
+                    loading!!.dismiss()
+                    loading = null
+                }
+                loading = LoadingDialog()
+                loading!!.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.BBB)
+                loading!!.show(supportFragmentManager, "Loading")
             }
-            loading = LoadingDialog()
-            loading!!.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.BBB)
-            loading!!.show(supportFragmentManager, "Loading")
+        }catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 
@@ -330,58 +350,80 @@ class Mains : AppCompatActivity(), MainsFun {
     }
 
     override fun showHistory() {
-        runOnUiThread {
-            if (history != null) {
-                history!!.dismiss()
-                history = null
+        try {
+            runOnUiThread {
+                if (history != null) {
+                    history!!.dismiss()
+                    history = null
+                }
+                history = HistoryDialog()
+                history!!.show(supportFragmentManager, "History")
             }
-            history = HistoryDialog()
-            history!!.show(supportFragmentManager, "History")
+        }catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 
     override fun showMessage(msg: String, num: String) {
-        runOnUiThread {
-            if (message != null) {
-                message!!.dismiss()
-                message = null
+        try {
+            runOnUiThread {
+                if (message != null) {
+                    message!!.dismiss()
+                    message = null
+                }
+                message = MessageDialog(num)
+                message!!.show(supportFragmentManager, msg)
             }
-            message = MessageDialog(num)
-            message!!.show(supportFragmentManager, msg)
+        }catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
+
     }
 
     override fun showSelect() {
-        runOnUiThread {
-            if (select != null) {
-                select!!.dismiss()
-                select = null
+        try {
+            runOnUiThread {
+                if (select != null) {
+                    select!!.dismiss()
+                    select = null
+                }
+                select = SelectDialog()
+                select!!.show(supportFragmentManager, "Select")
             }
-            select = SelectDialog()
-            select!!.show(supportFragmentManager, "Select")
+        }catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
+
     }
 
     override fun showAddress() {
-        runOnUiThread {
-            if (address != null) {
-                address!!.dismiss()
-                address = null
+        try {
+            runOnUiThread {
+                if (address != null) {
+                    address!!.dismiss()
+                    address = null
+                }
+                address = AddressDialog()
+                address!!.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light)
+                address!!.show(supportFragmentManager, "address")
             }
-            address = AddressDialog()
-            address!!.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light)
-            address!!.show(supportFragmentManager, "address")
+        }catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 
     override fun showPayment() {
-        runOnUiThread {
-            if (payment != null) {
-                payment!!.dismiss()
-                payment = null
+        try {
+            runOnUiThread {
+                if (payment != null) {
+                    payment!!.dismiss()
+                    payment = null
+                }
+                payment = PaymentDialog()
+                payment!!.show(supportFragmentManager, "Select")
             }
-            payment = PaymentDialog()
-            payment!!.show(supportFragmentManager, "Select")
+        }catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }
 
