@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.beyondinc.commandcenter.viewmodel.MainsViewModel" />
+    </data>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.InfoFragment"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="원하시는 메뉴를 눌러주세요"
+                        android:singleLine="true"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="18dp"
+                        android:layout_weight="3">
+
+                    </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="180dp"
+                            android:background="@drawable/p1"
+                            android:layout_margin="5dp"
+                            android:padding="20dp"
+                            android:layout_weight="1"
+                            android:onClick="@{v->viewModel.click_order()}"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="오더 >"
+                                android:textStyle="bold"
+                                android:textSize="18dp"
+                                android:textColor="@color/menu1">
+                            </TextView>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="접수된 오더목록을\n볼수 있어요!"
+                                android:textSize="12dp"
+                                android:textColor="@color/gray">
+                            </TextView>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="180dp"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:padding="20dp"
+                            android:background="@drawable/p3"
+                            android:onClick="@{v->viewModel.click_map()}"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="123dp"
+                                android:layout_weight="1"
+                                android:gravity="right|bottom"
+                                android:text="지도 >"
+                                android:textColor="@color/menu1"
+                                android:textSize="18dp"
+                                android:textStyle="bold"></TextView>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="지도화면을\n볼수 있어요!"
+                                android:textSize="12dp"
+                                android:gravity="right|bottom"
+                                android:textColor="@color/gray">
+                            </TextView>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:background="@drawable/p2"
+                    android:padding="10dp"
+                    android:layout_margin="5dp"
+                    android:onClick="@{v->viewModel.getAgencyList()}"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="공지사항 >"
+                        android:textStyle="bold"
+                        android:textSize="18dp"
+                        android:textColor="@color/menu2">
+                    </TextView>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="공지사항을\n볼수 있어요!"
+                        android:textSize="12dp"
+                        android:textColor="@color/gray">
+                    </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_height="80dp"
+                    android:background="@drawable/p4"
+                    android:padding="10dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_margin="5dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="가맹점 >"
+                            android:textStyle="bold"
+                            android:textSize="18dp"
+                            android:textColor="@color/menu3">
+                        </TextView>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="가맹점 목록을\n볼수 있어요!"
+                            android:textSize="12dp"
+                            android:textColor="@color/gray">
+                        </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_height="80dp"
+                    android:background="@drawable/p6"
+                    android:padding="10dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:onClick="@{v->viewModel.click_Agency()}"
+                    android:layout_margin="5dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="라이더 >"
+                        android:textStyle="bold"
+                        android:textSize="18dp"
+                        android:textColor="@color/menu3">
+                    </TextView>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="라이더 목록을\n볼수 있어요!"
+                        android:textSize="12dp"
+                        android:textColor="@color/gray">
+                    </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="2"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_height="35dp"
+                            android:background="@drawable/p7"
+                            android:padding="5dp"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:onClick="@{v->viewModel.click_center_call()}"
+                            android:layout_marginBottom="5dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="1899-4231 >"
+                                android:textStyle="bold"
+                                android:textSize="18dp"
+                                android:textColor="@color/menu1">
+                            </TextView>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_height="35dp"
+                            android:background="@drawable/p10"
+                            android:padding="5dp"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:onClick="@{v->viewModel.click_kakao_call()}"
+                            android:layout_marginTop="5dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="카카오 헬프데스크 >"
+                                android:textStyle="bold"
+                                android:textSize="18dp"
+                                android:textColor="@color/menu1">
+                            </TextView>
+
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_height="80dp"
+                        android:background="@drawable/p8"
+                        android:padding="10dp"
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_margin="5dp"
+                        android:onClick="@{v->viewModel.click_setting()}"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="환경설정 >"
+                            android:textStyle="bold"
+                            android:textSize="18dp"
+                            android:textColor="@color/menu3">
+                        </TextView>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="환경설정을\n할수 있어요!"
+                            android:textSize="12dp"
+                            android:textColor="@color/gray">
+                        </TextView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/p9"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:onClick="@{v->viewModel.click_exit()}"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="앱 종료하기"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:textSize="30dp"
+                            android:textColor="@color/black">
+                        </TextView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="5dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@color/black">
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/tmlogo">
+        </TextView>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textColor="@color/white"
+            android:textSize="8dp"
+            android:text=" 상호명 : (주)비욘드아이앤씨 | e-mail : sales@beyondinc.co.kr | 문의번호 : 1522-1724\n
+본사 : 서울 성동구 자동차시장1길 49, 7층 (주)비욘드아이앤씨 \n 영업본부 : 경기 고양시 일산동구 호수로 640 청원레이크빌 619호 \n
+Copyright © Beyond delivery. All rights reserved."
+            android:layout_weight="4">
+        </TextView>
+    </LinearLayout>
+</LinearLayout>
+</layout>

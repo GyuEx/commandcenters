@@ -42,6 +42,8 @@ class Mains : AppCompatActivity(), MainsFun {
         var oderfrag: Fragment? = null
         var mapfrag: Fragment? = null
         var checkfrag: Fragment? = null
+        var infofrag : Fragment? = null
+        var agency : Fragment? = null
         var fragmentTransaction: FragmentTransaction? = null
         var fragmentTransactionSub: FragmentTransaction? = null
         var dialog:DialogFragment? = null
@@ -129,18 +131,26 @@ class Mains : AppCompatActivity(), MainsFun {
         checkfrag = CheckListFragment()
         mapfrag = MapFragment()
         oderfrag = OrderFragment()
+        infofrag = InfoFragment()
+        agency = AgencyListFragment()
 
         fragmentTransactionSub!!.add(R.id.mL02, checkfrag!!)
         fragmentTransactionSub!!.show(checkfrag!!)
         fragmentTransactionSub!!.commitAllowingStateLoss()
 
-
         //뷰를 선로드 및 재활용을 통해서 빠른 화면전환 기대할 수 있음
-        fragmentTransaction!!.add(R.id.mL01, oderfrag!!)
         fragmentTransaction!!.add(R.id.mL01, mapfrag!!)
+        fragmentTransaction!!.add(R.id.mL01, oderfrag!!)
+        fragmentTransaction!!.add(R.id.mL01, infofrag!!)
+        fragmentTransaction!!.add(R.id.mL01, agency!!)
+
         fragmentTransaction!!.hide(oderfrag!!)
-        fragmentTransaction!!.show(mapfrag!!)
-        fragmentTransaction!!.commitAllowingStateLoss()
+        fragmentTransaction!!.hide(infofrag!!)
+        fragmentTransaction!!.hide(agency!!)
+        fragmentTransaction!!.hide(mapfrag!!)
+
+        fr = infofrag
+        fragmentTransaction!!.show(fr!!).commitAllowingStateLoss()
 
         if(Vars.MainVm == null) Vars.MainVm = MainsViewModel()
         binding!!.lifecycleOwner = this
@@ -164,13 +174,23 @@ class Mains : AppCompatActivity(), MainsFun {
     }
 
     override fun onBackPressed() {
-        val tempTime = System.currentTimeMillis()
-        val intervalTime: Long = tempTime - backPressedTime
-        if (intervalTime in 0..FINISH_INTERVAL_TIME) {
-            exit()
-        } else {
-            backPressedTime = tempTime
-            Toast.makeText(applicationContext, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+
+        if(Vars.MainVm?.layer!!.value == Finals.SELECT_MENU)
+        {
+            val tempTime = System.currentTimeMillis()
+            val intervalTime: Long = tempTime - backPressedTime
+            if (intervalTime in 0..FINISH_INTERVAL_TIME) {
+                exit()
+            } else {
+                backPressedTime = tempTime
+                Toast.makeText(applicationContext, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+        else
+        {
+            //Vars.MainVm?.layer!!.value = Finals.SELECT_MENU
+            Vars.MainVm?.click_clean()
+            setFragment()
         }
     }
 
@@ -185,14 +205,30 @@ class Mains : AppCompatActivity(), MainsFun {
         if(Vars.MainVm?.layer!!.value == Finals.SELECT_MAP)
         {
             val ft = supportFragmentManager.beginTransaction()
-            ft!!.hide(oderfrag!!)
-            ft!!.show(mapfrag!!).commitAllowingStateLoss()
+            ft!!.hide(fr!!)
+            fr = mapfrag
+            ft!!.show(fr!!).commitAllowingStateLoss()
         }
         else if(Vars.MainVm?.layer!!.value == Finals.SELECT_ORDER)
         {
             val ft = supportFragmentManager.beginTransaction()
-            ft!!.hide(mapfrag!!)
+            ft!!.hide(fr!!)
+            fr = oderfrag
             ft!!.show(oderfrag!!).commitAllowingStateLoss()
+        }
+        else if(Vars.MainVm?.layer!!.value == Finals.SELECT_MENU)
+        {
+            val ft = supportFragmentManager.beginTransaction()
+            ft!!.hide(fr!!)
+            fr = infofrag
+            ft!!.show(infofrag!!).commitAllowingStateLoss()
+        }
+        else if(Vars.MainVm?.layer!!.value == Finals.SELECT_AGENCY)
+        {
+            val ft = supportFragmentManager.beginTransaction()
+            ft!!.hide(fr!!)
+            fr = agency
+            ft!!.show(fr!!).commitAllowingStateLoss()
         }
     }
 

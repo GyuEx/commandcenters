@@ -291,6 +291,18 @@ class MakeJsonParam {
         return parameterArray
     }
 
+    fun makeAgencyListParameter(loginID: String, searchTXT: String, selection : String): JSONArray {
+        var parameterArray = JSONArray()
+
+        val parameterJSON = makeBaseParameter(loginID)
+        parameterJSON["ReqType"] = selection
+        parameterJSON["CenterId"] = "124"
+        parameterJSON["InputData"] = searchTXT
+        parameterArray.add(parameterJSON)
+
+        return parameterArray
+    }
+
 //    fun makeAlarmAcknowledgementParameter(alarmID: String): JSONArray {
 //        val parameterJSON = JSONObject()
 //

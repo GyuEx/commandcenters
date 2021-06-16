@@ -35,4 +35,9 @@
 
     <color name="backgroundLoading">#66000000</color>
 
+    <color name="menu1">#FFDD7D00</color>
+    <color name="menu2">#FF7E6097</color>
+    <color name="menu3">#FFF25E70</color>
+
+
 </resources>

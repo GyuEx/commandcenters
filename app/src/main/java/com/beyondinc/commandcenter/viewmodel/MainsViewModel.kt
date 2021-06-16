@@ -2,6 +2,7 @@ package com.beyondinc.commandcenter.viewmodel
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.os.Handler
 import android.os.Message
 import android.preference.PreferenceManager
@@ -31,6 +32,7 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.vasone.deliveryalarm.DAClient
 import org.json.simple.JSONArray
+import org.json.simple.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 
 
@@ -43,6 +45,8 @@ class MainsViewModel : ViewModel() {
     var checkview = MutableLiveData<Int>() // 센터목록뷰를 보여주는지 여부
     var drawer = MutableLiveData<Boolean>() // 좌측 드로워 메뉴가 열려있는지 여부
     var briteLayer = MutableLiveData<Int>() // 화면밝기 조절값
+
+    var spAgencyList: MutableLiveData<Array<String>> = MutableLiveData() // 동목록 저장변수
 
     var proTxt = MutableLiveData<String>() // 업데이트시 프로그래스바 값
 
@@ -84,7 +88,7 @@ class MainsViewModel : ViewModel() {
 
         proTxt.value = "서버에 접속중이예요!"
 
-        layer.postValue(Finals.SELECT_ORDER)
+        layer.postValue(Finals.SELECT_MENU)
         select.postValue(Finals.SELECT_EMPTY)
         // 위 두줄 포스트벨류로 안넣으면 초기 맵 선로딩이 안될 경우가 더 많음(라이브데이터 속도차이)
         drawer.value = false
@@ -139,6 +143,13 @@ class MainsViewModel : ViewModel() {
             DAClient.Stop()
             Vars.daclient = false
         }
+    }
+
+    fun getAgencyList(){
+        Log.e("버튼", "눌러짐")
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.AGENCY_LIST] = MakeJsonParam().makeAgencyListParameter(Logindata.LoginId!!, "","0")
+        Vars.sendList.add(temp)
     }
 
     fun checkOrderLastTime(){
@@ -347,16 +358,29 @@ class MainsViewModel : ViewModel() {
     {
         proTxt.value = "라이더를 가져오고 있어요!"
 
+        //센터목록은 가져온 이후시점이므로 센터리스트를 만들어보자!
+
         var it : Iterator<String> = Vars.centerList.keys.iterator()
         var ids : ArrayList<String> = ArrayList()
+        var idc : ArrayList<String> = ArrayList()
         while (it.hasNext())
         {
-            ids.add(Vars.centerList[it.next()]!!.centerId)
+            var itt = it.next()
+            ids.add(Vars.centerList[itt]!!.centerId)
+            idc.add(Vars.centerList[itt]!!.centerName)
         }
+        spAgencyList.value = idc.toArray(arrayOfNulls(idc.size))
+
         var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
         temp[Procedures.RIDER_LIST_IN_CENTER] =
             MakeJsonParam().makeRiderListParameter(Logindata.LoginId!!, ids)
         Vars.sendList.add(temp)
+    }
+
+    fun onItemSelectedAgency(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        //  스피너의 선택 내용이 바뀌면 호출된다
+        (parent.getChildAt(0) as TextView).textSize = 20f
+        (parent.getChildAt(0) as TextView).gravity = Gravity.CENTER
     }
 
     fun orderAssign(id: String){
@@ -411,6 +435,9 @@ class MainsViewModel : ViewModel() {
     }
     fun getSelectBrife(): Int? {
         return Finals.SELECT_BRIFE
+    }
+    fun getSelectAgency(): Int? {
+        return Finals.SELECT_AGENCY
     }
 
     fun MapDrOpen(){
@@ -467,24 +494,68 @@ class MainsViewModel : ViewModel() {
         }
     }
 
-    fun click_map_to_order() {
+    fun click_order() {
+        Log.e("click","click Order")
+        if(layer.value != Finals.SELECT_ORDER)
+        {
+            Log.e("click","click Order1")
+            layer.value = Finals.SELECT_ORDER
+            Vars.mLayer = Finals.SELECT_ORDER // 쓰레드가 현재 메인레이어를 뭘보고 있는지 알고싶어함
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget()
+        }
+    }
+
+    fun click_map()
+    {
+        Log.e("click","click Order2")
         if(layer.value != Finals.SELECT_MAP)
         {
+            Log.e("click","click Order3")
             layer.value = Finals.SELECT_MAP
             Vars.mLayer = Finals.SELECT_MAP // 쓰레드가 현재 메인레이어를 뭘보고 있는지 알고싶어함
-            select.value = Finals.SELECT_EMPTY
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBITEM,Finals.INSERT_ORDER,0).sendToTarget()
+        }
+    }
+
+    fun click_Agency(){
+        if(layer.value != Finals.SELECT_AGENCY)
+        {
+            layer.value = Finals.SELECT_AGENCY
+            Vars.mLayer = Finals.SELECT_AGENCY // 쓰레드가 현재 메인레이어를 뭘보고 있는지 알고싶어함
+        }
+    }
+
+    fun click_clean()
+    {
+        checkview.value = Finals.SELECT_EMPTY
+        layer.value = Finals.SELECT_MENU
+        Vars.mLayer = Finals.SELECT_MENU // 쓰레드가 현재 메인레이어를 뭘보고 있는지 알고싶어함
+        select.value = Finals.SELECT_EMPTY
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.SELECT_EMPTY,0).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBITEM,Finals.SELECT_EMPTY,0).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.MAP_FOR_DCLOSE,0).sendToTarget()
+    }
+
+    fun click_fragment()
+    {
+        if(layer.value != Finals.SELECT_MAP)
+        {
+            checkview.value = Finals.SELECT_EMPTY
+            layer.postValue(Finals.SELECT_MAP)
+            select.postValue(Finals.SELECT_EMPTY)
+            Vars.mLayer = Finals.SELECT_MAP // 쓰레드가 현재 메인레이어를 뭘보고 있는지 알고싶어함
             Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.SELECT_EMPTY,0).sendToTarget()
             Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBITEM,Finals.INSERT_ORDER,0).sendToTarget()
-            // empty를 먼저 던져줘야 맵이 초기화가 됨
         }
         else
         {
-            layer.value = Finals.SELECT_ORDER
+            checkview.value = Finals.SELECT_EMPTY
+            layer.postValue(Finals.SELECT_ORDER)
+            select.postValue(Finals.SELECT_EMPTY)
             Vars.mLayer = Finals.SELECT_ORDER // 쓰레드가 현재 메인레이어를 뭘보고 있는지 알고싶어함
+            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.MAP_FOR_DCLOSE,0).sendToTarget()
             Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBITEM,Finals.SELECT_EMPTY,0).sendToTarget()
             Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget()
-            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.MAP_FOR_DCLOSE,0).sendToTarget()
-            // empty를 먼저 던져줘야 맵이 초기화가 됨
         }
     }
 
@@ -498,7 +569,7 @@ class MainsViewModel : ViewModel() {
     }
 
     fun click_check() {
-        if ((layer.value == Finals.SELECT_ORDER || layer.value == Finals.SELECT_MAP) && select.value != Finals.SELECT_BRIFE) {
+        if (select.value != Finals.SELECT_BRIFE) {
             if (checkview.value == Finals.SELECT_CHECK) {
                 checkview.value = Finals.SELECT_EMPTY
             } else {

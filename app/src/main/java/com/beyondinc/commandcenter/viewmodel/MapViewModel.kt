@@ -3,6 +3,7 @@ package com.beyondinc.commandcenter.viewmodel
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Handler
 import android.os.Message
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -75,6 +77,7 @@ class MapViewModel : ViewModel()
         //Log.e("MapViewModel", "MapViewModel init")
         Drawer.value = false
         Lrawer.value = false
+        subitemsize.value = 0
     }
 
     override fun onCleared() {
@@ -248,7 +251,7 @@ class MapViewModel : ViewModel()
 
         if(first == false)
         {
-            //Log.e("호출되나?","알려주세요 호출되는지~")
+            Log.e("호출되나?","알려주세요 호출되는지~")
             CancelRider()
             first = true
         }
@@ -331,19 +334,31 @@ class MapViewModel : ViewModel()
     }
 
     fun Mapclick(){
-        mapInstance?.setOnMapClickListener { point, coord ->
-        }
 
-        mapInstance?.setOnMapLongClickListener { point, coord ->
-        }
+        var i = Vars.riderList.iterator()
+        while (i.hasNext())
+        {
+            var it = i.next()
+            if(it.value.latitude!!.toDouble() > 0)
+            {
+                MapFocusSet(it.value)
+                break
+            }
+        } // 최초 맵위치를 가져오도록 합니다.
 
-        mapInstance?.setOnMapDoubleTapListener { point, coord ->
-            true
-        }
-
-        mapInstance?.setOnMapTwoFingerTapListener { point, coord ->
-            true
-        }
+//        mapInstance?.setOnMapClickListener { point, coord ->
+//        }
+//
+//        mapInstance?.setOnMapLongClickListener { point, coord ->
+//        }
+//
+//        mapInstance?.setOnMapDoubleTapListener { point, coord ->
+//            true
+//        }
+//
+//        mapInstance?.setOnMapTwoFingerTapListener { point, coord ->
+//            true
+//        }
     }
 
     fun OpenDrawer(){
@@ -371,6 +386,8 @@ class MapViewModel : ViewModel()
     }
 
     fun LowLayerClick(){
+
+        if(subitemsize.value == 0 && !Lselect) return
         Lselect = true
         Dselect = false
         Drawer.value = false

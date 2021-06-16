@@ -51,24 +51,31 @@ class MarkerThread : Thread() , ThreadFun {
                     Vars.riderList[itt]?.pickupCount = 0
                     Vars.riderList[itt]?.completeCount = 0
 
-                    var rit : Iterator<String> = Vars.orderList.keys.iterator()
-                    while (rit.hasNext())
+                    if(Vars.f_center.contains(Vars.riderList[itt]!!.centerID))
                     {
-                        var rtemp = rit.next()
-                        if ((Vars.orderList[rtemp]!!.DeliveryStateName != "접수" || Vars.orderList[rtemp]!!.DeliveryStateName != "취소") && Vars.orderList[rtemp]!!.RiderId != "0") {
-                            if (Vars.riderList.containsKey(Vars.orderList[rtemp]!!.RiderId)) {
-                                if (Vars.orderList[rtemp]!!.DeliveryStateName == "배정" && Vars.orderList[rtemp]!!.RiderId == Vars.riderList[itt]!!.id) Vars.riderList[itt]!!.assignCount += 1
-                                else if (Vars.orderList[rtemp]!!.DeliveryStateName == "픽업" && Vars.orderList[rtemp]!!.RiderId == Vars.riderList[itt]!!.id) Vars.riderList[itt]!!.pickupCount += 1
-                                else if (Vars.orderList[rtemp]!!.DeliveryStateName == "완료" && Vars.orderList[rtemp]!!.RiderId == Vars.riderList[itt]!!.id) Vars.riderList[itt]!!.completeCount += 1
+                        //아무고토모타죠..
+                    }
+                    else
+                    {
+                        var rit : Iterator<String> = Vars.orderList.keys.iterator()
+                        while (rit.hasNext())
+                        {
+                            var rtemp = rit.next()
+                            if ((Vars.orderList[rtemp]!!.DeliveryStateName != "접수" || Vars.orderList[rtemp]!!.DeliveryStateName != "취소") && Vars.orderList[rtemp]!!.RiderId != "0") {
+                                if (Vars.riderList.containsKey(Vars.orderList[rtemp]!!.RiderId)) {
+                                    if (Vars.orderList[rtemp]!!.DeliveryStateName == "배정" && Vars.orderList[rtemp]!!.RiderId == Vars.riderList[itt]!!.id) Vars.riderList[itt]!!.assignCount += 1
+                                    else if (Vars.orderList[rtemp]!!.DeliveryStateName == "픽업" && Vars.orderList[rtemp]!!.RiderId == Vars.riderList[itt]!!.id) Vars.riderList[itt]!!.pickupCount += 1
+                                    else if (Vars.orderList[rtemp]!!.DeliveryStateName == "완료" && Vars.orderList[rtemp]!!.RiderId == Vars.riderList[itt]!!.id) Vars.riderList[itt]!!.completeCount += 1
+                                }
                             }
                         }
-                    }
 
-                    cntj++ // 전체 리스트임
-                    if (Vars.riderList[itt]!!.workingStateCode!! == Codes.RIDER_OFF_WORK) cntt++
-                    else if (Vars.riderList[itt]!!.workingStateCode!! == Codes.RIDER_ON_WORK && (Vars.riderList[itt]?.pickupCount!! > 0 || Vars.riderList[itt]?.assignCount!! > 0)) cntu++
-                    else if (Vars.riderList[itt]!!.workingStateCode!! == Codes.RIDER_ON_WORK && Vars.riderList[itt]?.pickupCount!! == 0 && Vars.riderList[itt]?.assignCount!! == 0) cntd++
-                    else if (Vars.riderList[itt]!!.workingStateCode!! == Codes.RIDER_ON_EAT) cnts++
+                        cntj++ // 전체 리스트임
+                        if (Vars.riderList[itt]!!.workingStateCode!! == Codes.RIDER_OFF_WORK) cntt++
+                        else if (Vars.riderList[itt]!!.workingStateCode!! == Codes.RIDER_ON_WORK && (Vars.riderList[itt]?.pickupCount!! > 0 || Vars.riderList[itt]?.assignCount!! > 0)) cntu++
+                        else if (Vars.riderList[itt]!!.workingStateCode!! == Codes.RIDER_ON_WORK && Vars.riderList[itt]?.pickupCount!! == 0 && Vars.riderList[itt]?.assignCount!! == 0) cntd++
+                        else if (Vars.riderList[itt]!!.workingStateCode!! == Codes.RIDER_ON_EAT) cnts++
+                    }
 
                     if(Vars.riderList[itt]!!.MakerID == null && Vars.riderList[itt]?.latitude != "0") // 마커가 없을경우 생성해줌
                     {

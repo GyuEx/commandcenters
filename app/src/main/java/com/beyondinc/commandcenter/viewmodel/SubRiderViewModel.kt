@@ -160,11 +160,11 @@ class SubRiderViewModel : ViewModel() {
 
         adapter!!.notifyDataSetChanged()
 
-        if(items?.keys?.size!! > 0 && !first)
-        {
-            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.MAP_MOVE_FOCUS, 0,items?.get(0)).sendToTarget()
-            first = true
-        }
+//        if(items?.keys?.size!! > 0 && !first)
+//        {
+//            Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAP,Finals.MAP_MOVE_FOCUS, 0,items?.get(0)).sendToTarget()
+//            first = true
+//        }
     }
 
     fun getSelectBrife(): Int{

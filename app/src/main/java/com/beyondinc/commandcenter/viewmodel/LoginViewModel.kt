@@ -28,6 +28,7 @@ import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import java.io.File
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -224,23 +225,29 @@ class LoginViewModel() : ViewModel() {
         downloadID = downloadManager!!.enqueue(request)
 
         Thread {
-            var downloading = true
-            while (downloading) {
-                val q = DownloadManager.Query()
-                q.setFilterById(downloadID)
-                val cursor = downloadManager!!.query(q)
-                cursor.moveToFirst()
-                val bytes_downloaded: Int = cursor.getInt(
-                    cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)
-                )
-                val bytes_total: Int =
-                    cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
-                if (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) === DownloadManager.STATUS_SUCCESSFUL) {
-                    downloading = false
+            try
+            {
+                var downloading = true
+                while (downloading) {
+                    val q = DownloadManager.Query()
+                    q.setFilterById(downloadID)
+                    val cursor = downloadManager!!.query(q)
+                    cursor.moveToFirst()
+                    val bytes_downloaded: Int = cursor.getInt(
+                        cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)
+                    )
+                    val bytes_total: Int =
+                        cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+                    if (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) === DownloadManager.STATUS_SUCCESSFUL) {
+                        downloading = false
+                    }
+                    val dl_progress = (bytes_downloaded * 100) / bytes_total
+                    proVal.postValue(dl_progress)
+                    cursor.close()
                 }
-                val dl_progress = (bytes_downloaded * 100) / bytes_total
-                proVal.postValue(dl_progress)
-                cursor.close()
+            }
+            catch (e : Exception)
+            {
             }
         }.start()
     }

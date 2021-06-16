@@ -27,16 +27,18 @@ object Finals {
     val CLOSE_POPUP : Int = 9
     val CLOSE_DIALOG : Int = 10
 
+    val SELECT_MENU : Int = 13
     val SELECT_MAP : Int = 14
     val SELECT_ORDER : Int = 15
     val SELECT_CHECK : Int = 16
-
-    val DETAIL_MAP : Int = 17
-    val DETAIL_DETAIL : Int = 18
+    val SELECT_AGENCY : Int = 17
 
     val CLOSE_CHECK : Int = 21
     val SUCCESS_MESSAGE : Int = 22
     val CANCEL_MESSAGE : Int = 23
+
+    val DETAIL_MAP : Int = 24
+    val DETAIL_DETAIL : Int = 25
 
     val ORDER_ASSIGN : Int = 26
     val ORDER_TOAST_SHOW : Int = 27

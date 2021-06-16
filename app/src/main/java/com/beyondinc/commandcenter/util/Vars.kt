@@ -60,6 +60,7 @@ object Vars {
     var AssignVm : AssignViewModel? = null // 맵화면 라이더 오더목록 뷰모델
     var AddressVm : AddressViewModel? = null // 주소검색 뷰모델
     var MainVm : MainsViewModel? = null // 메인 뷰모델
+    var AgencyVm : AgencyViewModel? = null // 가맹점 뷰모델
 
     var DataHandler : Handler? = null // 데이터 처리를 전달해줄 프로브
 

@@ -17,6 +17,7 @@ object Procedures {
     const val CENTER_LIST = "dim_spAccessibleCenterList"
     const val RIDER_LIST_IN_CENTER = "dim_spRiderByCenter"
     const val ORDER_LIST_IN_CENTER = "dim_spMgrOrderList"
+    const val AGENCY_LIST = "mgr_spMAgencyList"
 
     // TODO: 실제 오더상세 수신이 아닌 알람 수신시 개별오더 업데이트용. 이름을 변경해야 함
 //    const val ORDER_DETAIL = "dim_spMgrOrderDetail"

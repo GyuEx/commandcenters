@@ -13,6 +13,7 @@ import com.beyondinc.commandcenter.adapter.RecyclerAdapterCheck
 import com.beyondinc.commandcenter.data.Checkdata
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
+import com.beyondinc.commandcenter.handler.MarkerThread
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import java.util.concurrent.ConcurrentHashMap
@@ -127,6 +128,7 @@ class CheckViewModel : ViewModel() {
         }
         Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget() //리스트 새로그리고
         Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBITEM,Finals.INSERT_ORDER,0).sendToTarget() //리스트 새로그리고
+        MarkerThread().start() // 마커도 새로생성하고 마 다햇서
         Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_CHECK,0).sendToTarget() //뷰 닫기
     }
 

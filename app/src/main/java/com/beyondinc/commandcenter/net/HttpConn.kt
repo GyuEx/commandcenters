@@ -87,7 +87,7 @@ class HttpConn : Thread(), ThreadFun {
                     val data = jsonMessage[code]
 
 //                    Log.e("Connect", "" + code)
-//                    Log.e("Connect", "" + data)
+                    Log.e("Connect", "" + data)
 
                     val requestCipherKey = Crypto.generateMD5Hash(Vars.lContext!!.resources.getString(R.string.default_token))!!.toLowerCase(Locale.getDefault())
                     val responseCipherKey = Crypto.generateMD5Hash(Crypto.getCurrentTimeKey())!!.toLowerCase(Locale.getDefault())
@@ -132,10 +132,11 @@ class HttpConn : Thread(), ThreadFun {
                         val receivedBody = Crypto.AES256.decrypt(receivedEncryptedBody, responseCipherKey)
                         val parser = JSONParser()
                         val results: JSONObject = parser.parse(receivedBody) as JSONObject
+
+                        Log.e("HTTP" , "" + receivedBody)
+
                         val resultMethodBlock: JSONArray = results["Method"] as JSONArray
                         val returnData = makeResponseData(resultMethodBlock)
-
-                        //Log.e("HTTP" , "" + resultMethodBlock)
 
                         var temp : ConcurrentHashMap<String,ArrayList<ConcurrentHashMap<String, String>>> = ConcurrentHashMap()
                         temp[code!!] = returnData
@@ -153,22 +154,22 @@ class HttpConn : Thread(), ThreadFun {
                     Thread.sleep(100)
                 }
 
-            } catch (e: Exception) {
-                if (code == Procedures.LOGIN) Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.LOGIN_FAIL,0).sendToTarget()
-                else
-                {
-                    if(dofalseConn == 5) // 통신불능시 해당 Exception을 타게됨, 카운터를 줘서 5회 이상이면 통신장애안내창 띄움
-                    {
-                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.HTTP_ERROR,0).sendToTarget()
-                        dofalseConn++ // 창을 두세번띄울 필요는 없으므로 카운터는 계속 진행-- 상단에서 초기화
-                    }
-                    else
-                    {
-                        dofalseConn++
-                    }
-                    Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.DISCONN_ALRAM,0).sendToTarget() // 데이터전송실패시 알람을 꺼버림
-                    Vars.timecntOT = 10 // 갯수조회 카운터를 한시적으로 10초로 변경
-                }
+           } catch (e: Exception) {
+//                if (code == Procedures.LOGIN) Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.LOGIN_FAIL,0).sendToTarget()
+//                else
+//                {
+//                    if(dofalseConn == 5) // 통신불능시 해당 Exception을 타게됨, 카운터를 줘서 5회 이상이면 통신장애안내창 띄움
+//                    {
+//                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.HTTP_ERROR,0).sendToTarget()
+//                        dofalseConn++ // 창을 두세번띄울 필요는 없으므로 카운터는 계속 진행-- 상단에서 초기화
+//                    }
+//                    else
+//                    {
+//                        dofalseConn++
+//                    }
+//                    Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.DISCONN_ALRAM,0).sendToTarget() // 데이터전송실패시 알람을 꺼버림
+//                    Vars.timecntOT = 10 // 갯수조회 카운터를 한시적으로 10초로 변경
+//                }
             }
         }
     }

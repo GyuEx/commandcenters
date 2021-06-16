@@ -94,12 +94,54 @@ object MainAdapter {
         if (velue == Finals.SELECT_MAP)
         {
             (Vars.mContext as MainsFun).setFragment()
-            view.setBackgroundResource(R.drawable.order_btn)
+            view.text = "오더목록"
+        }
+        else if(velue == Finals.SELECT_ORDER)
+        {
+            (Vars.mContext as MainsFun).setFragment()
+            view.text = "지도화면"
+        }
+        else if(velue == Finals.SELECT_MENU)
+        {
+            (Vars.mContext as MainsFun).setFragment()
+            view.text = "메인화면"
+        }
+        else if(velue == Finals.SELECT_AGENCY)
+        {
+            (Vars.mContext as MainsFun).setFragment()
+            view.text = "가맹점목록"
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("menu_title")
+    fun setMenutitle(view: TextView, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if(height == Finals.SELECT_ORDER || height == Finals.SELECT_MAP)
+        {
+            layoutParams.weight = 1f
+            view.layoutParams = layoutParams
         }
         else
         {
-            (Vars.mContext as MainsFun).setFragment()
-            view.setBackgroundResource(R.drawable.map_btn)
+            layoutParams.weight = 0f
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("menu_title_check_btn")
+    fun setMenutitlecheckbtn(view: TextView, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if(height == Finals.SELECT_ORDER || height == Finals.SELECT_MAP)
+        {
+            layoutParams.weight = 1f
+            view.layoutParams = layoutParams
+        }
+        else
+        {
+            layoutParams.weight = 0f
+            view.layoutParams = layoutParams
         }
     }
 
@@ -108,6 +150,32 @@ object MainAdapter {
     fun setLayout(view: LinearLayout, height: Int) {
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
         if (height == True) {
+            layoutParams.weight = 1f
+            view.layoutParams = layoutParams
+        } else {
+            layoutParams.weight = 0f
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("layout_form_header")
+    fun setLayoutheader(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height != Finals.SELECT_MENU) {
+            layoutParams.weight = 2f
+            view.layoutParams = layoutParams
+        } else {
+            layoutParams.weight = 0f
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("layout_form_btn")
+    fun setLayoutbtn(view: TextView, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height != Finals.SELECT_MENU) {
             layoutParams.weight = 1f
             view.layoutParams = layoutParams
         } else {
@@ -274,8 +342,30 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("Main_title_font2")
     fun main_title_font2(view: TextView, height: Int) {
-        if(height == Finals.SELECT_MAP) view.text = "관제지도 "
-        else if(height == Finals.SELECT_ORDER) view.text = "오더현황 "
+        if(height == Finals.SELECT_MAP)
+        {
+            view.text = "관제지도 "
+            view.gravity = Gravity.CENTER
+            view.isClickable = true
+        }
+        else if(height == Finals.SELECT_ORDER)
+        {
+            view.text = "오더현황 "
+            view.gravity = Gravity.CENTER
+            view.isClickable = true
+        }
+        else if(height == Finals.SELECT_AGENCY)
+        {
+            view.text = "가맹점현황"
+            view.gravity = Gravity.CENTER
+            view.isClickable = false
+        }
+        else if(height == Finals.SELECT_MENU)
+        {
+            view.text = "메뉴화면"
+            view.gravity = Gravity.CENTER
+            view.isClickable = false
+        }
     }
 
     @JvmStatic
