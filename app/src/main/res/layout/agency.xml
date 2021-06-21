@@ -47,34 +47,33 @@
                     android:paddingLeft="20dp">
 
                     <TextView
-                        android:id="@+id/title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:includeFontPadding="false"
                         android:textSize="15dp"
                         android:gravity="left"
                         android:singleLine="true"
-                        android:text="@{viewModel.items.get(pos).agencyName}"
+                        android:text="@{viewModel.getName(pos)}"
                         android:textColor="@android:color/black"
                         android:textStyle="bold"/>
 
                     <TextView
-                        android:id="@+id/adress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:includeFontPadding="false"
                         android:textSize="13sp"
                         android:gravity="left"
+                        android:text="@{viewModel.getAddr(pos)}"
                         android:textColor="@android:color/black"/>
 
                     <TextView
-                        android:id="@+id/poi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:includeFontPadding="false"
                         android:textSize="13sp"
                         android:singleLine="true"
                         android:gravity="left"
+                        android:text="@{viewModel.getTime(pos)}"
                         android:textColor="@android:color/black"/>
 
                 </LinearLayout>
@@ -86,7 +85,6 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/rider"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:includeFontPadding="false"
@@ -94,10 +92,10 @@
                         android:gravity="center"
                         android:textColor="@android:color/black"
                         android:singleLine="true"
+                        android:text="@{viewModel.getMoney(pos)}"
                         android:textStyle="bold"/>
 
                     <TextView
-                        android:id="@+id/work"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:includeFontPadding="false"
@@ -106,15 +104,16 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:singleLine="true"
+                        android:text="@{viewModel.getLogins(pos)}"
                         android:textColor="@android:color/white"/>
                     <TextView
-                        android:id="@+id/paywon"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:includeFontPadding="false"
                         android:textSize="13sp"
                         android:gravity="center"
                         android:singleLine="true"
+                        android:text="@{viewModel.getInfo(pos)}"
                         android:textColor="@android:color/black"/>
                 </LinearLayout>
             </LinearLayout>

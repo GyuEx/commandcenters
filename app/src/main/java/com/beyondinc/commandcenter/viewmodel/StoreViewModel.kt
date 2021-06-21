@@ -42,7 +42,7 @@ class StoreViewModel : ViewModel() {
             if (tempmap.containsKey(Vars.orderList[rittemp]?.AgencyName))
             else {
                 val memo = Agencydata()
-                memo.agencyName = Vars.orderList[rittemp]!!.AgencyName
+                memo.AgencyName = Vars.orderList[rittemp]!!.AgencyName
                 tempmap[Vars.orderList[rittemp]!!.AgencyName] = memo
             }
 
@@ -57,7 +57,7 @@ class StoreViewModel : ViewModel() {
         while (ita.hasNext())
         {
             var itat = ita.next()
-            if(searchtxt.value!!.isEmpty() || tempmap[itat]?.agencyName!!.toLowerCase().contains(searchtxt.value!!))
+            if(searchtxt.value!!.isEmpty() || tempmap[itat]?.AgencyName!!.toLowerCase().contains(searchtxt.value!!))
             {
                 tempmap!![itat]!!.id = cnt
                 items!![cnt] = tempmap!![itat]!!
@@ -69,7 +69,7 @@ class StoreViewModel : ViewModel() {
     }
 
     fun onClick(pos: Int){
-        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.STORE_ITEM_SELECT, 0,items!![pos]!!.agencyName).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.STORE_ITEM_SELECT, 0,items!![pos]!!.AgencyName).sendToTarget()
     }
 
     fun onCreate() {
@@ -77,7 +77,7 @@ class StoreViewModel : ViewModel() {
     }
 
     fun getName(pos: Int): String? {
-        return items!![pos]?.agencyName
+        return items!![pos]?.AgencyName
     }
 
     fun getVelue1(pos: Int): String? {

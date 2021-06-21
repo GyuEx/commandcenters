@@ -7,10 +7,7 @@ import com.beyondinc.commandcenter.data.Alarmdata
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.net.DACallerInterface
-import com.beyondinc.commandcenter.repository.database.entity.Addrdata
-import com.beyondinc.commandcenter.repository.database.entity.Centerdata
-import com.beyondinc.commandcenter.repository.database.entity.Dongdata
-import com.beyondinc.commandcenter.repository.database.entity.Riderdata
+import com.beyondinc.commandcenter.repository.database.entity.*
 import com.beyondinc.commandcenter.util.Codes
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Procedures
@@ -46,8 +43,8 @@ class MainThread() : Thread() , ThreadFun{
                     val code = rdata.keys.iterator().next()
                     val data = rdata[code]
 
-//                    Log.e("Recive", "" + code)
-//                    Log.e("Recive", "" + data + " // " + data!!.size + " // " )
+                    Log.e("Recive", "" + code)
+                    Log.e("Recive", "" + data + " // " + data!!.size + " // " )
 
                     if(code == Procedures.LOGIN)
                     {
@@ -106,6 +103,16 @@ class MainThread() : Thread() , ThreadFun{
 
                         Vars.riderList.putAll(ridertemp)
                         Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.INSERT_RIDER,0).sendToTarget()
+                    }
+                    else if(code == Procedures.AGENCY_LIST)
+                    {
+                        var agencytemp : ConcurrentHashMap<String,Agencydata> = ConcurrentHashMap()
+                        for (i in 0 until data!!.size) {
+                            val ar = agencypassing(data[i]) // 너무길어서 따로 메소드 처리
+                            agencytemp[ar.AgencyId.toString()] = ar
+                        }
+                        Vars.agencyList.putAll(agencytemp)
+                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_AGENCY,Finals.INSERT_ORDER,0).sendToTarget()
                     }
                     else if(code == Procedures.ORDER_LIST_IN_CENTER)
                     {
@@ -284,6 +291,61 @@ class MainThread() : Thread() , ThreadFun{
                 Log.e("MainThread",e.toString())
             }
         }
+    }
+    
+    fun agencypassing(data : ConcurrentHashMap<String,String>) : Agencydata
+    {
+        val ar = Agencydata()
+
+        ar.MinDepositAmt = data["MinDepositAmt"].toString()
+        ar.BusinessNumber = data["BusinessNumber"].toString()
+        ar.AgencyId = data["AgencyId"].toString()
+        ar.DetailAddr = data["DetailAddr"].toString()
+        ar.Latitude = data["Latitude"].toString()
+        ar.WarningDepositAmt = data["WarningDepositAmt"].toString()
+        ar.Addr = data["Addr"].toString()
+        ar.ArriveAgencyPlanTime = data["ArriveAgencyPlanTime"].toString()
+        ar.MobileVanCode = data["MobileVanCode"].toString()
+        ar.BusinessCategory = data["BusinessCategory"].toString()
+        ar.AgencyOrderDelay = data["AgencyOrderDelay "].toString()
+        ar.MinDepositByAgencySettingYn = data["MinDepositByAgencySettingYn"].toString()
+        ar.Phone = data["Phone"].toString()
+        ar.DailyOrderLimit = data["DailyOrderLimit"].toString()
+        ar.CenterAgencyOrderDelay = data["CenterAgencyOrderDelay"].toString()
+        ar.MobilePGDeviceCode = data["MobilePGDeviceCode "].toString()
+        ar.SumAmt = data["SumAmt"].toString()
+        ar.MobileVanDeviceCode = data["MobileVanDeviceCode"].toString()
+        ar.DepositYn = data["DepositYn"].toString()
+        ar.MonthlyOrderLimitYn = data["MonthlyOrderLimitYn"].toString()
+        ar.AgencyName = data["AgencyName"].toString()
+        ar.ContactMobile = data["ContactMobile"].toString()
+        ar.DeliveryCharge = data["DeliveryCharge"].toString()
+        ar.DailyOrderLimitYn = data["DailyOrderLimitYn"].toString()
+        ar.MonthlyOrderLimit = data["MonthlyOrderLimit"].toString()
+        ar.LoginId = data["LoginId"].toString()
+        ar.LatestLoginDT = data["LatestLoginDT"].toString()
+        ar.WarningDepositByAgencySettingYn = data["WarningDepositByAgencySettingYn"].toString()
+        ar.CEOName = data["CEOName"].toString()
+        ar.SurchargeByAgencySettingYn = data["SurchargeByAgencySettingYn"].toString()
+        ar.BuildingNo = data["BuildingNo"].toString()
+        ar.DeliveryExtFeeType = data["DeliveryExtFeeType"].toString()
+        ar.CEOResNo = data["CEOResNo"].toString()
+        ar.Maintenance = data["Maintenance"].toString()
+        ar.ShowEasyReceiptYn = data["ShowEasyReceiptYn"].toString()
+        ar.Longitude = data["Longitude"].toString()
+        ar.ShareOrderYn = data["ShareOrderYn"].toString()
+        ar.AgencyWorkState = data["AgencyWorkState"].toString()
+        ar.CallCenterOrderDelay = data["CallCenterOrderDelay"].toString()
+        ar.AgencyLoginYn = data["AgencyLoginYn"].toString()
+        ar.State = data["State"].toString()
+        ar.DepositWarningPrice = data["DepositWarningPrice"].toString()
+        ar.AgencyColor = data["AgencyColor"].toString()
+        ar.MobilePGSerialNo = data["MobilePGSerialNo"].toString()
+        ar.ActiveYn = data["ActiveYn"].toString()
+        ar.MobilePGAgencyId = data["MobilePGAgencyId"].toString()
+        ar.StoreTypeId = data["StoreTypeId"].toString()
+
+        return ar
     }
 
     fun passing(data : ConcurrentHashMap<String, String>) : Orderdata

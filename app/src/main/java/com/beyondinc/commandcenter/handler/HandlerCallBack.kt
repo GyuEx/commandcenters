@@ -2,6 +2,7 @@ package com.beyondinc.commandcenter.handler
 
 import android.os.Handler
 import android.os.Message
+import android.util.Log
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.repository.database.entity.Addrdata
 import com.beyondinc.commandcenter.repository.database.entity.Riderdata
@@ -15,6 +16,7 @@ class HandlerCallBack : Handler.Callback {
 //        Log.e("DataHandler" , "Message Init // ${msg}")
         // 각 뷰모델마다 what 코드로 분리, 명령코드는 arg1로 분리, arg2는 예비, obj로 필요시 데이터 전달
         // 모든 뷰모델은 View Destory시 null 일수 있으므로, "뷰모델?" 형태로 전달
+
         when (msg.what)
         {
             Finals.VIEW_ITEM -> when (msg.arg1) // 메인 오더리스트 뷰모델
@@ -83,6 +85,11 @@ class HandlerCallBack : Handler.Callback {
                 Finals.INSERT_ADDR -> Vars.AddressVm?.insertdong(msg.obj as Orderdata)
                 Finals.SEARCH_ADDR -> Vars.AddressVm?.insertAddr()
                 Finals.MESSAGE_ADDR -> Vars.AddressVm?.showMsg()
+            }
+            Finals.VIEW_AGENCY -> when (msg.arg1)
+            {
+                Finals.INSERT_ORDER -> Vars.AgencyVm?.insertLogic()
+                Finals.ALL_CLEAR -> Vars.AgencyVm?.clear()
             }
             Finals.VIEW_MAIN -> when (msg.arg1) //메인 뷰모델
             {

@@ -11,34 +11,35 @@ import com.beyondinc.commandcenter.data.Dialogdata
 import com.beyondinc.commandcenter.data.Historydata
 import com.beyondinc.commandcenter.repository.database.entity.Agencydata
 import com.beyondinc.commandcenter.util.Vars
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
 
 class AgencyViewModel : ViewModel() {
-    var items: ArrayList<Agencydata>? = null // 리스트에 보여줄 목록
+    var items: ConcurrentHashMap<Int, Agencydata>? = null // 리스트에 보여줄 목록
     var adapter: RecyclerAdapterAgency? = null // 리스트 어뎁터
 
     init {
         Log.e("Agency", "Init다!!")
         if (items == null) {
-            items = ArrayList()
+            items = ConcurrentHashMap()
         }
         if (adapter == null) {
             adapter = RecyclerAdapterAgency(this)
         }
-        insertLogic()
     }
 
-    fun insertLogic() {
-        for (i in 0..30) {
-            val memo = Agencydata()
-            memo.id = i
-            memo.agencyName = ("$i 번마")
-            memo.v1 = 1 + i
-            memo.v2 = 2 + i
-            memo.v3 = 3 + i
-            items!!.add(memo)
+    fun insertLogic()
+    {
+        clear()
+
+        var ita : Iterator<String> = Vars.agencyList!!.keys.iterator()
+        var cnt = 0
+        while (ita.hasNext())
+        {
+            var itat = ita.next()
+            items!![cnt] = Vars.agencyList!![itat]!!
+            cnt++
         }
-        //Log.e("insert", "data inserting")
         adapter!!.notifyDataSetChanged()
     }
 
@@ -50,29 +51,38 @@ class AgencyViewModel : ViewModel() {
 
     }
 
+    fun clear(){
+        items!!.clear()
+        adapter!!.notifyDataSetChanged()
+    }
+
     fun onCreate() {
         adapter!!.notifyDataSetChanged()
     }
 
     fun onResume() {}
 
-    fun getItems(): List<Agencydata>? {
-        return items
+    fun getName(pos: Int): String? {
+        return items!![pos]!!.AgencyName
     }
 
-    fun getName(pos: Int): String? {
-        return items!![pos].agencyName
+    fun getAddr(pos: Int): String? {
+        return items!![pos]!!.Addr
     }
 
     fun getTime(pos: Int): String? {
-        return items!![pos].v1.toString()
+        return items!![pos]!!.LatestLoginDT
     }
 
-    fun getState(pos: Int): String? {
-        return items!![pos].v2.toString()
+    fun getMoney(pos: Int): String? {
+        return items!![pos]!!.AgencyName
     }
 
-    fun getCode(pos: Int): String? {
-        return items!![pos].v3.toString()
+    fun getLogins(pos: Int): String? {
+        return items!![pos]!!.State
+    }
+
+    fun getInfo(pos: Int): String? {
+        return items!![pos]!!.AgencyName
     }
 }

@@ -291,12 +291,12 @@ class MakeJsonParam {
         return parameterArray
     }
 
-    fun makeAgencyListParameter(loginID: String, searchTXT: String, selection : String): JSONArray {
+    fun makeAgencyListParameter(loginID: String, searchTXT: String, selectAgency : String, selection : String): JSONArray {
         var parameterArray = JSONArray()
 
         val parameterJSON = makeBaseParameter(loginID)
         parameterJSON["ReqType"] = selection
-        parameterJSON["CenterId"] = "124"
+        parameterJSON["CenterId"] = selectAgency
         parameterJSON["InputData"] = searchTXT
         parameterArray.add(parameterJSON)
 

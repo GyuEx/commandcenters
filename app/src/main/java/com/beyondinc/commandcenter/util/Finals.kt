@@ -13,6 +13,7 @@ object Finals {
     val VIEW_CHECK = 7
     val VIEW_MAP = 8
     val VIEW_ASSIGN = 9
+    val VIEW_AGENCY = 10
 
     //View Codes
     val NOT_USE_CODE : Int = 0

@@ -37,6 +37,11 @@ object Codes {
     const val PAYMENT_CARD = "2702"
     const val PAYMENT_PREPAY = "2704"
 
+    // 가맹점 사용상태
+    const val AGENCY_STATE_TYPE_USE = "2801" // 사용
+    const val AGENCY_STATE_TYPE_NOT_USE = "2802" // 미사용
+    const val AGENCY_STATE_TYPE_RELEASE = "2803" // 해지
+
     val PaymentType = mapOf(
             PAYMENT_MONEY to "현금",
             PAYMENT_CARD to "카드",

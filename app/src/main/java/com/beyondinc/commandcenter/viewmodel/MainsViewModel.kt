@@ -46,7 +46,7 @@ class MainsViewModel : ViewModel() {
     var drawer = MutableLiveData<Boolean>() // 좌측 드로워 메뉴가 열려있는지 여부
     var briteLayer = MutableLiveData<Int>() // 화면밝기 조절값
 
-    var spAgencyList: MutableLiveData<Array<String>> = MutableLiveData() // 동목록 저장변수
+    var spAgencyList: MutableLiveData<Array<String>> = MutableLiveData() // 가맹점 리스트
 
     var proTxt = MutableLiveData<String>() // 업데이트시 프로그래스바 값
 
@@ -60,6 +60,10 @@ class MainsViewModel : ViewModel() {
 
     var order_count : MutableLiveData<String> = MutableLiveData() // 전체 오더 카운터
     var rider_count : MutableLiveData<String> = MutableLiveData() // 전체 라이더 카운터
+
+    var agencySearchtxt : MutableLiveData<String> = MutableLiveData()
+    var agencySelecttxt : String = ""
+
 
     private lateinit var alarmCallback: (ArrayList<Alarmdata>)-> Unit? // 알람
 
@@ -145,10 +149,10 @@ class MainsViewModel : ViewModel() {
         }
     }
 
-    fun getAgencyList(){
+    fun getAgencyList(txt : String){
         Log.e("버튼", "눌러짐")
         var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
-        temp[Procedures.AGENCY_LIST] = MakeJsonParam().makeAgencyListParameter(Logindata.LoginId!!, "","0")
+        temp[Procedures.AGENCY_LIST] = MakeJsonParam().makeAgencyListParameter(Logindata.LoginId!!, txt, agencySelecttxt,"0")
         Vars.sendList.add(temp)
     }
 
@@ -381,6 +385,18 @@ class MainsViewModel : ViewModel() {
         //  스피너의 선택 내용이 바뀌면 호출된다
         (parent.getChildAt(0) as TextView).textSize = 20f
         (parent.getChildAt(0) as TextView).gravity = Gravity.CENTER
+
+        //초기에 해당부분을 전혀 고려하지 않아서 뭔가 힘들게 할수밖에 없네.., 더 좋은 방법이 생각나면 고칠것!
+        var it = Vars.centerList.keys.iterator()
+        while (it.hasNext())
+        {
+            var itt = it.next()
+            if(Vars.centerList[itt]!!.centerName == (parent.getChildAt(0) as TextView).text as String)
+            {
+                agencySelecttxt = Vars.centerList[itt]!!.centerId
+                break
+            }
+        }
     }
 
     fun orderAssign(id: String){
@@ -522,6 +538,15 @@ class MainsViewModel : ViewModel() {
         {
             layer.value = Finals.SELECT_AGENCY
             Vars.mLayer = Finals.SELECT_AGENCY // 쓰레드가 현재 메인레이어를 뭘보고 있는지 알고싶어함
+        }
+    }
+
+    fun click_Agency_Search(){
+        if(layer.value == Finals.SELECT_AGENCY)
+        {
+            Vars.agencyList.clear() // 받아왔던 리스트는 다 지우고
+            if(agencySearchtxt.value.isNullOrEmpty()) getAgencyList("")
+            else getAgencyList(agencySearchtxt.value.toString())
         }
     }
 

@@ -9,6 +9,7 @@ import com.beyondinc.commandcenter.data.Alarmdata
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.handler.MarkerThread
 import com.beyondinc.commandcenter.net.DACallerInterface
+import com.beyondinc.commandcenter.repository.database.entity.Agencydata
 import com.beyondinc.commandcenter.repository.database.entity.Centerdata
 import com.beyondinc.commandcenter.repository.database.entity.Dongdata
 import com.beyondinc.commandcenter.repository.database.entity.Riderdata
@@ -50,6 +51,7 @@ object Vars {
     var orderList: ConcurrentHashMap<String,Orderdata> = ConcurrentHashMap() // 오더리스트
     var centerLastTime: ConcurrentHashMap<String,String> = ConcurrentHashMap() // 센터별 마지막 오더타임
     var centerOrderCount : ConcurrentHashMap<String,String> = ConcurrentHashMap() // 센터별 총 오더 갯수
+    var agencyList : ConcurrentHashMap<String,Agencydata> = ConcurrentHashMap() // 가맹점리스트
 
     var ItemVm : ItemViewModel? = null // 메인오더뷰모델
     var LoginVm : LoginViewModel? = null // 로그인뷰모델
