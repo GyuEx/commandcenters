@@ -87,7 +87,7 @@ class MarkerThread : Thread() , ThreadFun {
                         marker.setCaptionAligns(Align.Center)
                         marker.captionColor = Color.WHITE
                         marker.captionHaloColor = Color.TRANSPARENT
-                        marker.captionText = "${Vars.riderList[itt]?.name.toString()} \n ${Vars.riderList[itt]!!.assignCount!!.toInt()} / ${Vars.riderList[itt]!!.pickupCount!!.toInt()} \n "
+                        marker.captionText = "[${Vars.centerList[Vars.riderList[itt]?.centerID]?.centerName.toString()}]\n${Vars.riderList[itt]?.name.toString()}\n${Vars.riderList[itt]!!.assignCount!!.toInt()} / ${Vars.riderList[itt]!!.pickupCount!!.toInt()} \n "
                         marker.captionTextSize = 13F
                         if(Vars.riderList[itt]!!.assignCount!!.toInt() == 0 && Vars.riderList[itt]!!.pickupCount!!.toInt() == 0) marker.icon = imgBlue
                         else marker.icon = imgGray

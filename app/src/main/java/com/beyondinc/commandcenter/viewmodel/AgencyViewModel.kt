@@ -1,15 +1,25 @@
 package com.beyondinc.commandcenter.viewmodel
 
+import android.os.Build
 import android.util.Log
+import android.view.Gravity
+import android.view.View
+import android.widget.AdapterView
+import android.widget.TextView
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.Interface.MainsFun
+import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.adapter.RecyclerAdapter
 import com.beyondinc.commandcenter.adapter.RecyclerAdapterAgency
 import com.beyondinc.commandcenter.adapter.RecyclerAdapterHistory
 import com.beyondinc.commandcenter.adapter.RecyclerAdapterPopup
 import com.beyondinc.commandcenter.data.Dialogdata
 import com.beyondinc.commandcenter.data.Historydata
+import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.repository.database.entity.Agencydata
+import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
@@ -17,6 +27,7 @@ import kotlin.collections.ArrayList
 class AgencyViewModel : ViewModel() {
     var items: ConcurrentHashMap<Int, Agencydata>? = null // 리스트에 보여줄 목록
     var adapter: RecyclerAdapterAgency? = null // 리스트 어뎁터
+    var sendeditem : MutableLiveData<Agencydata> = MutableLiveData()
 
     init {
         Log.e("Agency", "Init다!!")
@@ -43,12 +54,12 @@ class AgencyViewModel : ViewModel() {
         adapter!!.notifyDataSetChanged()
     }
 
-    fun onClick(pos: Int){
-        //Log.e("PopUp","click event" + items!!.get(pos)!!.name)
-    }
-
     fun close() {
 
+    }
+
+    fun click_AgencyCall(){
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.SEND_TELEPHONE,0,sendeditem.value!!.Phone).sendToTarget()
     }
 
     fun clear(){
@@ -58,6 +69,34 @@ class AgencyViewModel : ViewModel() {
 
     fun onCreate() {
         adapter!!.notifyDataSetChanged()
+    }
+
+    fun setUse(pos:Int)
+    {
+        if(!items!![pos]!!.setUse)
+        {
+            for(i in 0 until items!!.keys.size)
+            {
+                items!![i]!!.setUse = false
+            }
+            items!![pos]!!.setUse = true
+            sendeditem.value = items?.get(pos)
+        }
+        else
+        {
+            items!![pos]!!.setUse = false
+            sendeditem.value = null
+        }
+        onCreate()
+    }
+
+    fun click_detail()
+    {
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN, Finals.AGENCY_ITEM_SELECT, 0,sendeditem.value).sendToTarget()
+    }
+
+    fun click_assign(){
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN, Finals.NEW_ASSIGN,0,sendeditem.value).sendToTarget()
     }
 
     fun onResume() {}
@@ -75,14 +114,85 @@ class AgencyViewModel : ViewModel() {
     }
 
     fun getMoney(pos: Int): String? {
-        return items!![pos]!!.AgencyName
+        return items!![pos]!!.SumAmt
     }
 
     fun getLogins(pos: Int): String? {
-        return items!![pos]!!.State
+        return items!![pos]!!.AgencyLoginYn
     }
 
     fun getInfo(pos: Int): String? {
-        return items!![pos]!!.AgencyName
+        return items!![pos]!!.Maintenance
     }
+
+    fun getUse(pos: Int): Boolean? {
+        return items!![pos]!!.setUse
+    }
+
+    fun onItemSelectedDeliveryExtFeeType(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        //  스피너의 선택 내용이 바뀌면 호출된다
+        (parent.getChildAt(0) as TextView).textSize = 18f
+        (parent.getChildAt(0) as TextView).setTextColor(Vars.mContext!!.getColor(R.color.black))
+    }
+
+    fun onItemSelectedDepositYn(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        //  스피너의 선택 내용이 바뀌면 호출된다
+        (parent.getChildAt(0) as TextView).textSize = 18f
+        (parent.getChildAt(0) as TextView).setTextColor(Vars.mContext!!.getColor(R.color.black))
+    }
+
+    fun onItemSelectedShareOrderYn(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        //  스피너의 선택 내용이 바뀌면 호출된다
+        (parent.getChildAt(0) as TextView).textSize = 18f
+        (parent.getChildAt(0) as TextView).setTextColor(Vars.mContext!!.getColor(R.color.black))
+    }
+
+    fun onItemSelectedState(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        //  스피너의 선택 내용이 바뀌면 호출된다
+        (parent.getChildAt(0) as TextView).textSize = 18f
+        (parent.getChildAt(0) as TextView).setTextColor(Vars.mContext!!.getColor(R.color.black))
+    }
+
+    fun onItemSelectedAgencyColor(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        //  스피너의 선택 내용이 바뀌면 호출된다
+        (parent.getChildAt(0) as TextView).textSize = 18f
+        (parent.getChildAt(0) as TextView).setTextColor(Vars.mContext!!.getColor(R.color.black))
+    }
+
+    fun onItemSelectedAgencyWorkState(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        //  스피너의 선택 내용이 바뀌면 호출된다
+        (parent.getChildAt(0) as TextView).textSize = 18f
+        (parent.getChildAt(0) as TextView).setTextColor(Vars.mContext!!.getColor(R.color.black))
+    }
+
+    fun onItemSelectedAgencyMonthlyOrderLimitYn(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        //  스피너의 선택 내용이 바뀌면 호출된다
+        (parent.getChildAt(0) as TextView).textSize = 18f
+        (parent.getChildAt(0) as TextView).setTextColor(Vars.mContext!!.getColor(R.color.black))
+    }
+
+    fun onItemSelectedAgencyDailyOrderLimitYn(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        //  스피너의 선택 내용이 바뀌면 호출된다
+        (parent.getChildAt(0) as TextView).textSize = 18f
+        (parent.getChildAt(0) as TextView).setTextColor(Vars.mContext!!.getColor(R.color.black))
+    }
+
+    fun onItemSelectedSurchargeByAgencySettingYn(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        //  스피너의 선택 내용이 바뀌면 호출된다
+        (parent.getChildAt(0) as TextView).textSize = 18f
+        (parent.getChildAt(0) as TextView).setTextColor(Vars.mContext!!.getColor(R.color.black))
+    }
+
+    fun onItemSelectedWarningDepositByAgencySettingYn(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        //  스피너의 선택 내용이 바뀌면 호출된다
+        (parent.getChildAt(0) as TextView).textSize = 18f
+        (parent.getChildAt(0) as TextView).setTextColor(Vars.mContext!!.getColor(R.color.black))
+    }
+
+    fun onItemSelectedMinDepositByAgencySettingYn(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        //  스피너의 선택 내용이 바뀌면 호출된다
+        (parent.getChildAt(0) as TextView).textSize = 18f
+        (parent.getChildAt(0) as TextView).setTextColor(Vars.mContext!!.getColor(R.color.black))
+    }
+
 }

@@ -54,4 +54,6 @@ class Agencydata
     var v1 : Int = 0
     var v2 : Int = 0
     var v3 : Int = 0
+
+    var setUse : Boolean = false
 }

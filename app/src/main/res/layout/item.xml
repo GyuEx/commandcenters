@@ -44,8 +44,7 @@
                 app:select_item_backcolor="@{viewModel.items.get(pos).use}"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                android:paddingRight="15dp"
-                android:onClick="@{v->viewModel.setUse(pos)}">
+                android:paddingRight="15dp">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -96,7 +95,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
                     android:orientation="vertical"
-                    android:paddingLeft="20dp">
+                    android:paddingLeft="20dp"
+                    android:onClick="@{v->viewModel.setUse(pos)}">
 
                     <TextView
                         android:id="@+id/title"
@@ -168,7 +168,8 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:singleLine="true"
-                        android:textColor="@android:color/white"/>
+                        android:textColor="@android:color/white"
+                        android:onClick="@{v->viewModel.setMapUse(pos)}"/>
                     <TextView
                         android:id="@+id/paywon"
                         android:layout_width="match_parent"

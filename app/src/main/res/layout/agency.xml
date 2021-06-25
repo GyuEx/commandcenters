@@ -27,13 +27,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:onClick="@{v->viewModel.setUse(pos)}"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:orientation="horizontal"
+                app:select_item_backcolor="@{viewModel.getUse(pos)}"
                 android:background="@color/lightgray"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
@@ -49,8 +51,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:includeFontPadding="false"
-                        android:textSize="15dp"
+                        android:textSize="18dp"
                         android:gravity="left"
                         android:singleLine="true"
                         android:text="@{viewModel.getName(pos)}"
@@ -60,63 +61,123 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:includeFontPadding="false"
-                        android:textSize="13sp"
+                        android:textSize="13dp"
                         android:gravity="left"
+                        android:textStyle="bold"
                         android:text="@{viewModel.getAddr(pos)}"
-                        android:textColor="@android:color/black"/>
+                        android:textColor="@color/darkgray"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:includeFontPadding="false"
-                        android:textSize="13sp"
+                        android:textSize="10dp"
                         android:singleLine="true"
                         android:gravity="left"
-                        android:text="@{viewModel.getTime(pos)}"
-                        android:textColor="@android:color/black"/>
+                        app:Agency_loginTime="@{viewModel.getTime(pos)}"
+                        android:textColor="@color/darkgray"/>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:includeFontPadding="false"
-                        android:textSize="13sp"
-                        android:gravity="center"
+                        android:textSize="18dp"
+                        android:gravity="right"
                         android:textColor="@android:color/black"
                         android:singleLine="true"
-                        android:text="@{viewModel.getMoney(pos)}"
+                        app:Agency_SumAmt="@{viewModel.getMoney(pos)}"
                         android:textStyle="bold"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:includeFontPadding="false"
-                        android:textSize="13sp"
-                        android:gravity="center"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
+                        android:textSize="13dp"
+                        android:gravity="right"
                         android:singleLine="true"
-                        android:text="@{viewModel.getLogins(pos)}"
-                        android:textColor="@android:color/white"/>
+                        android:textStyle="bold"
+                        app:Agency_working="@{viewModel.getLogins(pos)}"
+                        android:textColor="@android:color/black"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:includeFontPadding="false"
-                        android:textSize="13sp"
-                        android:gravity="center"
+                        android:textSize="10dp"
+                        android:gravity="right"
                         android:singleLine="true"
-                        android:text="@{viewModel.getInfo(pos)}"
-                        android:textColor="@android:color/black"/>
+                        app:Agency_manage="@{viewModel.getInfo(pos)}"
+                        android:textColor="@color/black"/>
                 </LinearLayout>
             </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:Agency_SetUse="@{viewModel.getUse(pos)}"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:background="@color/black"
+                android:textSize="18dp"
+                android:textColor="@drawable/click_text_color"
+                android:textStyle="bold"
+                android:onClick="@{v->viewModel.click_assign()}"
+                android:text="오더접수">
+            </TextView>
+
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+            </TextView>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:background="@color/black"
+                android:textSize="18dp"
+                android:textColor="@drawable/click_text_color"
+                android:textStyle="bold"
+                android:onClick="@{v->viewModel.click_detail()}"
+                android:text="상세보기">
+            </TextView>
+
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+            </TextView>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:background="@color/black"
+                android:textSize="18dp"
+                android:textColor="@drawable/click_text_color"
+                android:textStyle="bold"
+                android:onClick="@{v->viewModel.click_AgencyCall()}"
+                android:text="전화연결">
+            </TextView>
+
         </LinearLayout>
 
         <TextView

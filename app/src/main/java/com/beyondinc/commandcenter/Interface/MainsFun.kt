@@ -9,11 +9,11 @@ interface MainsFun {
     fun showDialogBrief()
     fun showDialogStore()
     fun showDialogRider()
-    fun showOderdetail()
+    fun showOrderdetail(code:Int)
     fun showHistory()
     fun showMessage(msg:String,num:String)
     fun showSelect()
-    fun showAddress()
+    fun showAddress(obj : Any?)
     fun showPayment()
     fun showLoading()
 

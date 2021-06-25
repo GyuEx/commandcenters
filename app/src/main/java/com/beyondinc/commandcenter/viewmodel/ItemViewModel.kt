@@ -86,6 +86,18 @@ class ItemViewModel : ViewModel() {
         items!!.clear()
     }
 
+    fun main_filter_select_empty(){
+        select!!.value = Finals.SELECT_EMPTY
+        setAgencyfilter = ""
+        setRiderfilter = ""
+    }
+
+    fun main_filter_select_BRIEF(){
+        select!!.value = Finals.SELECT_BRIFE
+        setAgencyfilter = ""
+        setRiderfilter = ""
+    }
+
     fun desableSelect(){
         setAgencyfilter = ""
         setRiderfilter = ""
@@ -93,12 +105,12 @@ class ItemViewModel : ViewModel() {
     }
     fun storeSelect(t : String){
         setAgencyfilter = t
-        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_POPUP,0).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_POPUP,0,t).sendToTarget()
         Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget()
     }
     fun riderSelect(t : String){
         setRiderfilter = t
-        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_POPUP,0).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_POPUP,0,t).sendToTarget()
         Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget()
     }
 
@@ -140,7 +152,7 @@ class ItemViewModel : ViewModel() {
             }
             else
             {
-                if (setAgencyfilter != "") // 가맹점 검색 필터 적용
+                if (setAgencyfilter != "" && !Vars.f_center.contains(Realitems!![ctemp]?.RcptCenterId)) // 가맹점 검색 필터 적용
                 {
                     if(setAgencyfilter == Realitems!![ctemp]?.AgencyName)
                     {
@@ -157,7 +169,7 @@ class ItemViewModel : ViewModel() {
                         itemp[Realitems!![ctemp]!!.OrderId.toInt()] = Realitems!![ctemp]!!
                     }
                 }
-                else if (setRiderfilter != "") // 라이더 검색 필터 적용
+                else if (setRiderfilter != "" && !Vars.f_center.contains(Realitems!![ctemp]?.RcptCenterId)) // 라이더 검색 필터 적용
                 {
                     if(setRiderfilter == Realitems!![ctemp]?.RiderName)
                     {
@@ -348,6 +360,12 @@ class ItemViewModel : ViewModel() {
             Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.ORDER_ITEM_SELECT, 0,items?.get(pos)).sendToTarget()
             sendedItem = items?.get(pos)
         }
+    }
+
+    fun setMapUse(pos:Int)
+    {
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.ORDER_ITEM_SELECT, 1,items?.get(pos)).sendToTarget()
+        sendedItem = items?.get(pos)
     }
 
     fun click_brief_filter(){

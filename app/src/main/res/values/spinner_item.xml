@@ -5,4 +5,94 @@
         <item>카드</item>
         <item>선결제</item>
     </string-array>
+
+    <string-array name="DeliveryExtFeeType">
+        <item>구역할증</item>
+        <item>동별할증</item>
+    </string-array>
+
+    <string-array name="DepositYn">
+        <item>사용</item>
+        <item>미사용</item>
+    </string-array>
+
+    <string-array name="ShareOrderYn">
+        <item>사용</item>
+        <item>미사용</item>
+    </string-array>
+
+    <string-array name="State">
+        <item>사용</item>
+        <item>미사용</item>
+        <item>해지</item>
+    </string-array>
+
+    <string-array name="AgencyColor">
+        <item>나중에구현할거야 많음</item>
+    </string-array>
+
+    <string-array name="AgencyWorkState">
+        <item>정상업무</item>
+        <item>일시정지</item>
+        <item>업무종료</item>
+    </string-array>
+
+    <string-array name="AgencyMonthlyOrderLimitYn">
+        <item>제한없음</item>
+        <item>월 건수 제한</item>
+    </string-array>
+
+    <string-array name="AgencyDailyOrderLimitYn">
+        <item>제한없음</item>
+        <item>일 건수 제한</item>
+    </string-array>
+
+    <string-array name="SurchargeByAgencySettingYn">
+        <item>가맹점 설정 적용</item>
+        <item>센터 설정 적용</item>
+    </string-array>
+
+    <string-array name="WarningDepositByAgencySettingYn">
+        <item>가맹점 설정 적용</item>
+        <item>센터 설정 적용</item>
+    </string-array>
+
+    <string-array name="MinDepositByAgencySettingYn">
+        <item>가맹점 설정 적용</item>
+        <item>센터 설정 적용</item>
+    </string-array>
+    
+    <string-array name="BuildingNameList">
+        <item>건물명</item>
+        <item>아파트</item>
+        <item>단지</item>
+        <item>빌라</item>
+        <item>빌딩</item>
+        <item>연립</item>
+        <item>오피스텔</item>
+        <item>모텔</item>
+        <item>맨션</item>
+        <item>타운</item>
+        <item>파크</item>
+        <item>프라자</item>
+        <item>하우스</item>
+        <item>호텔</item>
+    </string-array>
+
+    <string-array name="readyTimeList">
+        <item>즉시</item>
+        <item>5분</item>
+        <item>10분</item>
+        <item>15분</item>
+        <item>20분</item>
+        <item>25분</item>
+        <item>30분</item>
+        <item>35분</item>
+        <item>40분</item>
+        <item>45분</item>
+        <item>50분</item>
+        <item>55분</item>
+        <item>60분</item>
+    </string-array>
+
 </resources>

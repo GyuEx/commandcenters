@@ -38,8 +38,9 @@ object Finals {
     val SUCCESS_MESSAGE : Int = 22
     val CANCEL_MESSAGE : Int = 23
 
-    val DETAIL_MAP : Int = 24
-    val DETAIL_DETAIL : Int = 25
+    val DETAIL_MAP : Int = 31
+    val DETAIL_ORDER : Int = 32
+    val DETAIL_AGENCY : Int = 33
 
     val ORDER_ASSIGN : Int = 26
     val ORDER_TOAST_SHOW : Int = 27
@@ -64,7 +65,8 @@ object Finals {
     val BRIEF_ITEM_SELECT : Int = 62
     val STORE_ITEM_SELECT : Int = 63
     val RIDER_ITEM_SELECT : Int = 64
-    val DESABLE_SELECT : Int = 65
+    val AGENCY_ITEM_SELECT : Int = 65
+    val DESABLE_SELECT : Int = 66
 
     val CREATE_RIDER_MARKER : Int = 71
     val UPDATE_RIDER_MARKER : Int = 72
@@ -87,6 +89,7 @@ object Finals {
     val CHANGE_ADDRESS : Int = 92
     val CHANGE_PAYMENT : Int = 93
     val CHANGE_CLOSE : Int = 94
+    val NEW_ASSIGN : Int = 95
 
     val LOGIN_SUCESS : Int = 101
     val LOGIN_FAIL : Int = 102
@@ -112,6 +115,16 @@ object Finals {
     val CHANGE_ADDR : Int = 153
     val MESSAGE_ADDR : Int = 154
     val SHOW_ADDR : Int = 155
+    val SHOW_NEW_ASSIGN : Int = 156
+    val SEARCH_NEW_ADDR : Int = 157
+
+    val POPUP_MAP_AGENCY : Int = 181
+    val POPUP_MAP_CUST : Int = 182
+    val POPUP_MAP_RIDER : Int = 183
+    val POPUP_MAP_BRIEF : Int = 184
+    val POPUP_MAP_RECIVE : Int = 185
+    val POPUP_MAP_PIKUP : Int = 186
+    val POPUP_MAP_CC : Int = 187
 
     val ALL_CLEAR : Int = 200
 

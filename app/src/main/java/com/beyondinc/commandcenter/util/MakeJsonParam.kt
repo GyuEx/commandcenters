@@ -303,6 +303,18 @@ class MakeJsonParam {
         return parameterArray
     }
 
+    fun makeAgencyAddrListParameter(loginID: String, Type: String, CenterId : String, AgencyId : String): JSONArray {
+        var parameterArray = JSONArray()
+
+        val parameterJSON = makeBaseParameter(loginID)
+        parameterJSON["ReqType"] = Type
+        parameterJSON["CallCenterId"] = CenterId
+        parameterJSON["AgencyId"] = AgencyId
+        parameterArray.add(parameterJSON)
+
+        return parameterArray
+    }
+
 //    fun makeAlarmAcknowledgementParameter(alarmID: String): JSONArray {
 //        val parameterJSON = JSONObject()
 //

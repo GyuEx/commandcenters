@@ -217,8 +217,7 @@ class MapViewModel : ViewModel()
             Olayer.value = Finals.MAP_FOR_ORDER
             if(Lrawer.value!!) selectOr.value = Finals.SELECT_ORDER
         }
-
-        riderTitle.value = "${Item.value!!.name} : 배정 ${Item.value!!.assignCount} / 픽업 ${Item.value!!.pickupCount} / 완료 ${Item.value!!.completeCount}"
+        riderTitle.value = "${Vars.centerList[Item.value!!.centerID]?.centerName.toString()}]${Item.value!!.name} : 배정 ${Item.value!!.assignCount} / 픽업 ${Item.value!!.pickupCount} / 완료 ${Item.value!!.completeCount}"
 
         var it : Iterator<String> = Vars.orderList.keys.iterator()
         var pcnt = 0
@@ -417,11 +416,11 @@ class MapViewModel : ViewModel()
         if(marker!!.assignCount!!.toInt() == 0 && marker!!.pickupCount!!.toInt() == 0) marker.MakerID!!.icon = imgBlue
         else marker.MakerID!!.icon = imgGray
         marker.MakerID!!.position = position
-        marker.MakerID!!.captionText = "${marker.name.toString()} \n ${marker.assignCount!!.toInt()} / ${marker.pickupCount!!.toInt()} \n "
+        marker.MakerID!!.captionText = "[${Vars.centerList[marker.centerID]?.centerName.toString()}]\n${marker.name.toString()}\n${marker.assignCount!!.toInt()} / ${marker.pickupCount!!.toInt()} \n "
 
         if(Item.value != null)
         {
-            riderTitle.value = "${Item.value!!.name} : 배정 ${Item.value!!.assignCount} / 픽업 ${Item.value!!.pickupCount} / 완료 ${Item.value!!.completeCount}"
+            riderTitle.value = "${Vars.centerList[Item.value!!.centerID]?.centerName.toString()}]${Item.value!!.name} : 배정 ${Item.value!!.assignCount} / 픽업 ${Item.value!!.pickupCount} / 완료 ${Item.value!!.completeCount}"
         }
         Vars.DataHandler!!.obtainMessage(Finals.VIEW_SUBRIDER,Finals.INSERT_RIDER,0,marker).sendToTarget()
     }

@@ -1,0 +1,942 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.beyondinc.commandcenter.viewmodel.AgencyViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="가맹점명"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <EditText
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@={viewModel.sendeditem.agencyName}"
+                            android:textColor="@color/black">
+                        </EditText>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="대표자명"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.CEOName}"
+                            android:textColor="@color/black"></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="주민번호"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.CEOResNo}"
+                            android:inputType="textPassword"
+                            android:textColor="@color/black"></TextView>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="변경"
+                                android:gravity="center"
+                                android:textColor="@drawable/click_text_color_black"
+                                android:background="@drawable/line_background"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="사업자번호"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.businessNumber}"
+                            android:textColor="@color/black"></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="주소"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.addr + viewModel.sendeditem.detailAddr}"
+                            android:textColor="@color/black"></TextView>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/detail_title_background"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@android:drawable/ic_menu_mylocation"></TextView>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="업태/업종"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.businessCategory}"
+                            android:textColor="@color/black"></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="전화번호"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.phone}"
+                            android:textColor="@color/black"></TextView>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/detail_title_background"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@android:drawable/ic_menu_call"></TextView>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="휴대전화"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.contactMobile}"
+                            android:textColor="@color/black"></TextView>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/detail_title_background"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@android:drawable/ic_menu_call"></TextView>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="관리비"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.maintenance}"
+                            android:textColor="@color/black"></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="정산수수료"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/detail_data_background"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.deliveryCharge}"
+                            android:textColor="@color/black"></TextView>
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="7"
+                                android:text="원"
+                                android:textSize="18dp"
+                                android:gravity="left|center"
+                                android:textColor="@color/black"></TextView>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="지연시간"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/detail_data_background"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.centerAgencyOrderDelay}"
+                            android:textColor="@color/black"></TextView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:text="분"
+                            android:textSize="18dp"
+                            android:gravity="left|center"
+                            android:textColor="@color/black"></TextView>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="구간외 할증"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <Spinner
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/spinner_bg"
+                            android:onItemSelected='@{viewModel::onItemSelectedDeliveryExtFeeType}'
+                            android:entries="@array/DeliveryExtFeeType"
+                            app:DeliveryExtFeeType="@{viewModel.sendeditem.deliveryExtFeeType}">
+                        </Spinner>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="예치금"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <Spinner
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/spinner_bg"
+                            android:onItemSelected='@{viewModel::onItemSelectedDepositYn}'
+                            android:entries="@array/DepositYn"
+                            app:DepositYn="@{viewModel.sendeditem.depositYn}">
+                        </Spinner>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="오더공유"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <Spinner
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/spinner_bg"
+                            android:onItemSelected='@{viewModel::onItemSelectedShareOrderYn}'
+                            android:entries="@array/ShareOrderYn"
+                            app:ShareOrderYn="@{viewModel.sendeditem.shareOrderYn}">
+                        </Spinner>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="상태"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <Spinner
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/spinner_bg"
+                            android:onItemSelected='@{viewModel::onItemSelectedState}'
+                            android:entries="@array/State"
+                            app:State="@{viewModel.sendeditem.state}">
+                        </Spinner>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="구역표시"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <Spinner
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/spinner_bg"
+                            android:onItemSelected='@{viewModel::onItemSelectedAgencyColor}'
+                            android:entries="@array/AgencyColor"
+                            app:AgencyColor="@{viewModel.sendeditem.agencyColor}">
+                        </Spinner>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="업무상태"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <Spinner
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/spinner_bg"
+                            android:onItemSelected='@{viewModel::onItemSelectedAgencyWorkState}'
+                            android:entries="@array/AgencyWorkState"
+                            app:AgencyWorkState="@{viewModel.sendeditem.agencyWorkState}">
+                        </Spinner>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="오더수제한"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <Spinner
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/spinner_bg"
+                            android:onItemSelected='@{viewModel::onItemSelectedAgencyMonthlyOrderLimitYn}'
+                            android:entries="@array/AgencyMonthlyOrderLimitYn"
+                            app:AgencyMonthlyOrderLimitYn="@{viewModel.sendeditem.monthlyOrderLimitYn}">
+                        </Spinner>
+
+                        <Spinner
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/spinner_bg"
+                            android:onItemSelected='@{viewModel::onItemSelectedAgencyDailyOrderLimitYn}'
+                            android:entries="@array/AgencyDailyOrderLimitYn"
+                            app:AgencyDailyOrderLimitYn="@{viewModel.sendeditem.dailyOrderLimitYn}">
+                        </Spinner>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="할증금액"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7">
+
+                            <Spinner
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="7"
+                                android:background="@drawable/spinner_bg"
+                                android:onItemSelected='@{viewModel::onItemSelectedSurchargeByAgencySettingYn}'
+                                android:entries="@array/SurchargeByAgencySettingYn"
+                                app:SurchargeByAgencySettingYn="@{viewModel.sendeditem.surchargeByAgencySettingYn}">
+                            </Spinner>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="상세\n정보"
+                                android:gravity="center"
+                                android:textColor="@drawable/click_text_color_black"
+                                android:background="@drawable/line_background"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="경고예치금"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <Spinner
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/spinner_bg"
+                            android:onItemSelected='@{viewModel::onItemSelectedWarningDepositByAgencySettingYn}'
+                            android:entries="@array/WarningDepositByAgencySettingYn"
+                            app:WarningDepositByAgencySettingYn="@{viewModel.sendeditem.warningDepositByAgencySettingYn}">
+                        </Spinner>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="최소예치금"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3">
+
+                            <Spinner
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="7"
+                                android:background="@drawable/spinner_bg"
+                                android:onItemSelected='@{viewModel::onItemSelectedMinDepositByAgencySettingYn}'
+                                android:entries="@array/MinDepositByAgencySettingYn"
+                                app:MinDepositByAgencySettingYn="@{viewModel.sendeditem.minDepositByAgencySettingYn}">
+                            </Spinner>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="VAN/TID"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.mobileVanCode + viewModel.sendeditem.mobileVanDeviceCode}"
+                            android:textColor="@color/black"></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</layout>

@@ -1,0 +1,819 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.beyondinc.commandcenter.viewmodel.MainsViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:detail1="@{viewModel.orderItem.deliveryStateName}"
+                android:onClick='@{v->viewModel.showDialog(1)}'
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="배정"
+                android:gravity="center"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:background="@color/black"
+                android:textColor="@drawable/click_text_color">
+
+            </TextView>
+
+            <TextView
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                app:detail2="@{viewModel.orderItem.deliveryStateName}"
+                android:onClick='@{v->viewModel.showDialog(1)}'
+                android:text="배정변경"
+                android:textSize="15dp"
+                android:background="@color/black"
+                android:textStyle="bold"
+                android:textColor="@drawable/click_text_color">
+
+            </TextView>
+
+            <TextView
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                app:detail2="@{viewModel.orderItem.deliveryStateName}"
+                android:onClick='@{v->viewModel.showMessage("배정취소","0")}'
+                android:text="배정취소"
+                android:textSize="15dp"
+                android:background="@color/black"
+                android:textStyle="bold"
+                android:textColor="@drawable/click_text_color">
+
+            </TextView>
+            <TextView
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/black"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                app:detail3="@{viewModel.orderItem.deliveryStateName}"
+                android:onClick='@{v->viewModel.showMessage("오더완료","0")}'
+                android:text="오더완료"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor="@drawable/click_text_color">
+
+            </TextView>
+            <TextView
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/black"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                app:detail4="@{viewModel.orderItem.deliveryStateName}"
+                android:text="오더취소"
+                android:onClick='@{v->viewModel.showMessage("오더취소","0")}'
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor="@drawable/click_text_color">
+
+            </TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="11"
+            android:background="@drawable/dialog_background"
+            android:padding="1dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="센터"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:textColor="@color/black"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:text="@{viewModel.orderItem.centerName}"
+                    android:singleLine="true"
+                    android:background="@drawable/detail_data_background">
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="가맹점"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:textColor="@color/black"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:text="@{viewModel.orderItem.agencyName}"
+                    android:singleLine="true"
+                    android:background="@drawable/detail_data_background">
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="가맹점주소"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="7"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:text="@{viewModel.orderItem.agencyAddr}"
+                        android:singleLine="false"
+                        android:background="@drawable/detail_data_background">
+                    </TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:background="@drawable/detail_title_background"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:onClick="@{v-> viewModel.click_Agent_poi()}"
+                            android:background="@android:drawable/ic_menu_mylocation">
+                        </TextView>
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="가맹점전화"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="7"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:text="@{viewModel.orderItem.agencyPhoneNo}"
+                        android:singleLine="true"
+                        android:background="@drawable/detail_data_background">
+                    </TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:onClick='@{v->viewModel.showMessage("가맹점에 전화",viewModel.orderItem.agencyPhoneNo)}'
+                            android:background="@android:drawable/ic_menu_call" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="고객주소"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="7"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:text='@{viewModel.orderItem.customerLongAddr + " " + viewModel.orderItem.customerDetailAddr}'
+                        android:singleLine="false"
+                        android:background="@drawable/detail_data_background">
+                    </TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:background="@drawable/detail_title_background"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:onClick="@{v-> viewModel.click_Cust_poi()}"
+                            android:background="@android:drawable/ic_menu_mylocation">
+                        </TextView>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:onClick='@{v->viewModel.showMessage("고객주소변경","0")}'
+                            android:background="@android:drawable/ic_menu_edit">
+                        </TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="고객전화"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="7"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:text="@{viewModel.orderItem.customerPhone}"
+                        android:singleLine="true"
+                        android:background="@drawable/detail_data_background">
+                    </TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:onClick='@{v->viewModel.showMessage("고객에게 전화",viewModel.orderItem.customerPhone)}'
+                            android:background="@android:drawable/ic_menu_call" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="판매금액"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/white"
+                    android:onClick="@{v->viewModel.changePay(1)}"
+                    android:gravity="center"
+                    android:text='@{(viewModel.orderItem.approvalTypeName.equals("현금") ? "(현)": viewModel.orderItem.approvalTypeName.equals("카드") ? "(카)": "(선)") + " " + viewModel.orderItem.salesPrice}'
+                    android:singleLine="true"
+                    android:background="@color/black">
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="배달금액"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/white"
+                    android:onClick="@{v->viewModel.changePay(2)}"
+                    android:gravity="center"
+                    android:text='@{(viewModel.orderItem.approvalTypeName.equals("현금") ? "(현)": viewModel.orderItem.approvalTypeName.equals("카드") ? "(카)": "(선)") + " " + viewModel.orderItem.deliveryFee}'
+                    android:singleLine="true"
+                    android:background="@color/black">
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="포장"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="7"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:text="@{viewModel.orderItem.packingCompleteYn}"
+                        android:singleLine="true"
+                        android:background="@drawable/detail_data_background">
+                    </TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:background="@android:drawable/ic_menu_rotate"
+                            android:onClick='@{v->viewModel.showMessage("포장상태변경","0")}'></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="고객요청사항"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:textColor="@color/black"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:focusable="true"
+                    android:text="@{viewModel.orderItem.storeMemo}"
+                    android:ellipsize="marquee"
+                    android:focusableInTouchMode="true"
+                    android:singleLine="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    app:maquee="@{viewModel.orderItem.storeMemo.length > 0? 1:0}"
+                    android:background="@drawable/detail_data_background">
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="배달상태"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:textColor="@color/black"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:text="@{viewModel.orderItem.deliveryStateName}"
+                    android:singleLine="true"
+                    android:background="@drawable/detail_data_background">
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="배달거리"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:textColor="@color/black"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:text="@{viewModel.orderItem.deliveryDistance}"
+                    android:singleLine="true"
+                    android:background="@drawable/detail_data_background">
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="라이더명"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="7"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:text="@{viewModel.orderItem.riderName}"
+                        android:singleLine="true"
+                        android:background="@drawable/detail_data_background">
+                    </TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:background="@drawable/detail_title_background"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:onClick="@{v-> viewModel.click_Rider_poi()}"
+                            android:background="@android:drawable/ic_menu_mylocation">
+                        </TextView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="라이더전화"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="7"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:text="@{viewModel.orderItem.riderPhoneNo}"
+                        android:singleLine="true"
+                        android:background="@drawable/detail_data_background">
+                    </TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:onClick='@{v->viewModel.showMessage("라이더에게 전화",viewModel.orderItem.riderPhoneNo)}'
+                            android:background="@android:drawable/ic_menu_call" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="접수시간"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:textColor="@color/black"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:text="@{viewModel.orderItem.receiptDT}"
+                    android:singleLine="true"
+                    android:background="@drawable/detail_data_background">
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="배정시간"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:background="@drawable/detail_data_background"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:singleLine="true"
+                    android:text="@{viewModel.orderItem.driverAssignDT}"
+                    android:textColor="@color/black"></TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="픽업시간"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:textColor="@color/black"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:text="@{viewModel.orderItem.pickupDT}"
+                    android:singleLine="true"
+                    android:background="@drawable/detail_data_background">
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="배달시간"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:background="@drawable/detail_title_background">
+                </TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:textColor="@color/black"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:text="@{viewModel.orderItem.completeDT}"
+                    android:singleLine="true"
+                    android:background="@drawable/detail_data_background">
+                </TextView>
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+</layout>

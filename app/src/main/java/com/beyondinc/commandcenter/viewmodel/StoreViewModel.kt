@@ -39,6 +39,12 @@ class StoreViewModel : ViewModel() {
         {
             var rittemp = it.next()
             items!!.clear()
+
+            if(Vars.f_center.contains(Vars.orderList[rittemp]?.RcptCenterId))
+            {
+                continue
+            }
+
             if (tempmap.containsKey(Vars.orderList[rittemp]?.AgencyName))
             else {
                 val memo = Agencydata()

@@ -1,17 +1,19 @@
 package com.beyondinc.commandcenter.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context.INPUT_METHOD_SERVICE
-import android.os.Build
 import android.text.Spannable
+import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.setMargins
 import androidx.databinding.BindingAdapter
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +23,7 @@ import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import java.text.DecimalFormat
 
 
 object MainAdapter {
@@ -70,22 +73,46 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("text_color_breif")
     fun setTextBrief(view: TextView, velue: Int) {
-        if (velue == Finals.SELECT_BRIFE) view.setTextColor(Vars.mContext!!.getColor(R.color.white))
-        else view.setTextColor(Vars.mContext!!.getColor(R.color.gray))
+        if (velue == Finals.SELECT_BRIFE)
+        {
+            view.setBackgroundResource(R.drawable.menu_tab)
+            view.setTextColor(Vars.mContext!!.getColor(R.color.black))
+        }
+        else
+        {
+            view.background = null
+            view.setTextColor(Vars.mContext!!.getColor(R.color.gray))
+        }
     }
 
     @JvmStatic
     @BindingAdapter("text_color_store")
     fun setTextStore(view: TextView, velue: Int) {
-        if (velue == Finals.SELECT_STORE) view.setTextColor(Vars.mContext!!.getColor(R.color.white))
-        else view.setTextColor(Vars.mContext!!.getColor(R.color.gray))
+        if (velue == Finals.SELECT_STORE)
+        {
+            view.setBackgroundResource(R.drawable.menu_tab)
+            view.setTextColor(Vars.mContext!!.getColor(R.color.black))
+        }
+        else
+        {
+            view.background = null
+            view.setTextColor(Vars.mContext!!.getColor(R.color.gray))
+        }
     }
 
     @JvmStatic
     @BindingAdapter("text_color_rider")
     fun setTextRider(view: TextView, velue: Int) {
-        if (velue == Finals.SELECT_RIDER) view.setTextColor(Vars.mContext!!.getColor(R.color.white))
-        else view.setTextColor(Vars.mContext!!.getColor(R.color.gray))
+        if (velue == Finals.SELECT_RIDER)
+        {
+            view.setBackgroundResource(R.drawable.menu_tab)
+            view.setTextColor(Vars.mContext!!.getColor(R.color.black))
+        }
+        else
+        {
+            view.background = null
+            view.setTextColor(Vars.mContext!!.getColor(R.color.gray))
+        }
     }
 
     @JvmStatic
@@ -133,10 +160,18 @@ object MainAdapter {
     @BindingAdapter("menu_title_check_btn")
     fun setMenutitlecheckbtn(view: TextView, height: Int) {
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
-        if(height == Finals.SELECT_ORDER || height == Finals.SELECT_MAP)
+        var i = Vars.centerList.keys.count() - Vars.f_center.count()
+        if(height == Finals.SELECT_ORDER)
         {
             layoutParams.weight = 1f
             view.layoutParams = layoutParams
+            view.text = "오더현황 (${i}) ▼"
+        }
+        else if(height == Finals.SELECT_MAP)
+        {
+            layoutParams.weight = 1f
+            view.layoutParams = layoutParams
+            view.text = "관제지도 (${i}) ▼"
         }
         else
         {
@@ -172,10 +207,27 @@ object MainAdapter {
     }
 
     @JvmStatic
+    @BindingAdapter("layout_setting_btn")
+    fun setSettingBtn(view: TextView, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == Finals.SELECT_MENU) {
+            layoutParams.width = 80
+            layoutParams.height = 80
+            layoutParams.rightMargin = 20
+            view.layoutParams = layoutParams
+        } else {
+            layoutParams.width = 0
+            layoutParams.height = 0
+            layoutParams.rightMargin = 0
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
     @BindingAdapter("layout_form_btn")
     fun setLayoutbtn(view: TextView, height: Int) {
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
-        if (height != Finals.SELECT_MENU) {
+        if (height == Finals.SELECT_ORDER || height == Finals.SELECT_MAP) {
             layoutParams.weight = 1f
             view.layoutParams = layoutParams
         } else {
@@ -267,11 +319,11 @@ object MainAdapter {
 
     @JvmStatic
     @BindingAdapter("custom_checkbox_login")
-    fun setCustomCheckLogin(view: CheckBox, height: Boolean) {
+    fun setCustomCheckLogin(view: TextView, height: Boolean) {
         if (height) {
-            view.setButtonDrawable(R.drawable.k_login_check_p)
+            view.setBackgroundResource(R.drawable.checkbox_sel)
         } else {
-            view.setButtonDrawable(R.drawable.k_login_check_n)
+            view.setBackgroundResource(R.drawable.checkbox_nor)
         }
     }
 
@@ -333,10 +385,20 @@ object MainAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter("Main_title_font")
-    fun main_title_font(view: TextView, height: Int) {
-        if(height == Finals.SELECT_EMPTY) view.text = " ▼"
-        else if(height == Finals.SELECT_CHECK) view.text = " ▲"
+    @BindingAdapter("Main_title_font", "Main_title_font_sub")
+    fun main_title_font(view: TextView, height: Int, sub:Int) {
+        var i = Vars.centerList.keys.count() - Vars.f_center.count()
+
+        if(height == Finals.SELECT_EMPTY)
+        {
+            if(sub == Finals.SELECT_ORDER) view.text = "오더현황 (${i}) ▼"
+            else view.text = "지도화면 (${i}) ▼"
+        }
+        else if(height == Finals.SELECT_CHECK)
+        {
+            if(sub == Finals.SELECT_ORDER) view.text = "오더현황 (${i}) ▲"
+            else view.text = "지도화면 (${i}) ▲"
+        }
     }
 
     @JvmStatic
@@ -344,13 +406,13 @@ object MainAdapter {
     fun main_title_font2(view: TextView, height: Int) {
         if(height == Finals.SELECT_MAP)
         {
-            view.text = "관제지도 "
+            view.text = "관제지도"
             view.gravity = Gravity.CENTER
             view.isClickable = true
         }
         else if(height == Finals.SELECT_ORDER)
         {
-            view.text = "오더현황 "
+            view.text = "오더현황"
             view.gravity = Gravity.CENTER
             view.isClickable = true
         }
@@ -362,7 +424,7 @@ object MainAdapter {
         }
         else if(height == Finals.SELECT_MENU)
         {
-            view.text = "메뉴화면"
+            view.text = "통합관제 시스템"
             view.gravity = Gravity.CENTER
             view.isClickable = false
         }
@@ -499,6 +561,7 @@ object MainAdapter {
     @BindingAdapter("detail_title")
     fun setDetailBackTitle(view: TextView, height: Int) {
         if(height == Finals.DETAIL_MAP) view.text = "지도보기"
+        if(height == Finals.DETAIL_AGENCY) view.text = "가맹점상세"
         else view.text = "오더상세"
     }
 
@@ -591,14 +654,13 @@ object MainAdapter {
     @BindingAdapter("spin_bun")
     fun spin_bun(view: Spinner, height: Int) {
         view.setSelection(height)
-        view.setSelection(height)
     }
 
     @JvmStatic
     @BindingAdapter("Address_top_layer")
     fun toplayer(view: LinearLayout, height: Int) {
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
-        if (height == 0 || height == 4)
+        if (height == 0 || height == 4 || height == 5)
         {
             layoutParams.weight = 0F
             view.layoutParams = layoutParams
@@ -611,12 +673,64 @@ object MainAdapter {
     }
 
     @JvmStatic
+    @BindingAdapter("Address_number_layer")
+    fun numberlayer(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == 0 || height == 2 || height == 3 || height == 1)
+        {
+            layoutParams.weight = 0F
+            view.layoutParams = layoutParams
+        }
+        else
+        {
+            layoutParams.weight = 1f
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("Address_agency_addr")
+    fun Address_agency_addr(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height != 6)
+        {
+            layoutParams.weight = 10F
+            layoutParams.setMargins(30)
+            view.layoutParams = layoutParams
+        }
+        else
+        {
+            layoutParams.weight = 0f
+            layoutParams.setMargins(0)
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("Address_agency_assign")
+    fun Address_agency_assign(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == 6)
+        {
+            layoutParams.weight = 10F
+            layoutParams.setMargins(30)
+            view.layoutParams = layoutParams
+        }
+        else
+        {
+            layoutParams.weight = 0f
+            layoutParams.setMargins(0)
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
     @BindingAdapter("Address_map_layer")
     fun maplayer(view: LinearLayout, height: Int) {
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
         if (height == 4)
         {
-            layoutParams.weight = 1F
+            layoutParams.weight = 4F
             view.layoutParams = layoutParams
         }
         else
@@ -627,10 +741,26 @@ object MainAdapter {
     }
 
     @JvmStatic
+    @BindingAdapter("Address_map_layer_bottom")
+    fun maplayer_bottom(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == 4)
+        {
+            layoutParams.weight = 0F
+            view.layoutParams = layoutParams
+        }
+        else
+        {
+            layoutParams.weight = 4f
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
     @BindingAdapter("Address_finish_layer")
     fun finishlayer(view: LinearLayout, height: Int) {
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
-        if (height == 5 || height == 4)
+        if (height == 5 || height == 4 || height == 6)
         {
             layoutParams.weight = 1F
             view.layoutParams = layoutParams
@@ -730,44 +860,152 @@ object MainAdapter {
         }
     }
 
-
     @JvmStatic
     @BindingAdapter("cnt","sub")
     fun balloon(view: TextView, cnt: Int, sub:Boolean) {
-
-        if(sub)
+        if(cnt > 0 && !sub)
         {
-            val str = "${cnt}건"
-            val ssb = SpannableStringBuilder(str)
-            ssb.setSpan(
-                ForegroundColorSpan(Vars.mContext!!.getColor(R.color.brief)),
-                0,
-                if(cnt > 9) 2
-                else if (cnt > 99) 3
-                else if (cnt > 999) 4
-                else 1, //꼭 1자리라는 법은 없지
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            view.text = ssb
+            view.setBackgroundResource(R.drawable.arrow_up_red)
+        }
+        else if(!sub)
+        {
+            view.setBackgroundResource(R.drawable.arrow_up)
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("filter_title_Agency" , "filter_title_Agency_type")
+    fun filter_title_Agency(view: TextView, cnt : String , type:Int) {
+        if((!cnt.isNullOrEmpty() || cnt != "") && type == Finals.SELECT_STORE)
+        {
+            view.textSize = 20f
+            view.text = "가맹점\n(${cnt})"
+            val content: String = view.text.toString()
+            val spannableString = SpannableString(content)
+            val start: Int = content.indexOf(cnt) - 1
+            val end: Int = start + cnt.length + 2
+            spannableString.setSpan(RelativeSizeSpan(0.8f),start,end,SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+            view.text = spannableString;
         }
         else
         {
-            if(cnt == 0) view.text = "접수가 하나도 없어요.."
-            else
-            {
-                val str = "접수가 ${cnt}건 있어요!"
-                val ssb = SpannableStringBuilder(str)
-                ssb.setSpan(
-                    ForegroundColorSpan(Vars.mContext!!.getColor(R.color.brief)),
-                    4,
-                    if(cnt > 9) 6
-                    else if (cnt > 99) 7
-                    else if (cnt > 999) 8
-                    else 5, //꼭 1자리라는 법은 없지
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-                view.text = ssb
-            }
+            view.textSize = 25f
+            view.text = "가맹점"
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("filter_title_Rider","filter_title_Rider_type")
+    fun filter_title_Rider(view: TextView, cnt : String , type:Int) {
+        if((!cnt.isNullOrEmpty() || cnt != "") && type == Finals.SELECT_RIDER)
+        {
+            Log.e("aaaaaa", " $cnt")
+            view.textSize = 20f
+            view.text = "라이더\n(${cnt})"
+            val content: String = view.text.toString()
+            val spannableString = SpannableString(content)
+            val start: Int = content.indexOf(cnt) - 1
+            val end: Int = start + cnt.length + 2
+            spannableString.setSpan(RelativeSizeSpan(0.8f),start,end,SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+            view.text = spannableString
+        }
+        else
+        {
+            view.textSize = 25f
+            view.text = "라이더"
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("Agency_working")
+    fun agency_working(view: TextView, cnt : String) {
+        if(cnt == "Y")
+        {
+            view.text = "영업중"
+            view.setTextColor(Vars.mContext!!.getColor(R.color.pickup))
+        }
+        else
+        {
+            view.text = "영업종료"
+            view.setTextColor(Vars.mContext!!.getColor(R.color.brief))
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("Agency_loginTime")
+    fun agency_loginTime(view: TextView, cnt : String) {
+        var title = "최근 로그인일시:"
+        var value : String? = null
+        if(cnt.isNullOrEmpty() || cnt == "") value = "없음"
+        else value = cnt
+        title += value
+        val ssb = SpannableStringBuilder(title)
+        ssb.setSpan(
+            ForegroundColorSpan(Vars.mContext!!.getColor(R.color.complite)),
+            title.indexOf(value),
+            title.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        view.text = ssb
+    }
+
+    @JvmStatic
+    @BindingAdapter("Agency_manage")
+    fun agency_manage(view: TextView, cnt : String) {
+        var title = "관리비:"
+        var value : String? = null
+        if(cnt.isNullOrEmpty() || cnt == "") value = "미설정"
+        else value = cnt
+        title += value
+        val ssb = SpannableStringBuilder(title)
+        ssb.setSpan(
+            ForegroundColorSpan(Vars.mContext!!.getColor(R.color.complite)),
+            title.indexOf(value),
+            title.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        view.text = ssb
+    }
+
+    @JvmStatic
+    @BindingAdapter("Agency_SumAmt")
+    fun agency_sumamt(view: TextView, cnt : String) {
+        val df = DecimalFormat("#,###")
+        val result = df.format(cnt.toLong())
+        view.text = result + "원"
+        if(cnt.toLong() < 0) view.setTextColor(Vars.mContext!!.getColor(R.color.brief))
+        else view.setTextColor(Vars.mContext!!.getColor(R.color.menu1))
+    }
+
+    @JvmStatic
+    @BindingAdapter("Agency_SetUse")
+    fun agency_SetUse(view: LinearLayout, cnt : Boolean) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (!cnt)
+        {
+            layoutParams.width = 0
+            layoutParams.height = 0
+            view.layoutParams = layoutParams
+        }
+        else
+        {
+            layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
+            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("Agency_SetUse_color")
+    fun agency_SetUse_color(view: LinearLayout, cnt : Boolean) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (!cnt)
+        {
+            view.setBackgroundColor(Vars.mContext!!.getColor(R.color.lightgray))
+        }
+        else
+        {
+            view.setBackgroundResource(R.drawable.balloon)
         }
     }
 }

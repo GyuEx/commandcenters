@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.databinding.AddressDialogBinding
+import com.beyondinc.commandcenter.repository.database.entity.Agencydata
 import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.AddressViewModel
 import com.beyondinc.commandcenter.viewmodel.AssignViewModel
@@ -24,11 +25,12 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 
 
-class AddressDialog() : DialogFragment(), OnMapReadyCallback {
+class AddressDialog(obj : Any?) : DialogFragment(), OnMapReadyCallback {
 
     var binding: AddressDialogBinding? = null
     var mapfrag: MapFragment? = null
     var fragmentTransaction: FragmentTransaction? = null
+    var item = obj
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +54,7 @@ class AddressDialog() : DialogFragment(), OnMapReadyCallback {
         binding = DataBindingUtil.bind(view)
         if(Vars.AddressVm == null) Vars.AddressVm = AddressViewModel()
         binding!!.viewModel = Vars.AddressVm
-        binding!!.lifecycleOwner = requireActivity()
+        binding!!.lifecycleOwner = this
 
         fragmentTransaction = childFragmentManager.beginTransaction()
         mapfrag = MapFragment()
@@ -60,6 +62,7 @@ class AddressDialog() : DialogFragment(), OnMapReadyCallback {
         fragmentTransaction!!.commitAllowingStateLoss()
         mapfrag!!.getMapAsync(this)
 
+        Vars.AddressVm!!.insertdong(item)
     }
 
     override fun onResume() {

@@ -50,6 +50,7 @@ class BriefViewModel : ViewModel() {
                     memo.velue1 = Vars.riderList[rittemp]!!.assignCount.toString()
                     memo.velue2 = Vars.riderList[rittemp]!!.pickupCount.toString()
                     memo.velue3 = Vars.riderList[rittemp]!!.completeCount.toString()
+                    memo.centerId = Vars.riderList[rittemp]!!.centerID.toString()
                     items!![cnt] = memo
                     cnt++
                 }
@@ -69,7 +70,7 @@ class BriefViewModel : ViewModel() {
     }
 
     fun getName(pos: Int): String? {
-        return items!![pos]?.name
+        return "${Vars.centerList[items!![pos]?.centerId]?.centerName}]${items!![pos]?.name}"
     }
 
     fun getVelue1(pos: Int): String? {

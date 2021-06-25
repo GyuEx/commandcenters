@@ -7,17 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.beyondinc.commandcenter.R
-import com.beyondinc.commandcenter.databinding.InfoFragmentBinding
+import com.beyondinc.commandcenter.databinding.InfoFragmentNewBinding
 import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class InfoFragment : Fragment() {
-    private var binding: InfoFragmentBinding? = null
+    private var binding: InfoFragmentNewBinding? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.info_fragment, container, false)
+        return inflater.inflate(R.layout.info_fragment_new, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

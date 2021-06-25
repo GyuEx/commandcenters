@@ -111,7 +111,8 @@ class SubRiderViewModel : ViewModel() {
         var cnt = 0
         var itemp: ConcurrentHashMap<Int, Riderdata> = ConcurrentHashMap()
 
-        while (it.hasNext()) {
+        while (it.hasNext())
+        {
             var ctemp = it.next()
             itemp[list[ctemp]!!.completeCount] = list[ctemp]!!
         }
@@ -176,7 +177,7 @@ class SubRiderViewModel : ViewModel() {
     }
 
     fun getTitle(pos: Int): String? {
-        return items!![pos]?.name
+        return "${Vars.centerList[items!![pos]?.centerID]?.centerName}]${items!![pos]?.name}"
     }
 
     // 사용할일이 있을걸?

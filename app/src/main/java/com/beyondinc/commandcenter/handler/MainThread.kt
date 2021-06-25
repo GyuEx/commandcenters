@@ -229,6 +229,7 @@ class MainThread() : Thread() , ThreadFun{
                     else if(code == Procedures.EDIT_ORDER_INFO)
                     {
                         var msg = ""
+                        var msgcode = ""
                         var arrayList : HashMap<String,Any> = HashMap()
                         var sub = 0
                         for(i in 0 until data!!.size)
@@ -261,13 +262,14 @@ class MainThread() : Thread() , ThreadFun{
                             else
                             {
                                 msg = data!![i]["MSG"].toString()
+                                msgcode = data!![i]["CODE"].toString()
                             }
                         }
-                        if(sub == 0 && msg.indexOf("조회결과") == 0) // result가 동일하므로, 메세지로 구분함 (주소검색이 아닌경우)
+                        if(sub == 0 && msgcode != "-6") // result가 동일하므로, 메세지로 구분함 (주소검색이 아닌경우)
                         {
                             Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.ORDER_TOAST_SHOW,0,msg).sendToTarget()
                         }
-                        if(sub == 0 && msg.indexOf("조회결과") > 1) // 주소검색인경우, 서버상태에 따라서 스트링이 변경되면 호출안될수있으니 좋은 방안 필요함 indexOf로 처리할까?
+                        if(sub == 0 && msgcode == "-6") // 주소검색인경우, 서버상태에 따라서 스트링이 변경되면 호출안될수있으니 좋은 방안 필요함 indexOf로 처리할까?
                         {
                             Vars.DataHandler!!.obtainMessage(Finals.VIEW_ADDRESS,Finals.MESSAGE_ADDR,0).sendToTarget()
                         }
@@ -283,6 +285,20 @@ class MainThread() : Thread() , ThreadFun{
                             Vars.AddrList.putAll(arrayList)
                             Vars.DataHandler!!.obtainMessage(Finals.VIEW_ADDRESS,Finals.SEARCH_ADDR,0).sendToTarget()
                         }
+                    }
+                    else if(code == Procedures.AGENCY_TOWN_LIST)
+                    {
+                        var arrayList : HashMap<String,Any> = HashMap()
+                        for(i in 0 until data!!.size)
+                        {
+                            var dd = Dongdata()
+                            dd.code = data!![i]["LawTownCode"].toString()
+                            dd.name = data!![i]["LawTownName"].toString()
+                            arrayList[dd.name!!] = dd
+                        }
+                        Vars.dongList.clear() // 한번전체삭제 하고
+                        Vars.dongList.putAll(arrayList)
+                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.SHOW_NEW_ASSIGN,0)?.sendToTarget()
                     }
                 }
                 Thread.sleep(200)

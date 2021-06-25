@@ -35,7 +35,7 @@
 				android:id="@+id/spinner"
 				android:layout_width="0dp"
 				android:gravity="center"
-				app:item_font="@{viewModel.item.approvalTypeName}"
+				app:item_font="@{viewModel.orderItem.approvalTypeName}"
 				android:onItemSelected='@{viewModel::onItemSelected}'
 				android:layout_height="match_parent"
 				android:entries="@array/pay_spinner"

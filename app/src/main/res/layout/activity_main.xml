@@ -43,58 +43,18 @@
                                 android:layout_weight="10"
                                 android:background="@color/black"
                                 android:gravity="center"
-                                android:text="오더현황 "
-                                android:textColor="@drawable/click_text_color"
+                                android:text="오더현황"
+                                android:textColor="@color/white"
                                 android:textSize="25dp"
-                                android:textStyle="bold"
+                                android:fontFamily="@font/gmarketsans_bold"
                                 app:Main_title_font2="@{viewModel.layer}">
                             </TextView>
 
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                app:menu_title_check_btn="@{viewModel.layer}"
-                                android:layout_weight="1">
-                            </TextView>
-
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
-
-                            <Button
-                                android:id="@+id/mB01"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:layout_marginRight="5dp"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginBottom="5dp"
-                                android:layout_marginLeft="15dp"
-                                app:menu_title="@{viewModel.layer}"
-                                android:onClick="@{v->viewModel.showDrawer()}"
-                                android:background="@drawable/menu_btn">
-                            </Button>
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="10">
-                            </LinearLayout>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="7">
-                            </LinearLayout>
 
                             <TextView
                                 android:id="@+id/textView"
@@ -102,26 +62,22 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:background="@color/black"
-                                android:gravity="left|center_vertical"
-                                android:text=" ▼"
+                                android:gravity="center"
+                                android:text="오더현황 (5) ▼"
                                 android:textColor="@drawable/click_text_color"
                                 android:textSize="25dp"
-                                android:textStyle="bold"
+                                android:fontFamily="@font/gmarketsans_bold"
                                 android:onClick="@{v->viewModel.click_check()}"
                                 app:Main_title_font="@{viewModel.checkview}"
+                                app:Main_title_font_sub="@{viewModel.layer}"
                                 app:menu_title_check_btn="@{viewModel.layer}">
                             </TextView>
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="4">
-                            </LinearLayout>
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
+                            android:gravity="center"
                             android:layout_height="match_parent">
 
                             <LinearLayout
@@ -136,6 +92,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center"
+                                android:layout_gravity="center"
                                 android:onClick="@{v->viewModel.click_fragment()}"
                                 android:textColor="@drawable/click_text_color_black"
                                 android:textSize="18dp"
@@ -145,6 +102,15 @@
                                 android:textStyle="bold"
                                 app:layout_form_btn="@{viewModel.layer}"
                                 app:text_color_map="@{viewModel.layer}">
+                            </TextView>
+
+                            <TextView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:onClick="@{v->viewModel.click_setting()}"
+                                app:layout_setting_btn="@{viewModel.layer}"
+                                android:layout_marginRight="20dp"
+                                android:background="@drawable/info_setting_btn">
                             </TextView>
 
                         </LinearLayout>
@@ -196,6 +162,8 @@
                                             android:textStyle="bold"
                                             android:onClick="@{v->viewModel.click_store()}"
                                             android:text="가맹점"
+                                            app:filter_title_Agency="@{viewModel.filter_title}"
+                                            app:filter_title_Agency_type="@{viewModel.select}"
                                             app:text_color_store="@{viewModel.select}">
                                         </TextView>
 
@@ -208,6 +176,8 @@
                                             android:textStyle="bold"
                                             android:onClick="@{v->viewModel.click_rider()}"
                                             android:text="라이더"
+                                            app:filter_title_Rider="@{viewModel.filter_title}"
+                                            app:filter_title_Rider_type="@{viewModel.select}"
                                             app:text_color_rider="@{viewModel.select}">
                                         </TextView>
                                     </LinearLayout>
@@ -299,6 +269,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:layout_weight="1"
+                                    android:gravity="center"
                                     app:layout_form="@{viewModel.layer == viewModel.getSelectAgency? 1:0}"
                                     android:orientation="horizontal">
 

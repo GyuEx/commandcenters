@@ -5,6 +5,7 @@ import android.os.Message
 import android.util.Log
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.repository.database.entity.Addrdata
+import com.beyondinc.commandcenter.repository.database.entity.Agencydata
 import com.beyondinc.commandcenter.repository.database.entity.Riderdata
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
@@ -22,8 +23,8 @@ class HandlerCallBack : Handler.Callback {
             Finals.VIEW_ITEM -> when (msg.arg1) // 메인 오더리스트 뷰모델
             {
                 Finals.INSERT_ORDER -> Vars.ItemVm?.insertLogic()
-                Finals.SELECT_EMPTY -> Vars.ItemVm?.select!!.value = Finals.SELECT_EMPTY
-                Finals.SELECT_BRIFE -> Vars.ItemVm?.select!!.value = Finals.SELECT_BRIFE
+                Finals.SELECT_EMPTY -> Vars.ItemVm?.main_filter_select_empty()
+                Finals.SELECT_BRIFE -> Vars.ItemVm?.main_filter_select_BRIEF()
                 Finals.ORDER_ASSIGN -> Vars.ItemVm?.OrderAssign(msg.obj as String)
                 Finals.ORDER_DETAIL_CLOSE -> Vars.ItemVm?.maincloseDetail()
                 Finals.STORE_ITEM_SELECT -> Vars.ItemVm?.storeSelect(msg.obj as String)
@@ -82,7 +83,6 @@ class HandlerCallBack : Handler.Callback {
             }
             Finals.VIEW_ADDRESS -> when (msg.arg1) // 주소검색 뷰모델
             {
-                Finals.INSERT_ADDR -> Vars.AddressVm?.insertdong(msg.obj as Orderdata)
                 Finals.SEARCH_ADDR -> Vars.AddressVm?.insertAddr()
                 Finals.MESSAGE_ADDR -> Vars.AddressVm?.showMsg()
             }
@@ -97,8 +97,9 @@ class HandlerCallBack : Handler.Callback {
                 Finals.INSERT_RIDER -> Vars.MainVm?.insertRider()
                 Finals.CALL_CENTER -> Vars.MainVm?.getCenterList()
                 Finals.CALL_ORDER -> Vars.MainVm?.getOrderList()
-                Finals.CLOSE_CHECK -> Vars.MainVm?.checkview!!.value = Finals.SELECT_EMPTY
-                Finals.ORDER_ITEM_SELECT -> Vars.MainVm?.showOrderDetail(msg.obj as Orderdata)
+                Finals.CLOSE_CHECK -> Vars.MainVm?.closecheck()
+                Finals.ORDER_ITEM_SELECT -> Vars.MainVm?.showOrderDetail(msg.obj as Orderdata,msg.arg2)
+                Finals.AGENCY_ITEM_SELECT -> Vars.MainVm?.showAgencyDetail(msg.obj as Agencydata,msg.arg2)
                 Finals.HTTP_ERROR -> Vars.MainVm?.HttpError()
                 Finals.CLOSE_KEYBOARD -> Vars.MainVm?.closeKeyBoard()
                 Finals.INSERT_ORDER_COUNT -> Vars.MainVm?.order_count!!.postValue(msg.obj as String)
@@ -109,13 +110,14 @@ class HandlerCallBack : Handler.Callback {
                 Finals.ORDER_ASSIGN -> Vars.MainVm?.orderAssign(msg.obj as String)
                 Finals.ORDER_ASSIGN_LIST -> Vars.MainVm?.orderAssignList(msg.obj as ConcurrentHashMap<String, ArrayList<String>>)
                 Finals.ORDER_TOAST_SHOW -> Vars.MainVm?.showToast(msg.obj as String)
-                Finals.CLOSE_POPUP -> Vars.MainVm?.closeDialogHidden()
+                Finals.CLOSE_POPUP -> Vars.MainVm?.closeDialogHidden(msg.obj as String)
                 Finals.CLOSE_DIALOG -> Vars.MainVm?.closeDialog()
                 Finals.SEND_TELEPHONE -> Vars.MainVm?.send_call(msg.obj as String)
                 Finals.MAP_FOR_SOPEN -> Vars.MainVm?.showSelectDialog(msg.obj as Orderdata)
                 Finals.CALL_GPS -> Vars.MainVm?.getRiderGPS()
                 Finals.SEND_ITEM -> Vars.MainVm?.getItemsend(msg.obj as Orderdata)
                 Finals.CHANGE_ADDRESS -> Vars.MainVm?.showAddress()
+                Finals.NEW_ASSIGN -> Vars.MainVm?.newAssgint(msg.obj as Agencydata)
                 Finals.CHECK_TIME -> Vars.MainVm?.checkOrderLastTime()
                 Finals.CHECK_COUNT -> Vars.MainVm?.checkOrderCount()
                 Finals.CONN_ALRAM -> Vars.MainVm?.connenctAlram()
@@ -126,9 +128,10 @@ class HandlerCallBack : Handler.Callback {
                 Finals.SHOW_MESSAGE -> Vars.MainVm?.showMessage(msg.obj as String,"0")
                 Finals.CHANGE_CLOSE -> Vars.MainVm?.changeClose()
                 Finals.SEARCH_ADDR -> Vars.MainVm?.getAddress(msg.obj as HashMap<Int, String>)
+                Finals.SEARCH_NEW_ADDR -> Vars.MainVm?.getAddressNew(msg.obj as HashMap<Int, String>)
                 Finals.CHANGE_ADDR -> Vars.MainVm?.changeAddr(msg.obj as Addrdata)
-                Finals.INSERT_ADDR -> Vars.MainVm?.insertAddr()
                 Finals.SHOW_ADDR -> Vars.MainVm?.insertDetailAddr()
+                Finals.SHOW_NEW_ASSIGN -> Vars.MainVm?.insertNewAssign()
             }
         }
 

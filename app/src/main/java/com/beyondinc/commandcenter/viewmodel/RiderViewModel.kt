@@ -39,10 +39,16 @@ class RiderViewModel : ViewModel() {
         {
             var rittemp = it.next()
 
+            if(Vars.f_center.contains(Vars.orderList[rittemp]?.RcptCenterId))
+            {
+                continue
+            }
+
             if (tempmap.containsKey(Vars.orderList[rittemp]?.RiderName) || Vars.orderList[rittemp]?.RiderName == "")
             else {
                 val memo = AgencyRiderdata()
                 memo.riderName = Vars.orderList[rittemp]!!.RiderName
+                memo.centerId = Vars.riderList[Vars.orderList[rittemp]!!.RiderId!!]!!.centerID!!
                 tempmap[Vars.orderList[rittemp]!!.RiderName] = memo
             }
 
@@ -77,7 +83,7 @@ class RiderViewModel : ViewModel() {
     }
 
     fun getName(pos: Int): String? {
-        return items!![pos]?.riderName
+        return "${Vars.centerList[items!![pos]?.centerId]?.centerName}]${items!![pos]?.riderName}"
     }
 
     fun getVelue1(pos: Int): String? {

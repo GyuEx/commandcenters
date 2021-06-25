@@ -16,6 +16,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
+import java.net.SocketTimeoutException
 import java.net.URL
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -114,7 +115,8 @@ class HttpConn : Thread(), ThreadFun {
                     wr.write(requestBody) //json 형식의 message 전달
                     wr.flush()
                     val sb = StringBuilder()
-                    if (con.getResponseCode() === HttpURLConnection.HTTP_OK)
+                    val HttpResultCode = HttpURLConnection.HTTP_OK
+                    if (con.responseCode == HttpResultCode)
                     {
                         //Stream을 처리해줘야 하는 귀찮음이 있음.
                         val br = BufferedReader(
@@ -154,8 +156,8 @@ class HttpConn : Thread(), ThreadFun {
                     Thread.sleep(100)
                 }
 
-           } catch (e: Exception) {
-//                if (code == Procedures.LOGIN) Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.LOGIN_FAIL,0).sendToTarget()
+           } catch (e: SocketTimeoutException) {
+                if (code == Procedures.LOGIN) Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.LOGIN_FAIL,0).sendToTarget()
 //                else
 //                {
 //                    if(dofalseConn == 5) // 통신불능시 해당 Exception을 타게됨, 카운터를 줘서 5회 이상이면 통신장애안내창 띄움

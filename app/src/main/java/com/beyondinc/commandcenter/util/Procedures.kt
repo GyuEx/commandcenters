@@ -14,10 +14,15 @@ object Procedures {
 
     const val ALARM_ACKNOWLEDGEMENT = "dim_AlarmAck"
 
-    const val CENTER_LIST = "dim_spAccessibleCenterList"
-    const val RIDER_LIST_IN_CENTER = "dim_spRiderByCenter"
-    const val ORDER_LIST_IN_CENTER = "dim_spMgrOrderList"
-    const val AGENCY_LIST = "dim_spAgencyByCenter"
+    const val CENTER_LIST = "dim_spAccessibleCenterList"   // 센터 전체 리스트 가져오기
+    const val RIDER_LIST_IN_CENTER = "dim_spRiderByCenter" // 센터별 라이더 목록 조회
+    const val ORDER_LIST_IN_CENTER = "dim_spMgrOrderList"  // 센터별 오더목록 조회
+    const val AGENCY_LIST = "dim_spAgencyByCenter"         // 센터별 가맹점 조회
+    const val AGENCY_TOWN_LIST = "dim_spAgencyLocalAddr" // 가맹점별 배달가능지역 조회
+
+    object AgencyTownType {
+        const val SearchDong = "SearchCallcenterTown"
+    }
 
     // TODO: 실제 오더상세 수신이 아닌 알람 수신시 개별오더 업데이트용. 이름을 변경해야 함
 //    const val ORDER_DETAIL = "dim_spMgrOrderDetail"
@@ -42,6 +47,7 @@ object Procedures {
         const val ORDER_PACKING_COMPLETE = "Req.PackingComplete"
         const val CHANGE_SALES_PRICE = "Req.SalesPriceChange"
         const val ADD_DELIVERY_FEE = "Req.ChangeAddDeliveryFee"
+        const val APPROVAL_TYPE = "Req.Approval"
     }
 
     const val RIDER_LOCATION_IN_CENTER = "dim_spRiderLastLocationInfo"

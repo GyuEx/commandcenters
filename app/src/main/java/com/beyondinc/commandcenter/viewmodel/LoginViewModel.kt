@@ -39,7 +39,7 @@ class LoginViewModel() : ViewModel() {
     var pw : MutableLiveData<String> = MutableLiveData() // 패스워드
 
     var saveId : MutableLiveData<Boolean> = MutableLiveData() // 저장아이디
-    var savePw : MutableLiveData<Boolean> = MutableLiveData() // 저장패스워드
+    //var savePw : MutableLiveData<Boolean> = MutableLiveData() // 저장패스워드
 
     var updateTxt = MutableLiveData<String>() // 업데이트시 보여줄 텍스트
     var infotxt = MutableLiveData<String>() // 업데이트시 보여줄 안내 텍스트
@@ -55,7 +55,7 @@ class LoginViewModel() : ViewModel() {
         Logindata.isLogin = false
 
         saveId.value = false
-        savePw.value = false
+        //savePw.value = false
 
         ver.value = Logindata.appVersion
 
@@ -67,11 +67,11 @@ class LoginViewModel() : ViewModel() {
             saveId.value = true
             id.value = pref.getString("id", "")
         }
-        if(pref.getBoolean("savepw", false))
-        {
-            savePw.value = true
-            pw.value = pref.getString("pw", "")
-        }
+//        if(pref.getBoolean("savepw", false))
+//        {
+//            savePw.value = true
+//            pw.value = pref.getString("pw", "")
+//        }
 
         //getPhoneNum() // 핸드폰 번호 및 단말기명 가져오기
 
@@ -109,13 +109,13 @@ class LoginViewModel() : ViewModel() {
                 ed.putBoolean("saveid", saveId.value!!)
                 ed.apply()
             }
-            if(savePw.value == true) {
-                var pref = PreferenceManager.getDefaultSharedPreferences(Vars.lContext)
-                var ed = pref.edit()
-                ed.putString("pw", pw.value)
-                ed.putBoolean("savepw", savePw.value!!)
-                ed.apply()
-            }
+//            if(savePw.value == true) {
+//                var pref = PreferenceManager.getDefaultSharedPreferences(Vars.lContext)
+//                var ed = pref.edit()
+//                ed.putString("pw", pw.value)
+//                ed.putBoolean("savepw", savePw.value!!)
+//                ed.apply()
+//            }
         }
     }
 
@@ -134,13 +134,13 @@ class LoginViewModel() : ViewModel() {
         ed.apply()
     }
 
-    fun savePw(){
-        savePw.value = savePw.value != true
-        var pref = PreferenceManager.getDefaultSharedPreferences(Vars.lContext)
-        var ed = pref.edit()
-        ed.putBoolean("savepw", savePw.value!!)
-        ed.apply()
-    }
+//    fun savePw(){
+//        savePw.value = savePw.value != true
+//        var pref = PreferenceManager.getDefaultSharedPreferences(Vars.lContext)
+//        var ed = pref.edit()
+//        ed.putBoolean("savepw", savePw.value!!)
+//        ed.apply()
+//    }
 
     fun LoginSucess(){
         (Vars.lContext as LoginsFun).LoginSuccess()

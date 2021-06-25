@@ -342,14 +342,14 @@ class Mains : AppCompatActivity(), MainsFun {
         }
     }
 
-    override fun showOderdetail() {
+    override fun showOrderdetail(code:Int) {
         try {
             runOnUiThread {
                 if (detail != null) {
                     detail!!.dismiss()
                     detail = null
                 }
-                detail = DetailDialog()
+                detail = DetailDialog(code)
                 detail!!.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light)
                 detail!!.show(supportFragmentManager, "Details")
             }
@@ -432,14 +432,14 @@ class Mains : AppCompatActivity(), MainsFun {
 
     }
 
-    override fun showAddress() {
+    override fun showAddress(obj : Any?) {
         try {
             runOnUiThread {
                 if (address != null) {
                     address!!.dismiss()
                     address = null
                 }
-                address = AddressDialog()
+                address = AddressDialog(obj)
                 address!!.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light)
                 address!!.show(supportFragmentManager, "address")
             }

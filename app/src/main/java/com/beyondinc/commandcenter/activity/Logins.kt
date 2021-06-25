@@ -13,16 +13,14 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.Interface.LoginsFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Logindata
-import com.beyondinc.commandcenter.databinding.ActivityLoginsBinding
+import com.beyondinc.commandcenter.databinding.ActivityLoginsNewBinding
 import com.beyondinc.commandcenter.fragment.DownloadingDialog
 import com.beyondinc.commandcenter.fragment.LoginLoadingDialog
 import com.beyondinc.commandcenter.handler.*
@@ -38,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 
 class Logins : AppCompatActivity() , LoginsFun {
-    var binding: ActivityLoginsBinding? = null
+    var binding: ActivityLoginsNewBinding? = null
     var isLogin = false
     var loading:LoginLoadingDialog? = null
     var downloading:DownloadingDialog? = null
@@ -86,7 +84,7 @@ class Logins : AppCompatActivity() , LoginsFun {
 
         if(Vars.DataHandler == null) Vars.DataHandler = Handler(HandlerCallBack()) // 모델 데이터 처리 핸들러
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_logins)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_logins_new)
         if(Vars.LoginVm == null) Vars.LoginVm = LoginViewModel()
         binding!!.lifecycleOwner = this
         binding!!.viewModel = Vars.LoginVm

@@ -16,7 +16,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="0dp"
 			android:layout_weight="1"
-			android:text="@{viewModel.item.agencyName}"
+			android:text="@{viewModel.orderItem.agencyName}"
 			android:textStyle="bold"
 			android:textColor="@color/black"
 			android:textSize="20dp"
