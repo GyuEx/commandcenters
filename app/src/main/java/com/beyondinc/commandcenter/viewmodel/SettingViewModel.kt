@@ -3,11 +3,16 @@ package com.beyondinc.commandcenter.viewmodel
 import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.beyondinc.commandcenter.Interface.LoginsFun
 import com.beyondinc.commandcenter.Interface.SettingFun
+import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 
 class SettingViewModel : ViewModel() {
@@ -31,6 +36,7 @@ class SettingViewModel : ViewModel() {
 
     init
     {
+        Log.e("Setting","세팅 뷰모델이 나타났습니다.")
         usenick.value = Vars.Usenick
         useTime.value = Vars.UseTime
         useGana.value = Vars.UseGana
@@ -47,6 +53,7 @@ class SettingViewModel : ViewModel() {
         toneinfo.value = Vars.speechpitchinfo
         rateseek.value = Vars.rateseek
         toneseek.value = Vars.toneseek
+
     }
 
     fun click_save(){
@@ -95,6 +102,12 @@ class SettingViewModel : ViewModel() {
 
     fun click_nick_setting(){
         (Vars.sContext as SettingFun).showDialog()
+    }
+
+    fun click_change_password(){
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.RE_LOGIN,0).sendToTarget()
+        closeEmer()
+        exit()
     }
 
     fun click_close_pop(){
@@ -239,5 +252,13 @@ class SettingViewModel : ViewModel() {
             10 -> {tone.value = 2.0f
                 toneinfo.value = "매우높음"}
         }
+    }
+
+    fun showEmer(){
+        (Vars.sContext as SettingFun).showEmer()
+    }
+
+    fun closeEmer(){
+        (Vars.sContext as SettingFun).closeDialog()
     }
 }

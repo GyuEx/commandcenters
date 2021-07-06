@@ -93,6 +93,9 @@ object Finals {
 
     val LOGIN_SUCESS : Int = 101
     val LOGIN_FAIL : Int = 102
+    val LOG_OUT : Int = 103
+    val CHANGE_PASSWORD : Int = 104
+    val RE_LOGIN : Int = 105
 
     val HTTP_ERROR : Int = 111
     val SEND_TELEPHONE : Int = 112
@@ -117,6 +120,9 @@ object Finals {
     val SHOW_ADDR : Int = 155
     val SHOW_NEW_ASSIGN : Int = 156
     val SEARCH_NEW_ADDR : Int = 157
+
+    val GET_DELIVERY_FEE : Int = 171
+    val INSERT_NEW_ORDER : Int = 172
 
     val POPUP_MAP_AGENCY : Int = 181
     val POPUP_MAP_CUST : Int = 182

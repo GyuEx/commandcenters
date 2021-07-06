@@ -10,11 +10,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.RadioGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.adapter.RecyclerAdapterAddr
+import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.repository.database.entity.Addrdata
 import com.beyondinc.commandcenter.repository.database.entity.Agencydata
@@ -27,6 +29,8 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Align
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
@@ -45,6 +49,7 @@ class AddressViewModel : ViewModel() {
     var selection : MutableLiveData<String> = MutableLiveData() // 주소검색 "지번,도로명"등 선택 저장 변수
     var searchTxt : MutableLiveData<String> = MutableLiveData() // 검색 텍스트
     var detailtxt : MutableLiveData<String> = MutableLiveData() // 상세주소(기입형) 텍스트
+    var editfocus : MutableLiveData<String> = MutableLiveData() // 텍스트뷰 포커스
     var hinttxt : MutableLiveData<String> = MutableLiveData() // 상세주소 힌트
     var addr = Addrdata() // 주소선택시 저장클래스
     var from : MutableLiveData<Int> = MutableLiveData() // 0:작업중이아님, 1:검색중, 2:검색완료, 3:검색실패, 4:주소선택, 5:상세주소만변경, 6:접수화면
@@ -71,6 +76,9 @@ class AddressViewModel : ViewModel() {
 
     val CustMarker = Marker() // 지도 맵 마커
 
+    var DeliveryDistance : MutableLiveData<String> = MutableLiveData()
+    var DeliveryFee : MutableLiveData<String> = MutableLiveData()
+
     init
     {
         Log.e("AddrssView", "CheckView Enable")
@@ -83,6 +91,8 @@ class AddressViewModel : ViewModel() {
         }
         selection.value = "Road"
         orderSailMoney.value = ""
+        orderarriveTime.value = ""
+        editfocus.value = "0"
     }
 
     override fun onCleared() {
@@ -93,58 +103,26 @@ class AddressViewModel : ViewModel() {
 
     fun click_dong(){
         detailtxt.value += "동 "
+        if(editfocus.value == "0") editfocus.value = "1" //숫자는 별로 의미없음, 포커스를 글자 끝으로 주기 위함
+        else editfocus.value = "0"
     }
 
     fun click_ho(){
         detailtxt.value += "호 "
+        if(editfocus.value == "0") editfocus.value = "1"
+        else editfocus.value = "0"
     }
 
     fun click_cheung(){
         detailtxt.value += "층 "
+        if(editfocus.value == "0") editfocus.value = "1"
+        else editfocus.value = "0"
     }
 
     fun click_delete(){
         detailtxt.value = ""
-    }
-
-    fun click_one(){
-        detailtxt.value += "1"
-    }
-
-    fun click_two(){
-        detailtxt.value += "2"
-    }
-
-    fun click_three(){
-        detailtxt.value += "3"
-    }
-
-    fun click_four(){
-        detailtxt.value += "4"
-    }
-
-    fun click_five(){
-        detailtxt.value += "5"
-    }
-
-    fun click_six(){
-        detailtxt.value += "6"
-    }
-
-    fun click_seven(){
-        detailtxt.value += "7"
-    }
-
-    fun click_eight(){
-        detailtxt.value += "8"
-    }
-
-    fun click_nine(){
-        detailtxt.value += "9"
-    }
-
-    fun click_zero(){
-        detailtxt.value += "0"
+        if(editfocus.value == "0") editfocus.value = "1"
+        else editfocus.value = "0"
     }
 
     fun click_100(){
@@ -184,7 +162,18 @@ class AddressViewModel : ViewModel() {
         }
     }
 
-    fun initfirst(){
+    fun initfirst()
+    {
+        orderHistory.value = ""
+        orderSailMoney.value = ""
+        orderarriveTime.value = ""
+        orderTelnumber.value = ""
+        orderNotice.value = ""
+        orderPayment.value = ""
+
+        DeliveryDistance.value = ""
+        DeliveryFee.value = ""
+
         searchTxt.value = ""
         detailtxt.value = ""
         itemsAddr!!.clear()
@@ -197,12 +186,16 @@ class AddressViewModel : ViewModel() {
     fun onItemSelectedArriveTime(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
          if((parent.getChildAt(0) as TextView).text.toString() != "즉시") {
              var st = (parent.getChildAt(0) as TextView).text.toString().replace("분", "").toInt()
-             orderarriveTime.value = "${st + 20}분후 도착"
+             orderarriveTime.value = (st + 20).toString()
          }
     }
 
     fun onItemSelectedPayment(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         orderPayment.value = (parent.getChildAt(0) as TextView).text.toString()
+    }
+
+    fun onItemSelectedBuildName(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        detailtxt.value += (parent.getChildAt(0) as TextView).text.toString() + " "
     }
 
     fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
@@ -242,9 +235,10 @@ class AddressViewModel : ViewModel() {
             item_order = initdata
             statecode = 0
             titletext.value = "주소변경"
+            btntext.value = "완료"
 
             var road =
-                item_order.CustomerShortAddr.substring(item_order.CustomerAddrData.length + 1)
+                item_order.CustomerShortAddr.substring(item_order.CustomerAddrData.length)
                     .replace(
                         "[",
                         ""
@@ -293,7 +287,8 @@ class AddressViewModel : ViewModel() {
     fun rechoice(){
         if(from.value == 4) {
             from.value = 2
-            fromtext.value = "변경하려는 주소를 선택해주세요"
+            if(statecode == 0) fromtext.value = "변경하려는 주소를 선택해주세요"
+            else fromtext.value = "주소를 선택해주세요"
         }
         closeKeyboard()
     }
@@ -312,24 +307,14 @@ class AddressViewModel : ViewModel() {
         if(from.value != 5)
         {
             from.value = 2
-            fromtext.value = "변경하려는 주소를 선택해주세요"
+            if(statecode == 0) fromtext.value = "변경하려는 주소를 선택해주세요"
+            else fromtext.value = "주소를 선택해주세요"
             onCreateAddr()
         }
         else
         {
             click_Adress(0)
         }
-    }
-
-
-    fun afterTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
-    {
-        searchTxt.value = s.toString()
-    }
-
-    fun afterTextChanged3(s: CharSequence?, start: Int, before: Int, count: Int)
-    {
-        detailtxt.value = s.toString()
     }
 
     fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?) : Boolean
@@ -441,12 +426,86 @@ class AddressViewModel : ViewModel() {
         }
         else
         {
-            if(from.value != 6) from.value = 6
+            if(from.value != 6)
+            {
+                from.value = 6
+                Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.GET_DELIVERY_FEE,0,addr).sendToTarget()
+                btntext.value = "저장"
+            }
+            else if(orderHistory.value.isNullOrEmpty() || orderSailMoney.value.isNullOrEmpty() || orderTelnumber.value.isNullOrEmpty())
+            {
+                Toast.makeText(Vars.mContext,"금액,주문내역 또는 전화번호가 없습니다.",Toast.LENGTH_LONG).show()
+                return
+            }
             else
             {
-                Log.e("TEST","${orderHistory.value} + ${orderSailMoney.value} + ${orderarriveTime.value} + ${orderTelnumber.value} + ${orderNotice.value} + ${orderPayment.value}")
+                if(item_agency.DepositYn == "Y")
+                {
+                    var exeSum = item_agency.DepositWarningPrice!!.toInt()
+                    var extSum = item_agency.SumAmt!!.toInt()
+                    if(exeSum > extSum)
+                    {
+                        Toast.makeText(Vars.mContext,"예치금이 ${exeSum}원 미만인 경우에는 주문이 불가능합니다.\n 현재 예치금 잔액 : ${extSum}",Toast.LENGTH_LONG).show()
+                        return
+                    }
+                }
+                addr.Addr = "${addr.CityName} ${addr.CountyName} ${addr.LawTownName} ${addr.Jibun}"
+                addr.detailAddress = detailtxt.value.toString()
+                Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.SHOW_MESSAGE,0,"접수").sendToTarget()
             }
         }
+    }
+
+    fun insertNewOrder()
+    {
+        var nHash : HashMap<String,String> = HashMap()
+        var approvalCode : String? = ""
+
+        if(orderPayment.value == "현금") approvalCode = "2701"
+        else if(orderPayment.value == "카드") approvalCode = "2702"
+        else if(orderPayment.value == "선결제") approvalCode = "2704"
+
+        val format1 = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val time = Date()
+        val timecode = format1.format(time)
+
+        nHash["INPUT_TYPE"] = "I" //등록
+        nHash["RECEIPT_ID"] = "" //접수아이디
+        nHash["REG_ID_TYPE"] = "1"
+        nHash["USER_ID"] = Logindata.LoginId.toString()
+        nHash["ORDER_CLASS"] = "102" // 오더구분 : 102 예약
+        nHash["DELIVERY_PLAN_DT"] = timecode
+        nHash["AGENCY_ID"] = item_agency.AgencyId.toString()
+        nHash["CUSTOMER_ID"] = ""
+        nHash["CUSTOMERN_AME"] = ""
+        nHash["CUSTOMER_PHONE"] = orderTelnumber.value.toString()
+        nHash["CUSTOMER_MOBILE"] = ""
+        nHash["CUSTOMER_ADDR"] = addr.Addr
+        nHash["CUSTOMER_LAWTOWNCODE"] = Vars.dongList[addr.LawTownName].toString()
+        nHash["CUSTOMER_LAWTOWNNAME"] = addr.LawTownName
+        nHash["CUSTOMER_JIBUN"] = addr.Jibun
+        nHash["CUSTOMER_ADDR_DETAIL"] = addr.detailAddress
+        nHash["CUSTOMER_BUILDING_MANAGE_NO"] = addr.BuildingManageNo
+        nHash["APPROVAL_TYPE"] = approvalCode.toString()
+        nHash["PRICE"] = orderSailMoney.value.toString()
+        nHash["ORDER_DESC"] = orderHistory.value.toString()
+        nHash["CONTENT"] = orderNotice.value.toString()
+        nHash["PICKUP_YN"] = "N"
+        nHash["CANCEL_RESON"] = ""
+        nHash["CUSTOMER_LATITUDE"] = addr.Latitude
+        nHash["CUSTOMER_LONGITUDE"] = addr.Longitude
+        nHash["ORDER_DELAY"] = orderarriveTime.value.toString()
+        nHash["ShortLoadAddress"] = ""
+
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.INSERT_NEW_ORDER,0,nHash).sendToTarget()
+    }
+
+    fun initDeliFee(data : HashMap<String,String>){
+        val df = DecimalFormat("#,###")
+        val Distresult = df.format(data["DeliveryDistance"]!!.toLong())
+        val Feeresult = df.format(data["DeliveryFee"]!!.toLong())
+        DeliveryDistance.value = "배달거리 : ${Distresult} M"
+        DeliveryFee.value = "배달금액 : ${Feeresult} 원"
     }
 
     fun closeKeyboard()
@@ -454,7 +513,8 @@ class AddressViewModel : ViewModel() {
         foc.value = false
     }
 
-    fun click_choice(){
+    fun click_choice()
+    {
         from.value = 4
         title.value = "${addr.CityName} ${addr.CountyName} ${addr.LawTownName} ${addr.Jibun} [${addr.Road}]"
         if(statecode == 1) btntext.value = "다음"
@@ -465,8 +525,8 @@ class AddressViewModel : ViewModel() {
 
     fun makeMarker()
     {
-        if(item_order.CustomerLatitude != null && item_order.CustomerLatitude != "")
-        {
+ //       if(item_order.CustomerLatitude != null && item_order.CustomerLatitude != "")
+ //       {
             val agencylatitude = addr.Latitude?.toDouble()
             val agencylongitude = addr.Longitude?.toDouble()
             if (agencylatitude != null && agencylongitude != null) {
@@ -484,7 +544,7 @@ class AddressViewModel : ViewModel() {
                 mapInstance!!.moveCamera(CameraUpdate.scrollTo(agencyPosition))
                 mapInstance!!.moveCamera(CameraUpdate.zoomTo(16.0)) //확대율 조정
             }
-        }
+ //       }
     }
 
     class FixedMarkerView(context: Context, isStartPosition: Boolean = false) : ConstraintLayout(

@@ -19,9 +19,17 @@ object Procedures {
     const val ORDER_LIST_IN_CENTER = "dim_spMgrOrderList"  // 센터별 오더목록 조회
     const val AGENCY_LIST = "dim_spAgencyByCenter"         // 센터별 가맹점 조회
     const val AGENCY_TOWN_LIST = "dim_spAgencyLocalAddr" // 가맹점별 배달가능지역 조회
+    const val DELIVERY_FEE_INFO = "dim_spDeliveryFeeInfo" // 배달금액 조회
+    const val REG_NEW_ORDER = "dim_spOrderReg"
 
     object AgencyTownType {
         const val SearchDong = "SearchCallcenterTown"
+    }
+    object DeliveryFeeType {
+        const val SearchFee = "SearchDeliveryFeeInfo"
+    }
+    object RegOrderType {
+        const val NewOrder = "RegNewOrder"
     }
 
     // TODO: 실제 오더상세 수신이 아닌 알람 수신시 개별오더 업데이트용. 이름을 변경해야 함

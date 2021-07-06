@@ -34,7 +34,7 @@ class MainThread() : Thread() , ThreadFun{
 
     override fun run() {
         while (isKeep) {
-            try {
+//            try {
 
                 if (Vars.receiveList != null && Vars.receiveList.isNotEmpty()) {
 
@@ -48,27 +48,52 @@ class MainThread() : Thread() , ThreadFun{
 
                     if(code == Procedures.LOGIN)
                     {
-                        //로그인은 반드시 0번지여야함
-                        if(data!![0]["CODE"] == "-1000")
+                        if(data.size > 0)
                         {
-                            Logindata.MSG = data!![0]["MSG"]
-                            Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.APK_UPDATE,0).sendToTarget() // 업데이트 시작
-                        }
-                        else if(data!![0]["MSG"] == "로그인 성공!")
-                        {
-                            Logindata.CenterId=data!![0]["CenterId"]
-                            Logindata.CenterName=data!![0]["CenterName"]
-                            Logindata.CompanyId=data!![0]["CompanyId"]
-                            Logindata.CompanyName=data!![0]["CompanyName"]
-                            Logindata.UserDesc=data!![0]["UserDesc"]
-                            Logindata.LastLoginDT=data!![0]["LastLoginDT"]
-                            Logindata.MSG=data!![0]["MSG"]
-                            Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.LOGIN_SUCESS,0).sendToTarget()
-                        }
-                        else
-                        {
-                            Logindata.MSG = data!![0]["MSG"]
-                            Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.LOGIN_FAIL,0).sendToTarget()
+                            //로그인은 반드시 0번지여야함
+                            if(data!![0]["CODE"] == "-1000")
+                            {
+                                Logindata.MSG = data!![0]["MSG"]
+                                Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.APK_UPDATE,0).sendToTarget() // 업데이트 시작
+                            }
+                            else if(data!![0]["MSG"] == "로그인 성공!")
+                            {
+                                Logindata.CenterId=data!![0]["CenterId"]
+                                Logindata.CenterName=data!![0]["CenterName"]
+                                Logindata.CompanyId=data!![0]["CompanyId"]
+                                Logindata.CompanyName=data!![0]["CompanyName"]
+                                Logindata.UserDesc=data!![0]["UserDesc"]
+                                Logindata.LastLoginDT=data!![0]["LastLoginDT"]
+                                Logindata.MSG=data!![0]["MSG"]
+
+                                if(!data[0].containsKey("PasswdResetYn"))
+                                {
+                                    Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.LOGIN_SUCESS,0).sendToTarget()
+                                }
+                                else
+                                {
+                                    if(data[0]["PasswdResetYn"] == "N")
+                                    {
+                                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.LOGIN_SUCESS,0).sendToTarget()
+                                    }
+                                    else
+                                    {
+                                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.CHANGE_PASSWORD,0,data[0]["PasswdResetWhy"].toString()).sendToTarget()
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if(data!![0]["MSG"] == "비밀번호 변경에 성공하였습니다.")
+                                {
+                                    Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.SHOW_MESSAGE,0).sendToTarget()
+                                }
+                                else
+                                {
+                                    Logindata.MSG = data!![0]["MSG"]
+                                    Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.LOGIN_FAIL,0).sendToTarget()
+                                }
+                            }
                         }
                     }
                     else if(code == Procedures.CENTER_LIST)
@@ -300,12 +325,22 @@ class MainThread() : Thread() , ThreadFun{
                         Vars.dongList.putAll(arrayList)
                         Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.SHOW_NEW_ASSIGN,0)?.sendToTarget()
                     }
+                    else if(code == Procedures.DELIVERY_FEE_INFO)
+                    {
+                        var arrayList : HashMap<String,String> = HashMap()
+                        for(i in 0 until data!!.size)
+                        {
+                            arrayList["DeliveryFee"] = data!![i]["DeliveryFee"].toString()
+                            arrayList["DeliveryDistance"] = data!![i]["DeliveryDistance"].toString()
+                        }
+                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ADDRESS,Finals.GET_DELIVERY_FEE,0,arrayList).sendToTarget()
+                    }
                 }
                 Thread.sleep(200)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Log.e("MainThread",e.toString())
-            }
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//                Log.e("MainThread",e.toString())
+//            }
         }
     }
     

@@ -217,7 +217,6 @@
                         android:paddingBottom="10dp"
                         android:paddingRight="10dp"
                         android:background="@drawable/info_background_btn"
-                        android:onClick="@{v->viewModel.click_order()}"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -370,7 +369,6 @@
                         android:paddingBottom="10dp"
                         android:paddingRight="10dp"
                         android:background="@drawable/info_background_btn"
-                        android:onClick="@{v->viewModel.click_order()}"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -440,7 +438,6 @@
                         android:paddingBottom="10dp"
                         android:paddingRight="10dp"
                         android:background="@drawable/info_background_btn"
-                        android:onClick="@{v->viewModel.click_order()}"
                         android:orientation="vertical">
 
                         <LinearLayout

@@ -132,30 +132,22 @@
                         android:background="@color/whitegray"
                         android:onClick="@{v->viewModel.closeKeyboard()}"></TextView>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:gravity="left|center"
-                        android:onClick="@{v->viewModel.closeKeyboard()}"
-                        android:text='* 상세주소를 반드시 확인하여 주세요.'
-                        android:textColor="@color/black"
-                        android:textSize="13dp"
-                        android:textStyle="bold"></TextView>
 
                     <EditText
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
+                        android:layout_height="50dp"
+                        android:background="@drawable/detail_data_background"
+                        android:gravity="center_vertical"
                         android:hint="상세주소 입력은 여기를 터치해주세요"
                         android:imeOptions="actionDone"
                         android:inputType="text"
-                        android:onTextChanged="@{viewModel::afterTextChanged3}"
+                        android:paddingLeft="10dp"
                         android:singleLine="true"
-                        android:text="@{viewModel.detailtxt}"
+                        android:text="@={viewModel.detailtxt}"
                         android:textColor="@color/black"
                         android:textSize="20dp"
                         android:textStyle="bold"
+                        app:focusEditText="@{viewModel.editfocus}"
                         app:focus="@{viewModel.foc}"></EditText>
 
                 </LinearLayout>
@@ -163,8 +155,8 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:onClick="@{v->viewModel.closeKeyboard()}"
                 android:orientation="vertical"
                 app:Address_sel2_layer="@{viewModel.from}">
@@ -183,7 +175,8 @@
                 <Spinner
                     android:id="@+id/spinner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
+                    android:background="@drawable/spinner_bg"
                     android:entries="@{viewModel.itemsdong}"
                     android:gravity="center"
                     android:onItemSelected='@{viewModel::onItemSelected}'
@@ -250,25 +243,6 @@
                             android:textColor="@color/black"></RadioButton>
                     </RadioGroup>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:background="@color/whitegray"
-                        android:onClick="@{v->viewModel.closeKeyboard()}"></TextView>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:gravity="left|center"
-                        android:onClick="@{v->viewModel.closeKeyboard()}"
-                        android:text='* 검색할 주소를 입력해주세요'
-                        android:textColor="@color/black"
-                        android:textSize="13dp"
-                        android:textStyle="bold"></TextView>
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -278,14 +252,16 @@
                         <EditText
                             android:id="@+id/editBox01"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="50dp"
                             android:layout_marginRight="10dp"
                             android:layout_weight="5"
+                            android:background="@drawable/detail_data_background"
                             android:hint='@{viewModel.hinttxt}'
                             android:imeOptions="actionSearch"
                             android:inputType="text"
                             android:onEditorAction="@{viewModel::onEditorAction}"
-                            android:onTextChanged="@{viewModel::afterTextChanged}"
+                            android:text="@={viewModel.searchTxt}"
+                            android:paddingLeft="10dp"
                             android:singleLine="true"
                             android:textColor="@color/black"
                             android:textColorHint="@color/whitegray"
@@ -382,7 +358,10 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2"
-                            android:entries="@array/BuildingNameList"></Spinner>
+                            android:background="@drawable/spinner_bg"
+                            android:entries="@array/BuildingNameList"
+                            android:onItemSelected="@{viewModel::onItemSelectedBuildName}"
+                            android:padding="5dp"></Spinner>
 
                         <TextView
                             android:layout_width="0dp"
@@ -434,134 +413,6 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="1dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/line_background"
-                            android:gravity="center"
-                            android:onClick="@{v->viewModel.click_one()}"
-                            android:text="1"
-                            android:textColor="@drawable/click_text_color_black"
-                            android:textSize="20dp"></TextView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="1dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/line_background"
-                            android:gravity="center"
-                            android:onClick="@{v->viewModel.click_two()}"
-                            android:text="2"
-                            android:textColor="@drawable/click_text_color_black"
-                            android:textSize="20dp"></TextView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="1dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/line_background"
-                            android:gravity="center"
-                            android:onClick="@{v->viewModel.click_three()}"
-                            android:text="3"
-                            android:textColor="@drawable/click_text_color_black"
-                            android:textSize="20dp"></TextView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="1dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/line_background"
-                            android:gravity="center"
-                            android:onClick="@{v->viewModel.click_four()}"
-                            android:text="4"
-                            android:textColor="@drawable/click_text_color_black"
-                            android:textSize="20dp"></TextView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="1dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/line_background"
-                            android:gravity="center"
-                            android:onClick="@{v->viewModel.click_five()}"
-                            android:text="5"
-                            android:textColor="@drawable/click_text_color_black"
-                            android:textSize="20dp"></TextView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="1dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/line_background"
-                            android:gravity="center"
-                            android:onClick="@{v->viewModel.click_six()}"
-                            android:text="6"
-                            android:textColor="@drawable/click_text_color_black"
-                            android:textSize="20dp"></TextView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="1dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/line_background"
-                            android:gravity="center"
-                            android:onClick="@{v->viewModel.click_seven()}"
-                            android:text="7"
-                            android:textColor="@drawable/click_text_color_black"
-                            android:textSize="20dp"></TextView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="1dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/line_background"
-                            android:gravity="center"
-                            android:onClick="@{v->viewModel.click_eight()}"
-                            android:text="8"
-                            android:textColor="@drawable/click_text_color_black"
-                            android:textSize="20dp"></TextView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="1dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/line_background"
-                            android:gravity="center"
-                            android:onClick="@{v->viewModel.click_nine()}"
-                            android:text="9"
-                            android:textColor="@drawable/click_text_color_black"
-                            android:textSize="20dp"></TextView>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="1dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/line_background"
-                            android:gravity="center"
-                            android:onClick="@{v->viewModel.click_zero()}"
-                            android:text="0"
-                            android:textColor="@drawable/click_text_color_black"
-                            android:textSize="20dp"></TextView>
-
-                    </LinearLayout>
-
                 </LinearLayout>
 
                 <TextView
@@ -576,7 +427,7 @@
                     android:id="@+id/adML01"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="4"
+                    android:layout_weight="8"
                     android:onClick="@{v->viewModel.closeKeyboard()}"
                     android:orientation="horizontal"
                     app:Address_map_layer="@{viewModel.from}"></LinearLayout>
@@ -584,7 +435,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="4"
+                    android:layout_weight="8"
                     android:onClick="@{v->viewModel.closeKeyboard()}"
                     android:orientation="horizontal"
                     app:Address_map_layer_bottom="@{viewModel.from}"></LinearLayout>
@@ -644,6 +495,35 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:onClick="@{v->viewModel.closeKeyboard()}"
+                    android:text='@{viewModel.deliveryFee}'
+                    android:textColor="@color/complite"
+                    android:textSize="15dp"
+                    android:textStyle="bold"></TextView>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:onClick="@{v->viewModel.closeKeyboard()}"
+                    android:text='@{viewModel.deliveryDistance}'
+                    android:textColor="@color/complite"
+                    android:textSize="15dp"
+                    android:textStyle="bold"></TextView>
+
+            </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -655,244 +535,332 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:background="@drawable/detail_data_background"
+                android:orientation="vertical"
+                android:padding="1dp">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="주문내역"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold"></TextView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
 
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:text="@={viewModel.orderHistory}"
-                    android:hint="주문내역을 입력해주세요."
-                    android:textColorHint="@color/gray"></EditText>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:onClick="@{v->viewModel.closeKeyboard()}"
+                        android:text="주문내역"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold"></TextView>
 
-            </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:background="@drawable/detail_data_background"
+                        android:padding="5dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/detail_inner_background"
+                            android:hint="주문내역을 입력해주세요."
+                            android:paddingLeft="10dp"
+                            android:singleLine="true"
+                            android:text="@={viewModel.orderHistory}"
+                            android:textColorHint="@color/whitegray"></EditText>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="판매금액"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold"></TextView>
+                    </LinearLayout>
 
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:hint="판매금액을 입력해주세요."
-                    android:inputType="number"
-                    android:text="@={viewModel.orderSailMoney}"
-                    android:textColorHint="@color/gray"></EditText>
+                </LinearLayout>
 
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="1dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/line_background"
-                    android:gravity="center"
-                    android:text="100원"
-                    android:onClick="@{v->viewModel.click_100()}"
-                    android:textColor="@drawable/click_text_color_black"
-                    android:textSize="20dp"></TextView>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/detail_title_background"
+                            android:gravity="center"
+                            android:onClick="@{v->viewModel.closeKeyboard()}"
+                            android:text="판매금액"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
+                            android:textStyle="bold"></TextView>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="1dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/line_background"
-                    android:gravity="center"
-                    android:text="500원"
-                    android:onClick="@{v->viewModel.click_500()}"
-                    android:textColor="@drawable/click_text_color_black"
-                    android:textSize="20dp"></TextView>
+                    </LinearLayout>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="1dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/line_background"
-                    android:gravity="center"
-                    android:text="1000원"
-                    android:onClick="@{v->viewModel.click_1000()}"
-                    android:textColor="@drawable/click_text_color_black"
-                    android:textSize="20dp"></TextView>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:background="@drawable/detail_data_background"
+                        android:orientation="vertical">
 
-            </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:padding="5dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/detail_inner_background"
+                                android:hint="판매금액을 입력해주세요."
+                                android:inputType="number"
+                                android:paddingLeft="10dp"
+                                android:singleLine="true"
+                                android:text="@={viewModel.orderSailMoney}"
+                                android:textColorHint="@color/whitegray"></EditText>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="1dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/line_background"
-                    android:gravity="center"
-                    android:text="5000원"
-                    android:onClick="@{v->viewModel.click_5000()}"
-                    android:textColor="@drawable/click_text_color_black"
-                    android:textSize="20dp"></TextView>
+                        </LinearLayout>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="1dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/line_background"
-                    android:gravity="center"
-                    android:text="10000원"
-                    android:onClick="@{v->viewModel.click_10000()}"
-                    android:textColor="@drawable/click_text_color_black"
-                    android:textSize="20dp"></TextView>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="1dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/line_background"
-                    android:gravity="center"
-                    android:text="삭제"
-                    android:onClick="@{v->viewModel.click_money_delete()}"
-                    android:textColor="@drawable/click_text_color_black"
-                    android:textSize="20dp"></TextView>
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/line_background"
+                                android:gravity="center"
+                                android:onClick="@{v->viewModel.click_100()}"
+                                android:text="1백원"
+                                android:textColor="@drawable/click_text_color_black"
+                                android:textSize="20dp"></TextView>
 
-            </LinearLayout>
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/line_background"
+                                android:gravity="center"
+                                android:onClick="@{v->viewModel.click_500()}"
+                                android:text="5백원"
+                                android:textColor="@drawable/click_text_color_black"
+                                android:textSize="20dp"></TextView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/line_background"
+                                android:gravity="center"
+                                android:onClick="@{v->viewModel.click_1000()}"
+                                android:text="1천원"
+                                android:textColor="@drawable/click_text_color_black"
+                                android:textSize="20dp"></TextView>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:text="도착시간"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold"></TextView>
+                        </LinearLayout>
 
-                <Spinner
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:onItemSelected="@{viewModel::onItemSelectedArriveTime}"
-                    android:entries="@array/readyTimeList"></Spinner>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:gravity="center"
-                    android:text="@{viewModel.orderarriveTime}"
-                    android:textColor="@color/black"
-                    android:textSize="15dp"></TextView>
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/line_background"
+                                android:gravity="center"
+                                android:onClick="@{v->viewModel.click_5000()}"
+                                android:text="5천원"
+                                android:textColor="@drawable/click_text_color_black"
+                                android:textSize="20dp"></TextView>
 
-            </LinearLayout>
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/line_background"
+                                android:gravity="center"
+                                android:onClick="@{v->viewModel.click_10000()}"
+                                android:text="1만원"
+                                android:textColor="@drawable/click_text_color_black"
+                                android:textSize="20dp"></TextView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/line_background"
+                                android:gravity="center"
+                                android:onClick="@{v->viewModel.click_money_delete()}"
+                                android:text="삭제"
+                                android:textColor="@drawable/click_text_color_black"
+                                android:textSize="20dp"></TextView>
+                        </LinearLayout>
+                    </LinearLayout>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="전화번호"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold"></TextView>
+                </LinearLayout>
 
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:hint="전화번호를 입력해주세요."
-                    android:text="@={viewModel.orderTelnumber}"
-                    android:textColorHint="@color/gray"></EditText>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:onClick="@{v->viewModel.closeKeyboard()}"
+                        android:text="도착시간"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold"></TextView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    <Spinner
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:background="@drawable/spinner_bg_inner"
+                        android:entries="@array/readyTimeList"
+                        android:onItemSelected="@{viewModel::onItemSelectedArriveTime}"
+                        android:paddingLeft="10dp"></Spinner>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="전달사항"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold"></TextView>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:background="@drawable/detail_data_background"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        app:arrive_time_color="@{viewModel.orderarriveTime}"></TextView>
 
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:hint="전달사항 입력해주세요."
-                    android:text="@={viewModel.orderNotice}"
-                    android:textColorHint="@color/gray"></EditText>
+                </LinearLayout>
 
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:onClick="@{v->viewModel.closeKeyboard()}"
+                        android:text="전화번호"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold"></TextView>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="결제유형"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold"></TextView>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:background="@drawable/detail_data_background"
+                        android:padding="5dp">
 
-                <Spinner
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:onItemSelected="@{viewModel::onItemSelectedPayment}"
-                    android:entries="@array/pay_spinner"></Spinner>
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/detail_inner_background"
+                            android:hint="전화번호를 입력해주세요."
+                            android:paddingLeft="10dp"
+                            android:singleLine="true"
+                            android:text="@={viewModel.orderTelnumber}"
+                            android:textColorHint="@color/whitegray"></EditText>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:onClick="@{v->viewModel.closeKeyboard()}"
+                        android:text="전달사항"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:background="@drawable/detail_data_background"
+                        android:padding="5dp">
+
+                        <EditText
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:background="@drawable/detail_inner_background"
+                            android:hint="전달사항을 입력해주세요."
+                            android:paddingLeft="10dp"
+                            android:singleLine="true"
+                            android:text="@={viewModel.orderNotice}"
+                            android:textColorHint="@color/whitegray"></EditText>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:onClick="@{v->viewModel.closeKeyboard()}"
+                        android:text="결제유형"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold"></TextView>
+
+                    <Spinner
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:background="@drawable/spinner_bg_inner"
+                        android:entries="@array/pay_spinner"
+                        android:onItemSelected="@{viewModel::onItemSelectedPayment}"
+                        android:paddingLeft="10dp"></Spinner>
+
+                </LinearLayout>
 
             </LinearLayout>
 

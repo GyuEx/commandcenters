@@ -21,6 +21,7 @@ import com.beyondinc.commandcenter.repository.database.entity.Addrdata
 import com.beyondinc.commandcenter.repository.database.entity.Agencydata
 import com.beyondinc.commandcenter.util.*
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Align
@@ -116,6 +117,14 @@ class MainsViewModel : ViewModel() {
         (Vars.mContext as MainsFun).showAddress(OrderItem.value)
     }
 
+    fun Re_login(){
+        Logindata.CenterList = false
+        Logindata.RiderList = false
+        Logindata.OrderList = false
+        disconnectAlram()
+        (Vars.mContext as MainsFun).re_login()
+    }
+
     fun insertNewAssign()
     {
         //Vars.DataHandler!!.obtainMessage(Finals.VIEW_ADDRESS,Finals.INSERT_NEW,0,AgencyItem.value).sendToTarget()
@@ -125,6 +134,26 @@ class MainsViewModel : ViewModel() {
     fun changeAddr(addrdata: Addrdata) {
         var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
         temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeChangeDeliveryAddressParameter(Logindata.LoginId!!, OrderItem.value!!.OrderId, addrdata.Addr, addrdata.detailAddress,addrdata.Jibun,addrdata.Road,addrdata.LawTownName,addrdata.BuildingManageNo,addrdata.Latitude, addrdata.Longitude)
+        Vars.sendList.add(temp)
+    }
+
+    fun Logout() {
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.LOGOUT] = MakeJsonParam().makeLogoutParameter(Logindata.LoginId!!)
+        Vars.sendList.add(temp)
+    }
+
+    fun insertNewOrderRegSend(regdata : HashMap<String,String>) {
+        (Vars.mContext as MainsFun).closeMessage()
+        (Vars.mContext as MainsFun).changeClose()
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.REG_NEW_ORDER] = MakeJsonParam().makeNewOrderRegParameter(Logindata.LoginId!!, Procedures.RegOrderType.NewOrder, regdata)
+        Vars.sendList.add(temp)
+    }
+
+    fun DeliveryFee(addrdata: Addrdata) {
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.DELIVERY_FEE_INFO] = MakeJsonParam().makeDeliveryFeeInfoParameter(Logindata.LoginId!!, Procedures.DeliveryFeeType.SearchFee, AgencyItem.value?.AgencyId.toString(), addrdata.BuildingManageNo, addrdata.Latitude, addrdata.Longitude, Vars.dongList[addrdata.LawTownName].toString())
         Vars.sendList.add(temp)
     }
 
@@ -158,7 +187,6 @@ class MainsViewModel : ViewModel() {
     }
 
     fun getAgencyList(txt : String){
-        Log.e("버튼", "눌러짐")
         var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
         temp[Procedures.AGENCY_LIST] = MakeJsonParam().makeAgencyListParameter(Logindata.LoginId!!, txt, agencySelecttxt,"0")
         Vars.sendList.add(temp)
@@ -226,31 +254,53 @@ class MainsViewModel : ViewModel() {
     }
 
     fun successPayment(){
-        if(pay.value!!.length > 6)
+        if(pay.value != "" && pay.value != null)
         {
-            Toast.makeText(Vars.mContext,"백만원 이상은 좀 과하지 않나요 T^T",Toast.LENGTH_SHORT).show()
-            return
+            if(pay.value?.length!! > 6)
+            {
+                Toast.makeText(Vars.mContext, "백만원 이상은 좀 과하지 않나요 T^T", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            if(payselect == 1)
+            {
+                var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+                temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeChangeSalesPriceParameter(Logindata.LoginId!!, OrderItem.value!!.OrderId, pay.value!!)
+                Vars.sendList.add(temp)
+
+                if(dropitem != "" && OrderItem.value!!.ApprovalType != dropitem) // 결제타입을 변경하였을때만 해당부분을 변경하는 요청을 날림
+                {
+                    var temps : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+                    temps[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeChangeApprovalTypeParameter(Logindata.LoginId!!, OrderItem.value!!.OrderId, dropitem!!)
+                    Vars.sendList.add(temps)
+                }
+            }
+            else if(payselect == 2)
+            {
+                var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+                temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeAddDeliveryFeeParameter(Logindata.LoginId!!, OrderItem.value!!.OrderId, pay.value!!)
+                Vars.sendList.add(temp)
+
+                if(dropitem != "" && OrderItem.value!!.ApprovalType != dropitem) // 결제타입을 변경하였을때만 해당부분을 변경하는 요청을 날림
+                {
+                    var temps : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+                    temps[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeChangeApprovalTypeParameter(Logindata.LoginId!!, OrderItem.value!!.OrderId, dropitem!!)
+                    Vars.sendList.add(temps)
+                }
+            }
+            changeClose()
         }
-        if(payselect == 1)
+        else
         {
-            var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
-            temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeChangeSalesPriceParameter(Logindata.LoginId!!, OrderItem.value!!.OrderId, pay.value!!)
-            Vars.sendList.add(temp)
+            Toast.makeText(Vars.mContext,"금액을 입력해주세요.",Toast.LENGTH_SHORT).show()
         }
-        else if(payselect == 2)
-        {
-            var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
-            temp[Procedures.EDIT_ORDER_INFO] = MakeJsonParam().makeAddDeliveryFeeParameter(Logindata.LoginId!!, OrderItem.value!!.OrderId, pay.value!!)
-            Vars.sendList.add(temp)
-        }
-        changeClose()
     }
 
     fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         //  스피너의 선택 내용이 바뀌면 호출된다
-        if(position == 0) dropitem = "현금"
-        else if(position == 1) dropitem = "카드"
-        else if(position == 2) dropitem = "선결제"
+        if(position == 0) dropitem = Codes.PAYMENT_MONEY
+        else if(position == 1) dropitem = Codes.PAYMENT_CARD
+        else if(position == 2) dropitem = Codes.PAYMENT_PREPAY
     }
 
     fun getItemsend(obj: Orderdata){
@@ -406,6 +456,8 @@ class MainsViewModel : ViewModel() {
         //  스피너의 선택 내용이 바뀌면 호출된다
         (parent.getChildAt(0) as TextView).textSize = 20f
         (parent.getChildAt(0) as TextView).gravity = Gravity.CENTER
+
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_AGENCY,Finals.ALL_CLEAR,0).sendToTarget()
 
         //초기에 해당부분을 전혀 고려하지 않아서 뭔가 힘들게 할수밖에 없네.., 더 좋은 방법이 생각나면 고칠것!
         var it = Vars.centerList.keys.iterator()
@@ -895,7 +947,45 @@ class MainsViewModel : ViewModel() {
         else (r.toDouble()/1000).toString() + "km"
     }
 
-    fun makeMarker(i: Int) {
+    fun mapFocusing(){
+
+        // 모든 마커의 중심으로 갈수있는 로직을 짜보자
+
+        var MaxY: Double = 0.0
+        var MinY: Double = 0.0
+        var MaxX: Double = 0.0
+        var MinX: Double = 0.0
+
+        MaxY = OrderItem.value?.AgencyLatitude!!.toDouble()
+        MinY = OrderItem.value?.AgencyLatitude!!.toDouble()
+        MaxX = OrderItem.value?.AgencyLongitude!!.toDouble()
+        MinX = OrderItem.value?.AgencyLongitude!!.toDouble()
+
+        if(OrderItem.value?.CustomerLatitude!!.toDouble() > MaxY) MaxY = OrderItem.value?.CustomerLatitude!!.toDouble()
+        if(OrderItem.value?.CustomerLatitude!!.toDouble() < MinY) MinY = OrderItem.value?.CustomerLatitude!!.toDouble()
+        if(OrderItem.value?.CustomerLongitude!!.toDouble() > MaxX) MaxX = OrderItem.value?.CustomerLongitude!!.toDouble()
+        if(OrderItem.value?.CustomerLongitude!!.toDouble() < MinX) MinX = OrderItem.value?.CustomerLongitude!!.toDouble()
+
+        // 기준은 가맹점의 중심으로 한다!
+
+        if((OrderItem.value?.DeliveryStateName == "배정" || OrderItem.value?.DeliveryStateName == "픽업") && !OrderItem.value?.RiderId.isNullOrEmpty() && Vars.riderList.contains(OrderItem.value!!.RiderId))
+        {
+            val riderMarker = Vars.riderList[OrderItem.value!!.RiderId]?.MakerID
+            if(riderMarker?.position!!.latitude!!.toDouble() > MaxY) MaxY = riderMarker?.position!!.latitude!!.toDouble()
+            if(riderMarker?.position!!.latitude!!.toDouble() < MinY) MinY = riderMarker?.position!!.latitude!!.toDouble()
+            if(riderMarker?.position!!.longitude!!.toDouble() > MaxX) MaxX = riderMarker?.position!!.longitude!!.toDouble()
+            if(riderMarker?.position!!.longitude!!.toDouble() < MinX) MinX = riderMarker?.position!!.longitude!!.toDouble()
+        }
+
+        var LatLng1 = LatLng(MaxY,MaxX)
+        var LatLng2 = LatLng(MinY,MinX)
+
+        mapInstance?.moveCamera(CameraUpdate.fitBounds(LatLngBounds(LatLng1,LatLng2)))
+        mapInstance?.moveCamera(CameraUpdate.zoomOut()) //간단하게 줌 아웃
+    }
+
+    fun makeMarker(i: Int)
+    {
         if (i == Finals.POPUP_MAP_AGENCY)
         {
             AgencyMarker()
@@ -913,6 +1003,7 @@ class MainsViewModel : ViewModel() {
             AgencyMarker()
             CustMarker()
             AgencyToCustLine(Finals.POPUP_MAP_BRIEF)
+            mapFocusing()
         }
         else if(i == Finals.POPUP_MAP_RECIVE)
         {
@@ -920,6 +1011,7 @@ class MainsViewModel : ViewModel() {
             RiderMarker()
             CustMarker()
             AgencyToCustLine(Finals.POPUP_MAP_RECIVE)
+            mapFocusing()
         }
         else if(i == Finals.POPUP_MAP_PIKUP)
         {
@@ -927,6 +1019,7 @@ class MainsViewModel : ViewModel() {
             CustMarker()
             RiderMarker()
             AgencyToCustLine(Finals.POPUP_MAP_PIKUP)
+            mapFocusing()
         }
         else if(i == Finals.POPUP_MAP_CC)
         {
@@ -947,6 +1040,9 @@ class MainsViewModel : ViewModel() {
     }
 
     fun showMessage(msg: String, num: String){
+//        var pnum = ""
+//        if(num.substring(0,1) != "0") pnum = "0$num"
+//        else pnum = num
         (Vars.mContext as MainsFun).showMessage(msg, num)
     }
 

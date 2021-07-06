@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.beyondinc.commandcenter.Interface.SettingFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.databinding.ActivitySettingBinding
-import com.beyondinc.commandcenter.fragment.BriefDialog
-import com.beyondinc.commandcenter.fragment.NickDialog
+import com.beyondinc.commandcenter.databinding.EmergencyDialogBinding
+import com.beyondinc.commandcenter.fragment.*
 import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.SettingViewModel
 
@@ -20,6 +20,7 @@ class Setting : AppCompatActivity(), SettingFun {
     var binding: ActivitySettingBinding? = null
     var viewModel: SettingViewModel? = null
     var dialog : DialogFragment? = null
+    var emer : EmerDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +43,14 @@ class Setting : AppCompatActivity(), SettingFun {
         } catch (e: Exception) {
             //Log.e("MAIN", Log.getStackTraceString(e))
         }
+        try {
+            if (emer != null) {
+                emer!!.dismiss()
+                emer = null
+            }
+        } catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
+        }
     }
 
     override fun showDialog() {
@@ -53,6 +62,21 @@ class Setting : AppCompatActivity(), SettingFun {
                 }
                 dialog = NickDialog()
                 dialog!!.show(supportFragmentManager, "Nick")
+            }
+        }catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
+        }
+    }
+
+    override fun showEmer() {
+        try {
+            runOnUiThread {
+                if (emer != null) {
+                    emer!!.dismiss()
+                    emer = null
+                }
+                emer = EmerDialog()
+                emer!!.show(supportFragmentManager, "Emer")
             }
         }catch (e: Exception) {
             //Log.e("MAIN", Log.getStackTraceString(e))

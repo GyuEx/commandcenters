@@ -28,6 +28,7 @@ class AgencyViewModel : ViewModel() {
     var items: ConcurrentHashMap<Int, Agencydata>? = null // 리스트에 보여줄 목록
     var adapter: RecyclerAdapterAgency? = null // 리스트 어뎁터
     var sendeditem : MutableLiveData<Agencydata> = MutableLiveData()
+    var scrolls = MutableLiveData<Int>() // 해당부분에 값을 true로 지정하면 뷰의 스크롤을 최상단으로 올림
 
     init {
         Log.e("Agency", "Init다!!")
@@ -56,6 +57,10 @@ class AgencyViewModel : ViewModel() {
 
     fun close() {
 
+    }
+
+    fun click_Up(){
+        scrolls.value =+ 1
     }
 
     fun click_AgencyCall(){
@@ -127,6 +132,14 @@ class AgencyViewModel : ViewModel() {
 
     fun getUse(pos: Int): Boolean? {
         return items!![pos]!!.setUse
+    }
+
+    fun click_call_tel(){
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.SEND_TELEPHONE,0,sendeditem.value!!.Phone).sendToTarget()
+    }
+
+    fun click_call_phone(){
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.SEND_TELEPHONE,0,sendeditem.value!!.ContactMobile).sendToTarget()
     }
 
     fun onItemSelectedDeliveryExtFeeType(parent: AdapterView<*>, view: View?, position: Int, id: Long) {

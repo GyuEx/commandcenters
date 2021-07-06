@@ -82,7 +82,7 @@ class DetailDialog(i: Int) : DialogFragment() , OnMapReadyCallback {
     }
 
     fun setFragment(i : Int) {
-        code = i
+        popcode = i
         if(Vars.MainVm?.DetailsSelect!!.value == Finals.DETAIL_MAP)
         {
             fragmentTransaction = childFragmentManager.beginTransaction()

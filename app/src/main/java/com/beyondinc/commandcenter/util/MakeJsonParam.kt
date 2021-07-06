@@ -32,6 +32,31 @@ class MakeJsonParam {
         return parameterArray
     }
 
+    fun makeChangePasswordParameter(id: String, oldpassword: String, newpassword : String): JSONArray {
+        val md5EncryptedPassword = Crypto.generateMD5Hash(oldpassword)!!
+        val encryptedPassword = Crypto.generateSHA512Hash(md5EncryptedPassword.toLowerCase(Locale.ROOT))!!.toUpperCase(Locale.ROOT)
+
+        val Newmd5EncryptedPassword = Crypto.generateMD5Hash(newpassword)!!
+        val NewencryptedPassword = Crypto.generateSHA512Hash(Newmd5EncryptedPassword.toLowerCase(Locale.ROOT))!!.toUpperCase(Locale.ROOT)
+
+        val parameterArray = JSONArray()
+
+        val parameterJSON = JSONObject()
+        parameterJSON["AppType"] = Logindata.AppType
+        parameterJSON["DeviceId"] = Logindata.deviceID
+        parameterJSON["LoginId"] = id
+        parameterJSON["Passwd"] = encryptedPassword
+        parameterJSON["AppId"] = Logindata.appID
+        parameterJSON["ReqType"] = Procedures.UserAuthType.CHANGE_PASSWORD
+        parameterJSON["AppVersion"] = Logindata.appVersion
+        parameterJSON["ModelName"] = Logindata.deviceModel
+        parameterJSON["PhoneNo"] = Logindata.devicePhone
+        parameterJSON["NewPasswd"] = NewencryptedPassword
+        parameterArray.add(parameterJSON)
+
+        return parameterArray
+    }
+
     private fun makeBaseParameter(loginID: String): JSONObject {
         val parameterJSON = JSONObject()
 
@@ -53,16 +78,16 @@ class MakeJsonParam {
         return parameterArray
     }
 
-//    fun makeLogoutParameter(loginID: String): JSONArray {
-//        val parameterArray = JSONArray()
-//
-//        val parameterJSON = makeBaseParameter(loginID)
-//        parameterJSON["ReqType"] = Procedures.UserAuthType.LOGOUT
-//        parameterJSON["ModelName"] = globalInfo.deviceModelNumber
-//        parameterArray.add(parameterJSON)
-//
-//        return parameterArray
-//    }
+    fun makeLogoutParameter(loginID: String): JSONArray {
+        val parameterArray = JSONArray()
+
+        val parameterJSON = makeBaseParameter(loginID)
+        parameterJSON["ReqType"] = Procedures.UserAuthType.LOGOUT
+        parameterJSON["ModelName"] = Logindata.deviceModelNumber
+        parameterArray.add(parameterJSON)
+
+        return parameterArray
+    }
 
 //    fun makeChangePasswordParameter(loginID: String,
 //                                    oldPassword: String, newPassword: String): JSONArray {
@@ -269,6 +294,16 @@ class MakeJsonParam {
         return parameterArray
     }
 
+    fun makeChangeApprovalTypeParameter(loginID: String, editOrderID: String, Approval: String): JSONArray {
+        val parameterArray = JSONArray()
+
+        val parameterJSON = makeEditInfoParameter(loginID, Procedures.EditInfoType.APPROVAL_TYPE, editOrderID)
+        parameterJSON["ApprovalType"] = Approval
+        parameterArray.add(parameterJSON)
+
+        return parameterArray
+    }
+
     fun makeAddDeliveryFeeParameter(loginID: String, editOrderID: String, extraFee: String): JSONArray {
         val parameterArray = JSONArray()
 
@@ -310,6 +345,58 @@ class MakeJsonParam {
         parameterJSON["ReqType"] = Type
         parameterJSON["CallCenterId"] = CenterId
         parameterJSON["AgencyId"] = AgencyId
+        parameterArray.add(parameterJSON)
+
+        return parameterArray
+    }
+
+    fun makeDeliveryFeeInfoParameter(loginID: String, Type: String, AgencyId : String, BuldingNo : String, Lat : String, Lon : String, TownCode : String): JSONArray {
+        var parameterArray = JSONArray()
+
+        val parameterJSON = makeBaseParameter(loginID)
+        parameterJSON["ReqType"] = Type
+        parameterJSON["AgencyId"] = AgencyId
+        parameterJSON["CustomerBuildingManageNo"] = BuldingNo
+        parameterJSON["CustomerLatitude"] = Lat
+        parameterJSON["CustomerLongitude"] = Lon
+        parameterJSON["CustomerLawTownCode"] = TownCode
+        parameterArray.add(parameterJSON)
+
+        return parameterArray
+    }
+
+    fun makeNewOrderRegParameter(loginID: String, Type: String, Regdata : HashMap<String,String>): JSONArray {
+        var parameterArray = JSONArray()
+
+        val parameterJSON = makeBaseParameter(loginID)
+        parameterJSON["ReqType"] = Type
+        parameterJSON["INPUT_TYPE"] = Regdata["INPUT_TYPE"]
+        parameterJSON["RECEIPT_ID"] = Regdata["RECEIPT_ID"]
+        parameterJSON["REG_ID_TYPE"] = Regdata["REG_ID_TYPE"]
+        parameterJSON["USER_ID"] = Regdata["USER_ID"]
+        parameterJSON["ORDER_CLASS"] = Regdata["ORDER_CLASS"]
+        parameterJSON["DELIVERY_PLAN_DT"] = Regdata["DELIVERY_PLAN_DT"]
+        parameterJSON["AGENCY_ID"] = Regdata["AGENCY_ID"]
+        parameterJSON["CUSTOMER_ID"] = Regdata["CUSTOMER_ID"]
+        parameterJSON["CUSTOMERN_AME"] = Regdata["CUSTOMERN_AME"]
+        parameterJSON["CUSTOMER_PHONE"] = Regdata["CUSTOMER_PHONE"]
+        parameterJSON["CUSTOMER_MOBILE"] = Regdata["CUSTOMER_MOBILE"]
+        parameterJSON["CUSTOMER_ADDR"] = Regdata["CUSTOMER_ADDR"]
+        parameterJSON["CUSTOMER_LAWTOWNCODE"] = Regdata["CUSTOMER_LAWTOWNCODE"]
+        parameterJSON["CUSTOMER_LAWTOWNNAME"] = Regdata["CUSTOMER_LAWTOWNNAME"]
+        parameterJSON["CUSTOMER_JIBUN"] = Regdata["CUSTOMER_JIBUN"]
+        parameterJSON["CUSTOMER_ADDR_DETAIL"] = Regdata["CUSTOMER_ADDR_DETAIL"]
+        parameterJSON["CUSTOMER_BUILDING_MANAGE_NO"] = Regdata["CUSTOMER_BUILDING_MANAGE_NO"]
+        parameterJSON["APPROVAL_TYPE"] = Regdata["APPROVAL_TYPE"]
+        parameterJSON["PRICE"] = Regdata["PRICE"]
+        parameterJSON["ORDER_DESC"] = Regdata["ORDER_DESC"]
+        parameterJSON["CONTENT"] = Regdata["CONTENT"]
+        parameterJSON["PICKUP_YN"] = Regdata["PICKUP_YN"]
+        parameterJSON["CANCEL_RESON"] = Regdata["CANCEL_RESON"]
+        parameterJSON["CUSTOMER_LATITUDE"] = Regdata["CUSTOMER_LATITUDE"]
+        parameterJSON["CUSTOMER_LONGITUDE"] = Regdata["CUSTOMER_LONGITUDE"]
+        parameterJSON["ORDER_DELAY"] = Regdata["ORDER_DELAY"]
+        parameterJSON["ShortLoadAddress"] = Regdata["ShortLoadAddress"]
         parameterArray.add(parameterJSON)
 
         return parameterArray

@@ -21,8 +21,10 @@ import com.beyondinc.commandcenter.Interface.LoginsFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.databinding.ActivityLoginsNewBinding
+import com.beyondinc.commandcenter.fragment.ChangePasswordDialog
 import com.beyondinc.commandcenter.fragment.DownloadingDialog
 import com.beyondinc.commandcenter.fragment.LoginLoadingDialog
+import com.beyondinc.commandcenter.fragment.MsgDialog
 import com.beyondinc.commandcenter.handler.*
 import com.beyondinc.commandcenter.net.HttpConn
 import com.beyondinc.commandcenter.util.Finals
@@ -33,6 +35,7 @@ import com.beyondinc.commandcenter.viewmodel.LoginViewModel
 import org.json.simple.JSONArray
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.system.exitProcess
 
 
 class Logins : AppCompatActivity() , LoginsFun {
@@ -40,6 +43,8 @@ class Logins : AppCompatActivity() , LoginsFun {
     var isLogin = false
     var loading:LoginLoadingDialog? = null
     var downloading:DownloadingDialog? = null
+    var password : ChangePasswordDialog? = null
+    var msgDialog : MsgDialog? = null
 
     private val Tag = "Logins Activity"
 
@@ -89,6 +94,19 @@ class Logins : AppCompatActivity() , LoginsFun {
         binding!!.lifecycleOwner = this
         binding!!.viewModel = Vars.LoginVm
 
+        getDeviceSize() // 단말기 화면 사이즈 얻기
+
+        if(intent.hasExtra("ReLogin")){
+            showPassword(Logindata.LoginPw.toString(),"변경할 비밀번호를 입력해주세요")
+        }
+
+    }
+
+    fun getDeviceSize() {
+        /// 사용하는 핸드폰 전체 화면 사이즈 가져옴
+        val windowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val display = windowManager.defaultDisplay
+        display.getSize(Vars.DeviceSize)
     }
 
     override fun Login(id: String, pw: String) {
@@ -123,6 +141,62 @@ class Logins : AppCompatActivity() , LoginsFun {
                 loading!!.show(supportFragmentManager, "Loading")
             }
         }catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
+        }
+    }
+
+    override fun showMsg() {
+        try {
+            runOnUiThread {
+                if (msgDialog != null) {
+                    msgDialog!!.dismiss()
+                    msgDialog = null
+                }
+                msgDialog = MsgDialog()
+                msgDialog!!.show(supportFragmentManager, "Msg")
+            }
+        }catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
+        }
+    }
+
+    override fun closeMsg() {
+        try {
+            if (msgDialog != null) {
+                msgDialog!!.dismiss()
+                msgDialog = null
+            }
+        } catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
+        }
+        finishAffinity()
+        val intent = Intent(this, Logins::class.java)
+        startActivity(intent)
+        exitProcess(0)
+    }
+
+    override fun showPassword(pw:String,txt:String) {
+        try {
+            runOnUiThread {
+                if (password != null) {
+                    password!!.dismiss()
+                    password = null
+                }
+                password = ChangePasswordDialog(pw,txt)
+                password!!.show(supportFragmentManager, "password")
+            }
+        }catch (e: Exception) {
+            //Log.e("MAIN", Log.getStackTraceString(e))
+        }
+    }
+
+    override fun closePassword() {
+        try {
+            if (password != null) {
+                password!!.dismiss()
+                password = null
+            }
+        } catch (e: Exception) {
             //Log.e("MAIN", Log.getStackTraceString(e))
         }
     }

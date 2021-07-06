@@ -93,12 +93,12 @@
                 android:gravity="center">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="50dp"
                     android:layout_height="match_parent"
                     android:textSize="15dp"
                     android:gravity="center"
                     android:textColor="@color/black"
-                    android:background="@color/orange"
+                    android:background="@drawable/select_curcle_choice_btn"
                     android:text="선택">
 
                 </TextView>

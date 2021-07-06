@@ -10,4 +10,8 @@ interface LoginsFun {
     fun closeLoading()
     fun showDownLoading()
     fun closeDownLoading()
+    fun showPassword(pw:String,txt:String)
+    fun closePassword()
+    fun showMsg()
+    fun closeMsg()
 }

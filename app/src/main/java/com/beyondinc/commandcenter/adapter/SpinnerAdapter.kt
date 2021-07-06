@@ -104,4 +104,103 @@ object SpinnerAdapter {
         if(velue == "Y")view.setSelection(0)
         else if(velue == "N")view.setSelection(1)
     }
+
+    @JvmStatic
+    @BindingAdapter("DeliveryExtFeeType1")
+    fun onItemSelectedDeliveryExtFeeType1(view : TextView, value : String) {
+        var result : String = ""
+        if(value == "7401") result = "구역할증"
+        else if(value  == "7402") result = "동별할증"
+        view.text = result
+    }
+
+    @JvmStatic
+    @BindingAdapter("DepositYn1")
+    fun onItemSelectedDepositYn1(view : TextView, value : String) {
+        var result : String = ""
+        if(value == "Y") result = "사용"
+        else if(value  == "N") result = "미사용"
+        view.text = result
+    }
+
+    @JvmStatic
+    @BindingAdapter("ShareOrderYn1")
+    fun onItemSelectedShareOrderYn1(view : TextView, value : String) {
+        var result : String = ""
+        if(value == "Y") result = "사용"
+        else if(value == "N") result = "미사용"
+        view.text = result
+    }
+
+    @JvmStatic
+    @BindingAdapter("State1")
+    fun onItemSelectedState1(view : TextView, value : String) {
+        var result : String = ""
+        if(value == "2801") result = "사용"
+        else if(value == "2802") result = "미사용"
+        else if(value == "2803") result = "해지"
+        view.text = result
+    }
+
+    @JvmStatic
+    @BindingAdapter("AgencyColor1")
+    fun onItemSelectedAgencyColor1(view : TextView, value : String) {
+        var result : String = "미적용"
+        view.text = result
+    }
+
+    @JvmStatic
+    @BindingAdapter("AgencyWorkState1")
+    fun onItemSelectedAgencyWorkState1(view : TextView, value : String) {
+        var result : String = ""
+        if(value == "0") result = "정상업무"
+        else if(value == "1") result = "일시정지"
+        else if(value == "2") result = "업무종료"
+        view.text = result
+    }
+
+    @JvmStatic
+    @BindingAdapter("AgencyMonthlyOrderLimitYn1")
+    fun onItemSelectedAgencyMonthlyOrderLimitYn1(view : TextView, value : String) {
+        var result : String = ""
+        if(value == "N") result = "월 제한없음"
+        else if(value == "Y") result = "월 건수 제한"
+        view.text = result
+    }
+
+    @JvmStatic
+    @BindingAdapter("AgencyDailyOrderLimitYn1")
+    fun onItemSelectedAgencyDailyOrderLimitYn1(view : TextView, value : String) {
+        var result : String = ""
+        if(value == "N") result = "일 제한없음"
+        else if(value == "Y") result = "일 건수 제한"
+        view.text = result
+    }
+
+    @JvmStatic
+    @BindingAdapter("SurchargeByAgencySettingYn1")
+    fun onItemSelectedSurchargeByAgencySettingYn1(view : TextView, value : String) {
+        var result : String = ""
+        if(value == "Y") result = "가맹점 설정 적용"
+        else if(value == "N") result = "센터 설정 적용"
+        view.text = result
+    }
+
+    @JvmStatic
+    @BindingAdapter("WarningDepositByAgencySettingYn1")
+    fun onItemSelectedWarningDepositByAgencySettingYn1(view : TextView, value : String) {
+        var result : String = ""
+        if(value == "Y") result = "가맹점 설정 적용"
+        else if(value == "N") result = "센터 설정 적용"
+        view.text = result
+    }
+
+    @JvmStatic
+    @BindingAdapter("MinDepositByAgencySettingYn1")
+    fun onItemSelectedMinDepositByAgencySettingYn1(view : TextView, value : String) {
+        var result : String = ""
+        if(value == "Y") result = "가맹점 설정 적용"
+        else if(value == "N") result = "센터 설정 적용"
+        view.text = result
+    }
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<data>
+		<variable
+			name="viewModel"
+			type="com.beyondinc.commandcenter.viewmodel.SettingViewModel" />
+	</data>
+
+	<LinearLayout
+		android:id="@+id/cldL01"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="2"
+			android:text="진행하면 취소할 수 없습니다\n계속하시겠습니까?"
+			android:textStyle="bold"
+			android:textColor="@color/black"
+			android:textSize="25dp"
+			android:layout_gravity="center"
+			android:gravity="center"
+			android:background="@color/whitegray"/>
+
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="1"
+			android:layout_gravity="center"
+			android:gravity="center">
+
+			<TextView
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:text="취소"
+				android:textSize="30dp"
+				android:textColor="@drawable/click_text_color"
+				android:background="@color/gray"
+				android:gravity="center"
+				android:onClick="@{v->viewModel.click_close_pop()}"
+				android:layout_weight="1">
+			</TextView>
+
+			<TextView
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:text="확인"
+				android:textSize="30dp"
+				android:textColor="@drawable/click_text_color"
+				android:background="@color/darkgray"
+				android:gravity="center"
+				android:onClick="@{v->viewModel.click_change_password()}"
+				android:layout_weight="1">
+			</TextView>
+
+		</LinearLayout>
+	</LinearLayout>
+</layout>

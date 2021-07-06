@@ -23,14 +23,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondinc.commandcenter.BuildConfig
 import com.beyondinc.commandcenter.Interface.LoginsFun
+import com.beyondinc.commandcenter.Interface.MainsFun
+import com.beyondinc.commandcenter.Interface.SettingFun
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.util.Finals
+import com.beyondinc.commandcenter.util.MakeJsonParam
+import com.beyondinc.commandcenter.util.Procedures
 import com.beyondinc.commandcenter.util.Vars
+import org.json.simple.JSONArray
 import java.io.File
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
+import kotlin.collections.HashMap
 
 
 class LoginViewModel() : ViewModel() {
@@ -51,7 +58,11 @@ class LoginViewModel() : ViewModel() {
     private lateinit var file: File
     private var downloadManager: DownloadManager? = null
 
+    var Quest : Int = 0
+
     init {
+        Log.e("LoginsViewModel", "Init LoginsViewModel")
+
         Logindata.isLogin = false
 
         saveId.value = false
@@ -79,11 +90,21 @@ class LoginViewModel() : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
+        Log.e("LoginsViewmodel","distory LongisViewModel")
         Vars.LoginVm = null
     }
 
-    fun Login() {
+    fun QuestAction(){
+        if(Quest == 10) Toast.makeText(Vars.lContext,"애꾿은 로고는 왜 자꾸 누르시는지...",Toast.LENGTH_LONG).show()
+        if(Quest == 50) Toast.makeText(Vars.lContext,"그만좀 눌러요, 로고 화내요",Toast.LENGTH_LONG).show()
+        if(Quest == 100) Toast.makeText(Vars.lContext,"이제 끝,, 더 눌러도 나오는거 없습니다..",Toast.LENGTH_LONG).show()
+        if(Quest == 500) Toast.makeText(Vars.lContext,"여기까지 오셧다면 끈기가 대단하십니다.. 고생하셨습니다..",Toast.LENGTH_LONG).show()
+        if(Quest == 1000) Toast.makeText(Vars.lContext,"당신은 지금 천번째 로고를 누르고 계십니다..?",Toast.LENGTH_LONG).show()
+        if(Quest == 2000) Toast.makeText(Vars.lContext,"존경합니다..",Toast.LENGTH_LONG).show()
+        else Quest++
+    }
 
+    fun Login() {
         if(id.value.isNullOrEmpty()) Toast.makeText(
             Vars.lContext,
             "아이디를 입력해주세요.",
@@ -126,6 +147,27 @@ class LoginViewModel() : ViewModel() {
         return dateFormat.format(date)
     }
 
+    fun changepassword(msg : String)
+    {
+        (Vars.lContext as LoginsFun).showPassword(pw.value!!,msg)
+    }
+
+    fun closechange()
+    {
+        (Vars.lContext as LoginsFun).closePassword()
+    }
+
+    fun showMSG()
+    {
+        closechange()
+        (Vars.lContext as LoginsFun).showMsg()
+    }
+
+    fun closeMSG()
+    {
+        (Vars.lContext as LoginsFun).closeMsg()
+    }
+
     fun saveId(){
         saveId.value = saveId.value != true
         var pref = PreferenceManager.getDefaultSharedPreferences(Vars.lContext)
@@ -154,18 +196,24 @@ class LoginViewModel() : ViewModel() {
                 "서버접속실패, 다시 시도해주세요.",
                 Toast.LENGTH_SHORT
             )
-            toast.setGravity(Gravity.TOP, 0, 300)
             toast.show()
         }
         else
         {
-            var toast : Toast = Toast.makeText(
-                Vars.lContext,
-                Logindata.MSG,
-                Toast.LENGTH_SHORT
-            )
-            toast.setGravity(Gravity.TOP, 0, 300)
-            toast.show()
+//            if(Logindata.MSG!!.contains("비밀번호 변경에 성공"))
+//            {
+//
+//            }
+//            else
+//            {
+                var toast : Toast = Toast.makeText(
+                    Vars.lContext,
+                    Logindata.MSG,
+                    Toast.LENGTH_SHORT
+                )
+                toast.setGravity(Gravity.TOP, 0, 300)
+                toast.show()
+ //           }
         }
         (Vars.lContext as LoginsFun).LoginFail()
     }

@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.beyondinc.commandcenter.Interface.MainsFun
 import com.beyondinc.commandcenter.R
+import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.databinding.ActivityMainBinding
 import com.beyondinc.commandcenter.fragment.*
 import com.beyondinc.commandcenter.service.AppActivateService
@@ -62,7 +63,7 @@ class Mains : AppCompatActivity(), MainsFun {
     override fun onDestroy() {
         super.onDestroy()
         Log.e(Tag, "Destory")
-        exit()
+//        exit()
 //        (Vars.MainThread as ThreadFun).stopThread()
 //        (Vars.AlarmThread as ThreadFun).stopThread()
 //        (Vars.MarkerThread as ThreadFun).stopThread()
@@ -152,13 +153,15 @@ class Mains : AppCompatActivity(), MainsFun {
         fr = infofrag
         fragmentTransaction!!.show(fr!!).commitAllowingStateLoss()
 
-        if(Vars.MainVm == null) Vars.MainVm = MainsViewModel()
+        if(Vars.MainVm == null)
+        {
+            Vars.MainVm = MainsViewModel()
+            showLoading() // 최초 로딩화면 보여주기
+        }
         binding!!.lifecycleOwner = this
         binding!!.viewModel = Vars.MainVm
 
         getKeyHash(this) // 해시키 얻기
-        getDeviceSize() // 단말기 화면 사이즈 얻기
-        showLoading() // 최초 로딩화면 보여주기
     }
 
     fun getKeyHash(context: Context) {
@@ -195,10 +198,19 @@ class Mains : AppCompatActivity(), MainsFun {
     }
 
     override fun exit(){
+        Vars.MainVm!!.Logout()
         stopService(serviceIntent)
         moveTaskToBack(true)						// 태스크를 백그라운드로 이동
         finishAndRemoveTask()						// 액티비티 종료 + 태스크 리스트에서 지우기
         android.os.Process.killProcess(android.os.Process.myPid())	// 앱 프로세스 종료
+    }
+
+    override fun re_login() {
+        Vars.MainVm!!.Logout()
+        val intent = Intent(Vars.mContext,Logins::class.java)
+        intent.putExtra("ReLogin",Finals.CHANGE_PASSWORD)
+        startActivity(intent)
+        finish()
     }
 
     override fun setFragment() {
@@ -230,13 +242,6 @@ class Mains : AppCompatActivity(), MainsFun {
             fr = agency
             ft!!.show(fr!!).commitAllowingStateLoss()
         }
-    }
-
-    fun getDeviceSize() {
-        /// 사용하는 핸드폰 전체 화면 사이즈 가져옴
-        val windowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val display = windowManager.defaultDisplay
-        display.getSize(Vars.DeviceSize)
     }
 
     override fun closeDialog() {

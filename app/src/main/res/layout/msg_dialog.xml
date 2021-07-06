@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<data>
+		<variable
+			name="viewModel"
+			type="com.beyondinc.commandcenter.viewmodel.LoginViewModel" />
+	</data>
+
+	<LinearLayout
+		android:id="@+id/cldL01"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="2"
+			android:text="비밀번호 변경에 성공하였습니다\n시스템을 다시 시작합니다"
+			android:textStyle="bold"
+			android:textColor="@color/black"
+			android:textSize="25dp"
+			android:layout_gravity="center"
+			android:gravity="center"
+			android:background="@color/whitegray"/>
+
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="1"
+			android:layout_gravity="center"
+			android:gravity="center">
+
+			<TextView
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:text="확인"
+				android:textSize="30dp"
+				android:textColor="@drawable/click_text_color"
+				android:background="@color/darkgray"
+				android:gravity="center"
+				android:onClick="@{v->viewModel.closeMSG()}"
+				android:layout_weight="1">
+			</TextView>
+
+		</LinearLayout>
+	</LinearLayout>
+</layout>

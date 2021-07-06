@@ -36,6 +36,7 @@ class AddressDialog(obj : Any?) : DialogFragment(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         //false로 설정해 주면 화면밖 혹은 뒤로가기 버튼시 다이얼로그라 dismiss 되지 않는다.
         //isCancelable = false
+//
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -51,6 +52,8 @@ class AddressDialog(obj : Any?) : DialogFragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        dialog!!.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN) // 키보드는 화면을 덮을것!
+        
         binding = DataBindingUtil.bind(view)
         if(Vars.AddressVm == null) Vars.AddressVm = AddressViewModel()
         binding!!.viewModel = Vars.AddressVm

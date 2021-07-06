@@ -730,7 +730,7 @@ object MainAdapter {
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
         if (height == 4)
         {
-            layoutParams.weight = 4F
+            layoutParams.weight = 8F
             view.layoutParams = layoutParams
         }
         else
@@ -751,7 +751,7 @@ object MainAdapter {
         }
         else
         {
-            layoutParams.weight = 4f
+            layoutParams.weight = 8f
             view.layoutParams = layoutParams
         }
     }
@@ -878,7 +878,7 @@ object MainAdapter {
     fun filter_title_Agency(view: TextView, cnt : String , type:Int) {
         if((!cnt.isNullOrEmpty() || cnt != "") && type == Finals.SELECT_STORE)
         {
-            view.textSize = 20f
+            view.textSize = 15f
             view.text = "가맹점\n(${cnt})"
             val content: String = view.text.toString()
             val spannableString = SpannableString(content)
@@ -899,8 +899,7 @@ object MainAdapter {
     fun filter_title_Rider(view: TextView, cnt : String , type:Int) {
         if((!cnt.isNullOrEmpty() || cnt != "") && type == Finals.SELECT_RIDER)
         {
-            Log.e("aaaaaa", " $cnt")
-            view.textSize = 20f
+            view.textSize = 15f
             view.text = "라이더\n(${cnt})"
             val content: String = view.text.toString()
             val spannableString = SpannableString(content)
@@ -968,6 +967,27 @@ object MainAdapter {
     }
 
     @JvmStatic
+    @BindingAdapter("arrive_time_color")
+    fun arrive_time_color(view: TextView, cnt : String) {
+        var title = cnt
+        var value : String? = null
+        if(title.isNullOrEmpty() || title == "0") view.text = ""
+        else
+        {
+            value = "분후 도착"
+            title += value
+            val ssb = SpannableStringBuilder(title)
+            ssb.setSpan(
+                ForegroundColorSpan(Vars.mContext!!.getColor(R.color.brief)),
+                0,
+                title.indexOf(value),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            view.text = ssb
+        }
+    }
+
+    @JvmStatic
     @BindingAdapter("Agency_SumAmt")
     fun agency_sumamt(view: TextView, cnt : String) {
         val df = DecimalFormat("#,###")
@@ -1007,5 +1027,11 @@ object MainAdapter {
         {
             view.setBackgroundResource(R.drawable.balloon)
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("focusEditText")
+    fun setFocusEditText(view: EditText, cnt : String) {
+        view.setSelection(view.text.length)
     }
 }

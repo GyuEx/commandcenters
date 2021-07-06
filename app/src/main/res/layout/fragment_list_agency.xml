@@ -23,6 +23,7 @@
                 android:id="@+id/recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:scroll_up="@{viewModel.scrolls}"
                 bind:verAdapter="@{viewModel.getAdapter()}">
             </androidx.recyclerview.widget.RecyclerView>
 
@@ -35,6 +36,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="@{v->viewModel.click_Up()}"
                     android:background="@drawable/arrow_up">
 
                 </TextView>

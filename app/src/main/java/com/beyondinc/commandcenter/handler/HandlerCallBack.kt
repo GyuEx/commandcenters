@@ -2,6 +2,7 @@ package com.beyondinc.commandcenter.handler
 
 import android.os.Handler
 import android.os.Message
+import android.provider.Telephony
 import android.util.Log
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.repository.database.entity.Addrdata
@@ -43,6 +44,9 @@ class HandlerCallBack : Handler.Callback {
                 Finals.LOGIN_SUCESS -> Vars.LoginVm?.LoginSucess()
                 Finals.APK_UPDATE -> Vars.LoginVm?.downloadApk()
                 Finals.LOGIN_FAIL -> Vars.LoginVm?.LoginFail()
+                Finals.CHANGE_PASSWORD -> Vars.LoginVm?.changepassword(msg.obj as String)
+                Finals.CHANGE_CLOSE -> Vars.LoginVm?.closechange()
+                Finals.SHOW_MESSAGE -> Vars.LoginVm?.showMSG()
             }
             Finals.VIEW_SUBITEM -> when (msg.arg1) // 지도 하단 접수목록 뷰모델
             {
@@ -85,6 +89,8 @@ class HandlerCallBack : Handler.Callback {
             {
                 Finals.SEARCH_ADDR -> Vars.AddressVm?.insertAddr()
                 Finals.MESSAGE_ADDR -> Vars.AddressVm?.showMsg()
+                Finals.GET_DELIVERY_FEE -> Vars.AddressVm?.initDeliFee(msg.obj as HashMap<String, String>)
+                Finals.INSERT_NEW_ORDER -> Vars.AddressVm?.insertNewOrder()
             }
             Finals.VIEW_AGENCY -> when (msg.arg1)
             {
@@ -125,13 +131,17 @@ class HandlerCallBack : Handler.Callback {
                 Finals.SHOW_LOADING -> Vars.MainVm?.showLoading()
                 Finals.CLOSE_LOADING -> Vars.MainVm?.closeLoading()
                 Finals.DISCONN_ALRAM -> Vars.MainVm?.disconnectAlram()
-                Finals.SHOW_MESSAGE -> Vars.MainVm?.showMessage(msg.obj as String,"0")
+                Finals.SHOW_MESSAGE -> Vars.MainVm?.showMessage(msg.obj as String , "0")
                 Finals.CHANGE_CLOSE -> Vars.MainVm?.changeClose()
                 Finals.SEARCH_ADDR -> Vars.MainVm?.getAddress(msg.obj as HashMap<Int, String>)
                 Finals.SEARCH_NEW_ADDR -> Vars.MainVm?.getAddressNew(msg.obj as HashMap<Int, String>)
                 Finals.CHANGE_ADDR -> Vars.MainVm?.changeAddr(msg.obj as Addrdata)
                 Finals.SHOW_ADDR -> Vars.MainVm?.insertDetailAddr()
                 Finals.SHOW_NEW_ASSIGN -> Vars.MainVm?.insertNewAssign()
+                Finals.GET_DELIVERY_FEE -> Vars.MainVm?.DeliveryFee(msg.obj as Addrdata)
+                Finals.INSERT_NEW_ORDER -> Vars.MainVm?.insertNewOrderRegSend(msg.obj as HashMap<String, String>)
+                Finals.LOG_OUT -> Vars.MainVm?.Logout()
+                Finals.RE_LOGIN -> Vars.MainVm?.Re_login()
             }
         }
 
