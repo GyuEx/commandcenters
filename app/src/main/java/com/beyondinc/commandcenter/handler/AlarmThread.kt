@@ -78,11 +78,11 @@ class AlarmThread() : Thread() , ThreadFun{
 
                     }
                 }
-                Thread.sleep(200)
             } catch (e: Exception) {
                 e.printStackTrace()
                 Log.e("AlramThread",e.toString())
             }
+            Thread.sleep(200)
         }
     }
 }

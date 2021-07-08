@@ -495,7 +495,7 @@ class AddressViewModel : ViewModel() {
         nHash["CUSTOMER_LATITUDE"] = addr.Latitude
         nHash["CUSTOMER_LONGITUDE"] = addr.Longitude
         nHash["ORDER_DELAY"] = orderarriveTime.value.toString()
-        nHash["ShortLoadAddress"] = ""
+        nHash["ShortLoadAddress"] = addr.Road
 
         Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.INSERT_NEW_ORDER,0,nHash).sendToTarget()
     }

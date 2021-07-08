@@ -110,6 +110,8 @@ class MainsViewModel : ViewModel() {
 
         riderselect_name.value = true
         riderselect_out.value = false
+
+        if(!Logindata.CenterList) Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CALL_CENTER,0).sendToTarget()
     }
 
     fun onTouch() : Boolean{

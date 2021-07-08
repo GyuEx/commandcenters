@@ -35,9 +35,9 @@ class MainThread() : Thread() , ThreadFun{
 
     override fun run() {
         while (isKeep) {
-//            try {
+            try {
 
-                if (Vars.receiveList != null && Vars.receiveList.isNotEmpty()) {
+                if (Vars.receiveList.size > 0 && Vars.receiveList.isNotEmpty() && !Vars.receiveList.isNullOrEmpty()) {
 
                     var rdata = Vars.receiveList.removeAt(0)
 
@@ -361,11 +361,12 @@ class MainThread() : Thread() , ThreadFun{
                         Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.ORDER_TOAST_SHOW,0,data!![0]["MSG"]).sendToTarget()
                     }
                 }
-                Thread.sleep(200)
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//                Log.e("MainThread",e.toString())
-//            }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("MainThread",e.toString())
+            }
+            Thread.sleep(200)
         }
     }
     

@@ -25,7 +25,8 @@ class CheckViewModel : ViewModel() {
     var allcheck = MutableLiveData<Boolean>() // 전체선택, 전체해제 여부 저장
 
     init {
-        //Log.e("CheckView", "CheckView Enable")
+        Log.e("CheckView", "CheckView Enable")
+
         allcheck.value = true
 
         if (items == null) {
@@ -34,13 +35,11 @@ class CheckViewModel : ViewModel() {
         if (adapter == null) {
             adapter = RecyclerAdapterCheck(this)
         }
-
-        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CALL_CENTER,0).sendToTarget()
     }
 
     override fun onCleared() {
         super.onCleared()
-        Vars.CheckVm = null
+        Log.e("CheckViewModel","Check View Model Cleared")
     }
 
     fun insertStore() {

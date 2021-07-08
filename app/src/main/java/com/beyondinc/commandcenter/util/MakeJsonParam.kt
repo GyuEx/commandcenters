@@ -397,7 +397,7 @@ class MakeJsonParam {
         parameterJSON["CUSTOMERN_AME"] = Regdata["CUSTOMERN_AME"]
         parameterJSON["CUSTOMER_PHONE"] = Regdata["CUSTOMER_PHONE"]
         parameterJSON["CUSTOMER_MOBILE"] = Regdata["CUSTOMER_MOBILE"]
-        parameterJSON["CUSTOMER_ADDR"] = Regdata["CUSTOMER_ADDR"]
+        parameterJSON["CUSTOMER_ADDR"] = Regdata["CUSTOMER_ADDR"] + Regdata["ShortLoadAddress"]
         parameterJSON["CUSTOMER_LAWTOWNCODE"] = Regdata["CUSTOMER_LAWTOWNCODE"]
         parameterJSON["CUSTOMER_LAWTOWNNAME"] = Regdata["CUSTOMER_LAWTOWNNAME"]
         parameterJSON["CUSTOMER_JIBUN"] = Regdata["CUSTOMER_JIBUN"]

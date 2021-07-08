@@ -118,9 +118,6 @@ class Mains : AppCompatActivity(), MainsFun {
         super.onCreate(savedInstanceState)
         Vars.mContext = this
         Log.e(Tag, "Create")
-        //startService(Intent(this, ForecdTerminationService::class.java))
-        serviceIntent.setClass(this, AppActivateService::class.java)
-        startService(serviceIntent)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
@@ -226,13 +223,19 @@ class Mains : AppCompatActivity(), MainsFun {
         android.os.Process.killProcess(android.os.Process.myPid())	// 앱 프로세스 종료
     }
 
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        Logindata.SessionExpireMin = Vars.timecntExit // 터치 이벤트 없으면 일정시간 후 앱 종료
+    }
+
     override fun re_login(type : Int) {
         Vars.MainVm!!.Logout()
+        stopService(serviceIntent)
         val intent = Intent(Vars.mContext,Logins::class.java)
         if(type == Finals.CHANGE_PASSWORD) intent.putExtra("ReLogin",Finals.CHANGE_PASSWORD)
         else if (type == Finals.EXPIRE) intent.putExtra("Expire",Finals.EXPIRE)
         startActivity(intent)
-        finish()
+        finishAffinity()
     }
 
     override fun setFragment() {

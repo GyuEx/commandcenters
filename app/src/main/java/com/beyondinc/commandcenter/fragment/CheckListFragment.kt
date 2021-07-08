@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.databinding.FragmentListCheckBinding
 import com.beyondinc.commandcenter.util.Vars
@@ -33,5 +35,6 @@ class CheckListFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         Log.e("Check","Destroy")
+        Vars.CheckVm = null
     }
 }

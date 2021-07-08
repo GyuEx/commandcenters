@@ -80,7 +80,7 @@ class HttpConn : Thread(), ThreadFun {
         {
             try
             {
-                if (Vars.sendList != null && Vars.sendList.isNotEmpty())
+                if (Vars.sendList.size > 0 && Vars.sendList.isNotEmpty() && !Vars.sendList.isNullOrEmpty())
                 {
                     val jsonMessage = Vars.sendList.removeAt(0)
 
@@ -155,9 +155,7 @@ class HttpConn : Thread(), ThreadFun {
                     } else {
                         Log.e("HTTP", con.responseMessage)
                     }
-                    Thread.sleep(100)
                 }
-
            } catch (e: SocketTimeoutException) {
                 if (code == Procedures.LOGIN) Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.LOGIN_FAIL,0).sendToTarget()
 //                else
@@ -175,6 +173,7 @@ class HttpConn : Thread(), ThreadFun {
 //                    Vars.timecntOT = 10 // 갯수조회 카운터를 한시적으로 10초로 변경
 //                }
             }
+            Thread.sleep(200)
         }
     }
 }
