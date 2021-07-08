@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.beyondinc.commandcenter.viewmodel.RiderListViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/detail_data_background"
+            android:padding="1dp"
+            android:layout_margin="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="센터명"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:singleLine="false"
+                            android:text="@{viewModel.getCenterName()}"
+                            android:textColor="@color/black"
+                            android:textSize="18dp"></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="라이더명"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.riderName}"
+                            android:textColor="@color/black"></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="주민번호"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.SSNumber}"
+                            android:inputType="textPassword"
+                            android:textColor="@color/black"></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="전화번호"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.mobile}"
+                            android:textColor="@color/black"></TextView>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/detail_title_background"
+                            android:gravity="center"
+                            android:onClick="@{v->viewModel.click_RiderCall()}"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@android:drawable/ic_menu_call"></TextView>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="입사일자"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.joinDt}"
+                            android:textColor="@color/black"></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="퇴사일자"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.retiredDt}"
+                            android:textColor="@color/black"></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="상태"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            app:state1="@{viewModel.sendeditem.state}"
+                            android:textColor="@color/black"></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="세금납부"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            app:taxPaymentTypeId1="@{viewModel.sendeditem.taxPaymentTypeId}"
+                            android:textColor="@color/black"></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="오더지연"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:background="@drawable/detail_data_background"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            app:recvAlarmDelayId1="@{viewModel.sendeditem.recvAlarmDelayId}"
+                            android:textColor="@color/black"></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="오더현황보기"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/detail_data_background"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            app:showOrderStatusYn1="@{viewModel.sendeditem.showOrderStatusYn}"
+                            android:textColor="@color/black"></TextView>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="배정수제한"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/detail_data_background"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.riderWorkingCntLimit}"
+                            android:textColor="@color/black"></TextView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:text="개"
+                            android:textSize="18dp"
+                            android:gravity="left|center"
+                            android:textColor="@color/black"></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="배정수제한"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/detail_data_background"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:singleLine="false"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18dp"
+                            android:text="@{viewModel.sendeditem.riderNewListCntLimit}"
+                            android:textColor="@color/black"></TextView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:text="개"
+                            android:textSize="18dp"
+                            android:gravity="left|center"
+                            android:textColor="@color/black"></TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="콜비"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:singleLine="false"
+                            android:textSize="18dp"
+                            android:background="@drawable/detail_data_background"
+                            android:text='@{viewModel.sendeditem.riderCallFee}'>
+                        </TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="공유오더"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:singleLine="false"
+                            android:textSize="18dp"
+                            android:background="@drawable/detail_data_background"
+                            app:shareOrderViewTypeId1='@{viewModel.sendeditem.shareOrderViewTypeId}'>
+                        </TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="취소허용"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:singleLine="false"
+                            android:textSize="18dp"
+                            android:background="@drawable/detail_data_background"
+                            app:assignCancelByRiderYnByRiderSettingYn1='@{viewModel.sendeditem.assignCancelByRiderYnByRiderSettingYn}'>
+                        </TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="구역표시"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:singleLine="false"
+                            android:textSize="18dp"
+                            android:background="@drawable/detail_data_background">
+                        </TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/detail_title_background"
+                        android:gravity="center"
+                        android:text="잔액한도"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/black"></TextView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:singleLine="false"
+                            android:textSize="18dp"
+                            android:background="@drawable/detail_data_background"
+                            android:text='@{viewModel.sendeditem.balanceLimitAmt}'>
+                        </TextView>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</layout>

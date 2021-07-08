@@ -217,75 +217,6 @@
                         android:paddingBottom="10dp"
                         android:paddingRight="10dp"
                         android:background="@drawable/info_background_btn"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="5"
-                            android:orientation="vertical">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="4">
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="6"
-                                android:orientation="horizontal">
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="4">
-                                </LinearLayout>
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="3"
-                                    android:background="@drawable/info_center_state">
-                                </TextView>
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="4">
-                                </LinearLayout>
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="3">
-                            </LinearLayout>
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="2"
-                            android:text="센터"
-                            android:textColor="@drawable/click_text_color_black"
-                            android:textSize="26dp"
-                            android:textStyle="bold"
-                            android:gravity="center_horizontal"
-                            android:fontFamily="@font/gmarketsans_bold"></TextView>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:paddingBottom="10dp"
-                        android:paddingRight="10dp"
-                        android:background="@drawable/info_background_btn"
                         android:onClick="@{v->viewModel.click_Agency()}"
                         android:orientation="vertical">
 
@@ -348,19 +279,6 @@
                             android:fontFamily="@font/gmarketsans_bold"></TextView>
 
                     </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="6"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -368,6 +286,7 @@
                         android:layout_weight="1"
                         android:paddingBottom="10dp"
                         android:paddingRight="10dp"
+                        android:onClick="@{v->viewModel.click_RiderList()}"
                         android:background="@drawable/info_background_btn"
                         android:orientation="vertical">
 
@@ -430,6 +349,20 @@
                             android:fontFamily="@font/gmarketsans_bold"></TextView>
 
                     </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="6"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -499,6 +432,85 @@
                             android:fontFamily="@font/gmarketsans_bold"></TextView>
 
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:paddingBottom="10dp"
+                        android:paddingRight="10dp"
+                        android:orientation="vertical">
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0"
+                        android:paddingBottom="10dp"
+                        android:paddingRight="10dp"
+                        android:background="@drawable/info_background_btn"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="5"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="4">
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="6"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="4">
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="3"
+                                    android:background="@drawable/info_center_state">
+                                </TextView>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="4">
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="3">
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="2"
+                            android:text="센터"
+                            android:textColor="@drawable/click_text_color_black"
+                            android:textSize="26dp"
+                            android:textStyle="bold"
+                            android:gravity="center_horizontal"
+                            android:fontFamily="@font/gmarketsans_bold"></TextView>
+
+                    </LinearLayout>
+
                 </LinearLayout>
             </LinearLayout>
 

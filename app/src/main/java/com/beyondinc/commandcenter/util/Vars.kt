@@ -7,6 +7,7 @@ import android.os.Handler
 import android.speech.tts.TextToSpeech
 import com.beyondinc.commandcenter.data.Alarmdata
 import com.beyondinc.commandcenter.data.Orderdata
+import com.beyondinc.commandcenter.data.RiderListdata
 import com.beyondinc.commandcenter.handler.MarkerThread
 import com.beyondinc.commandcenter.net.DACallerInterface
 import com.beyondinc.commandcenter.repository.database.entity.Agencydata
@@ -36,6 +37,7 @@ object Vars {
 
     var timecntGPS = 10 // 라이더 요청주기
     var timecntOT = 60 // 오더갯수 요청주기
+    var timecntExit = 0 // 자동종료 주기
 
     var DeviceSize = Point() // 디바이스 사이즈 (메인 엑티비티 생성시 가져온다, 다이얼로그가 전역으로 사용)
 
@@ -52,6 +54,7 @@ object Vars {
     var centerLastTime: ConcurrentHashMap<String,String> = ConcurrentHashMap() // 센터별 마지막 오더타임
     var centerOrderCount : ConcurrentHashMap<String,String> = ConcurrentHashMap() // 센터별 총 오더 갯수
     var agencyList : ConcurrentHashMap<String,Agencydata> = ConcurrentHashMap() // 가맹점리스트
+    var riderlistList : ConcurrentHashMap<String,RiderListdata> = ConcurrentHashMap() //라이더리스트 리스트
 
     var ItemVm : ItemViewModel? = null // 메인오더뷰모델
     var LoginVm : LoginViewModel? = null // 로그인뷰모델
@@ -63,6 +66,7 @@ object Vars {
     var AddressVm : AddressViewModel? = null // 주소검색 뷰모델
     var MainVm : MainsViewModel? = null // 메인 뷰모델
     var AgencyVm : AgencyViewModel? = null // 가맹점 뷰모델
+    var RiderListVm : RiderListViewModel? = null // 라이더리스트 뷰모델
 
     var DataHandler : Handler? = null // 데이터 처리를 전달해줄 프로브
 

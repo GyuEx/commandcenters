@@ -21,6 +21,7 @@ object Procedures {
     const val AGENCY_TOWN_LIST = "dim_spAgencyLocalAddr" // 가맹점별 배달가능지역 조회
     const val DELIVERY_FEE_INFO = "dim_spDeliveryFeeInfo" // 배달금액 조회
     const val REG_NEW_ORDER = "dim_spOrderReg"
+    const val RIDER_LIST = "dim_spMgrRiderListInfo"
 
     object AgencyTownType {
         const val SearchDong = "SearchCallcenterTown"

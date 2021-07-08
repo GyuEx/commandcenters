@@ -99,7 +99,10 @@ class Logins : AppCompatActivity() , LoginsFun {
         if(intent.hasExtra("ReLogin")){
             showPassword(Logindata.LoginPw.toString(),"변경할 비밀번호를 입력해주세요")
         }
-
+        else if(intent.hasExtra("Expire")){
+            Vars.LoginVm?.ExpireMessage!!.value = "장시간 사용하지 않아\n시스템을 종료 합니다"
+            showMsg()
+        }
     }
 
     fun getDeviceSize() {
@@ -169,10 +172,18 @@ class Logins : AppCompatActivity() , LoginsFun {
         } catch (e: Exception) {
             //Log.e("MAIN", Log.getStackTraceString(e))
         }
-        finishAffinity()
-        val intent = Intent(this, Logins::class.java)
-        startActivity(intent)
-        exitProcess(0)
+
+        if(intent.hasExtra("ReLogin")){
+            finishAffinity()
+            val intent = Intent(this, Logins::class.java)
+            startActivity(intent)
+            exitProcess(0)
+        }
+        else
+        {
+            finishAffinity()
+            exitProcess(0)
+        }
     }
 
     override fun showPassword(pw:String,txt:String) {

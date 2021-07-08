@@ -203,4 +203,70 @@ object SpinnerAdapter {
         else if(value == "N") result = "센터 설정 적용"
         view.text = result
     }
+
+
+    // 라이더 어뎁터
+
+    @JvmStatic
+    @BindingAdapter("state1")
+    fun onItemSelectedstate1(view : TextView, value : String) {
+        var result : String = ""
+        if(value == "1001") result = "재직"
+        else if(value  == "1002") result = "퇴사"
+        view.text = result
+    }
+
+    @JvmStatic
+    @BindingAdapter("taxPaymentTypeId1")
+    fun onItemSelectedtaxPaymentTypeId1(view : TextView, value : String) {
+        var result : String = ""
+        if(value == "7801") result = "미적용"
+        else if(value  == "7802") result = "원천징수"
+        else if(value  == "7803") result = "종합소득세"
+        view.text = result
+    }
+
+    @JvmStatic
+    @BindingAdapter("recvAlarmDelayId1")
+    fun onItemSelectedrecvAlarmDelayId1(view : TextView, value : String) {
+        var result : String = ""
+        if(value == "5700") result = "지연안함"
+        else if(value == "5702") result = "2초"
+        else if(value == "5703") result = "3초"
+        else if(value == "5705") result = "5초"
+        else if(value == "5710") result = "10초"
+        else if(value == "5720") result = "20초"
+        else if(value == "5730") result = "30초"
+        else if(value == "5760") result = "1분"
+        else if(value == "5701") result = "2분"
+        view.text = result
+    }
+
+    @JvmStatic
+    @BindingAdapter("showOrderStatusYn1")
+    fun onItemSelectedshowOrderStatusYn1(view : TextView, value : String) {
+        var result : String = ""
+        if(value == "Y") result = "가능"
+        else if(value == "N") result = "불가능"
+        view.text = result
+    }
+
+    @JvmStatic
+    @BindingAdapter("shareOrderViewTypeId1")
+    fun onItemSelectedshareOrderViewTypeId1(view : TextView, value : String) {
+        var result : String = ""
+        if(value == "7701") result = "전체보기"
+        else if(value == "7702") result = "전체안보기"
+        else if(value == "7703") result = "선택보기"
+        view.text = result
+    }
+
+    @JvmStatic
+    @BindingAdapter("assignCancelByRiderYnByRiderSettingYn1")
+    fun onItemSelectedassignCancelByRiderYnByRiderSettingYn1(view : TextView, value : String) {
+        var result : String = ""
+        if(value == "Y") result = "라이더 설정 적용"
+        else if(value == "N") result = "센터 설정 적용"
+        view.text = result
+    }
 }

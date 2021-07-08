@@ -1,37 +1,31 @@
 package com.beyondinc.commandcenter.fragment
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.beyondinc.commandcenter.R
-import com.beyondinc.commandcenter.databinding.FragmentListCheckBinding
+import com.beyondinc.commandcenter.databinding.*
 import com.beyondinc.commandcenter.util.Vars
-import com.beyondinc.commandcenter.viewmodel.CheckViewModel
+import com.beyondinc.commandcenter.viewmodel.AgencyViewModel
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
+import com.beyondinc.commandcenter.viewmodel.RiderListViewModel
 
-class CheckListFragment : Fragment() {
-    private var binding: FragmentListCheckBinding? = null
+class RiderDetailFragment : Fragment() {
+
+    var binding: FragmentRiderDetailListTempBinding? = null
+    var viewModel : AgencyViewModel? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_list_check, container, false)
+        return inflater.inflate(R.layout.fragment_rider_detail_list_temp, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DataBindingUtil.bind(view)
-        if(Vars.CheckVm == null) Vars.CheckVm = CheckViewModel()
-        binding!!.viewModel = Vars.CheckVm
+        if(Vars.RiderListVm == null) Vars.RiderListVm = RiderListViewModel()
+        binding!!.viewModel = Vars.RiderListVm
         binding!!.lifecycleOwner = requireActivity()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.e("Check","Destroy")
     }
 }

@@ -25,6 +25,7 @@ class DetailDialog(i: Int) : DialogFragment() , OnMapReadyCallback {
     companion object {
         var orderfrag: Fragment? = null
         var agencyfrag: Fragment? = null
+        var riderlistfrag : Fragment? = null
         var mapfrag: MapFragment? = null
         var fragmentTransaction: FragmentTransaction? = null
         var code = 0
@@ -71,6 +72,13 @@ class DetailDialog(i: Int) : DialogFragment() , OnMapReadyCallback {
             fragmentTransaction!!.add(R.id.odL01, agencyfrag!!)
             fragmentTransaction!!.commitAllowingStateLoss()
         }
+        else if(popcode == Finals.DETAIL_RIDER)
+        {
+            fragmentTransaction = childFragmentManager.beginTransaction()
+            riderlistfrag = RiderDetailFragment()
+            fragmentTransaction!!.add(R.id.odL01, riderlistfrag!!)
+            fragmentTransaction!!.commitAllowingStateLoss()
+        }
         else
         {
             fragmentTransaction = childFragmentManager.beginTransaction()
@@ -103,6 +111,13 @@ class DetailDialog(i: Int) : DialogFragment() , OnMapReadyCallback {
             fragmentTransaction = childFragmentManager.beginTransaction()
             agencyfrag = AgencyFragment()
             fragmentTransaction!!.add(R.id.odL01, agencyfrag!!)
+            fragmentTransaction!!.commitAllowingStateLoss()
+        }
+        else if(Vars.MainVm?.DetailsSelect!!.value == Finals.DETAIL_RIDER)
+        {
+            fragmentTransaction = childFragmentManager.beginTransaction()
+            riderlistfrag = RiderDetailFragment()
+            fragmentTransaction!!.add(R.id.odL01, riderlistfrag!!)
             fragmentTransaction!!.commitAllowingStateLoss()
         }
     }

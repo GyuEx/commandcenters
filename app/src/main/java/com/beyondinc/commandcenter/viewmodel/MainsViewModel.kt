@@ -4,8 +4,10 @@ import android.content.Context
 import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -16,6 +18,7 @@ import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Alarmdata
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
+import com.beyondinc.commandcenter.data.RiderListdata
 import com.beyondinc.commandcenter.net.DACallerInterface
 import com.beyondinc.commandcenter.repository.database.entity.Addrdata
 import com.beyondinc.commandcenter.repository.database.entity.Agencydata
@@ -51,6 +54,7 @@ class MainsViewModel : ViewModel() {
 
     var OrderItem : MutableLiveData<Orderdata> = MutableLiveData() // 선택한 오더를 임시로 저장함
     var AgencyItem : MutableLiveData<Agencydata> = MutableLiveData()
+    var RiderItem : MutableLiveData<RiderListdata> = MutableLiveData()
     var showDetail : Boolean = false // 현재 오더의 디테일 화면을 나타내는지 여부
     var payselect = 1 // 1:물품금액 , 2: 배달금액
     var dropitem = "" // 드롭다운 아이템 목록 "미사용"
@@ -66,6 +70,9 @@ class MainsViewModel : ViewModel() {
 
     var titleName : MutableLiveData<String> = MutableLiveData()
 
+    var riderselect_name : MutableLiveData<Boolean> = MutableLiveData()
+    var riderselect_order : MutableLiveData<Boolean> = MutableLiveData()
+    var riderselect_out : MutableLiveData<Boolean> = MutableLiveData()
 
     private lateinit var alarmCallback: (ArrayList<Alarmdata>)-> Unit? // 알람
 
@@ -100,11 +107,35 @@ class MainsViewModel : ViewModel() {
         // 위 두줄 포스트벨류로 안넣으면 초기 맵 선로딩이 안될 경우가 더 많음(라이브데이터 속도차이)
         drawer.value = false
         filter_title.value = ""
+
+        riderselect_name.value = true
+        riderselect_out.value = false
+    }
+
+    fun onTouch() : Boolean{
+        Logindata.SessionExpireMin = Vars.timecntExit // 터치 이벤트 없으면 일정시간 후 앱 종료
+        return false
     }
 
     override fun onCleared() {
         super.onCleared()
         Vars.MainVm = null
+    }
+
+    fun onCheckedChanged(group : RadioGroup, checkedId : Int)
+    {
+        if(checkedId == R.id.SearchriderName)
+        {
+            riderselect_name.value = true
+        }
+        else if(checkedId == R.id.SearchriderOrder)
+        {
+            riderselect_name.value = false
+        }
+    }
+
+    fun click_RiderList_out(){
+        riderselect_out.value = riderselect_out.value != true
     }
 
     fun clean_Agency_Search_text(){
@@ -117,12 +148,14 @@ class MainsViewModel : ViewModel() {
         (Vars.mContext as MainsFun).showAddress(OrderItem.value)
     }
 
-    fun Re_login(){
+    fun Re_login(type: Int){
+        // 0: 비밀번호 변경
+
         Logindata.CenterList = false
         Logindata.RiderList = false
         Logindata.OrderList = false
         disconnectAlram()
-        (Vars.mContext as MainsFun).re_login()
+        (Vars.mContext as MainsFun).re_login(type)
     }
 
     fun insertNewAssign()
@@ -189,6 +222,21 @@ class MainsViewModel : ViewModel() {
     fun getAgencyList(txt : String){
         var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
         temp[Procedures.AGENCY_LIST] = MakeJsonParam().makeAgencyListParameter(Logindata.LoginId!!, txt, agencySelecttxt,"0")
+        Vars.sendList.add(temp)
+    }
+
+    fun getRiderInfoList(txt : String)
+    {
+        var s = "0"
+        var w = "0"
+        s = if(riderselect_name.value == true) "0"
+        else "1"
+
+        w = if(riderselect_out.value == false) "0"
+        else "1"
+
+        var temp : ConcurrentHashMap<String, JSONArray> =  ConcurrentHashMap()
+        temp[Procedures.RIDER_LIST] = MakeJsonParam().makeRiderInfoListParameter(Logindata.LoginId!!, "", "0",agencySelecttxt,s,w,txt)
         Vars.sendList.add(temp)
     }
 
@@ -457,7 +505,8 @@ class MainsViewModel : ViewModel() {
         (parent.getChildAt(0) as TextView).textSize = 20f
         (parent.getChildAt(0) as TextView).gravity = Gravity.CENTER
 
-        Vars.DataHandler!!.obtainMessage(Finals.VIEW_AGENCY,Finals.ALL_CLEAR,0).sendToTarget()
+        if(layer.value == Finals.SELECT_AGENCY) Vars.DataHandler!!.obtainMessage(Finals.VIEW_AGENCY,Finals.ALL_CLEAR,0).sendToTarget()
+        else if(layer.value == Finals.SELECT_RIDERLIST) Vars.DataHandler!!.obtainMessage(Finals.VIEW_RIDER,Finals.ALL_CLEAR,0).sendToTarget()
 
         //초기에 해당부분을 전혀 고려하지 않아서 뭔가 힘들게 할수밖에 없네.., 더 좋은 방법이 생각나면 고칠것!
         var it = Vars.centerList.keys.iterator()
@@ -538,6 +587,9 @@ class MainsViewModel : ViewModel() {
     }
     fun getSelectAgency(): Int? {
         return Finals.SELECT_AGENCY
+    }
+    fun getSelectRiderList(): Int? {
+        return Finals.SELECT_RIDERLIST
     }
 
     fun MapDrOpen(){
@@ -639,13 +691,35 @@ class MainsViewModel : ViewModel() {
         }
     }
 
+    fun click_RiderList(){
+        if(layer.value != Finals.SELECT_RIDERLIST)
+        {
+            layer.value = Finals.SELECT_RIDERLIST
+            Vars.mLayer = Finals.SELECT_RIDERLIST // 쓰레드가 현재 메인레이어를 뭘보고 있는지 알고싶어함
+        }
+    }
+
     fun click_Agency_Search(){
+
+        proTxt.value = "조회중.."
+        showLoading()
+
         if(layer.value == Finals.SELECT_AGENCY)
         {
             Vars.agencyList.clear() // 받아왔던 리스트는 다 지우고
             if(agencySearchtxt.value.isNullOrEmpty()) getAgencyList("")
             else getAgencyList(agencySearchtxt.value.toString())
         }
+        if(layer.value == Finals.SELECT_RIDERLIST)
+        {
+            Vars.riderlistList.clear() // 받아왔던 리스트는 다 지우고
+            if(agencySearchtxt.value.isNullOrEmpty()) getRiderInfoList("")
+            else getRiderInfoList(agencySearchtxt.value.toString())
+        }
+    }
+
+    fun sendSMS(num : String){
+        (Vars.mContext as MainsFun).sendSMS(num)
     }
 
     fun click_clean()
@@ -782,6 +856,21 @@ class MainsViewModel : ViewModel() {
                 showDetail = true
                 DetailsSelect.value = Finals.DETAIL_AGENCY
                 (Vars.mContext as MainsFun).showOrderdetail(Finals.DETAIL_AGENCY)
+            }
+        }
+    }
+
+    fun showRiderDetail(msg: Any?,code : Int) {
+
+        RiderItem.value = msg as RiderListdata
+
+        if(!showDetail) // 창을 새로 띄우기 보단 안띄우고 갱신 시키기 위함
+        {
+            if(code == 0)
+            {
+                showDetail = true
+                DetailsSelect.value = Finals.DETAIL_RIDER
+                (Vars.mContext as MainsFun).showOrderdetail(Finals.DETAIL_RIDER)
             }
         }
     }

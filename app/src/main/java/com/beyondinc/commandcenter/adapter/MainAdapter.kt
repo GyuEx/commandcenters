@@ -41,6 +41,12 @@ object MainAdapter {
     }
 
     @JvmStatic
+    @BindingAdapter("onTouch")
+    fun setTouchListener(view: View, callback: () -> Boolean) {
+        view.setOnTouchListener { v, event -> callback() }
+    }
+
+    @JvmStatic
     @BindingAdapter("text_color")
     fun setTextColor(view: TextView, velue: Int) {
         if (velue < 7) {
@@ -138,6 +144,11 @@ object MainAdapter {
             (Vars.mContext as MainsFun).setFragment()
             view.text = "가맹점목록"
         }
+        else if(velue == Finals.SELECT_RIDERLIST)
+        {
+            (Vars.mContext as MainsFun).setFragment()
+            view.text = "라이더목록"
+        }
     }
 
     @JvmStatic
@@ -194,13 +205,44 @@ object MainAdapter {
     }
 
     @JvmStatic
+    @BindingAdapter("layout_form_list_view")
+    fun setLayout_listview(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == Finals.SELECT_RIDERLIST || height == Finals.SELECT_AGENCY) {
+            layoutParams.weight = 1f
+            view.layoutParams = layoutParams
+        } else {
+            layoutParams.weight = 0f
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("layout_form_list_view_rider")
+    fun setLayout_listview_rider(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == Finals.SELECT_RIDERLIST) {
+            layoutParams.weight = 1f
+            view.layoutParams = layoutParams
+        } else {
+            layoutParams.weight = 0f
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
     @BindingAdapter("layout_form_header")
     fun setLayoutheader(view: LinearLayout, height: Int) {
         val layoutParams = view.layoutParams as LinearLayout.LayoutParams
-        if (height != Finals.SELECT_MENU) {
+        if (height == Finals.SELECT_RIDERLIST) {
+            layoutParams.weight = 4f
+            view.layoutParams = layoutParams
+        }
+        else if(height != Finals.SELECT_MENU) {
             layoutParams.weight = 2f
             view.layoutParams = layoutParams
-        } else {
+        }
+        else {
             layoutParams.weight = 0f
             view.layoutParams = layoutParams
         }
@@ -428,6 +470,12 @@ object MainAdapter {
             view.gravity = Gravity.CENTER
             view.isClickable = false
         }
+        else if(height == Finals.SELECT_RIDERLIST)
+        {
+            view.text = "라이더현황"
+            view.gravity = Gravity.CENTER
+            view.isClickable = false
+        }
     }
 
     @JvmStatic
@@ -561,7 +609,8 @@ object MainAdapter {
     @BindingAdapter("detail_title")
     fun setDetailBackTitle(view: TextView, height: Int) {
         if(height == Finals.DETAIL_MAP) view.text = "지도보기"
-        if(height == Finals.DETAIL_AGENCY) view.text = "가맹점상세"
+        else if(height == Finals.DETAIL_AGENCY) view.text = "가맹점상세"
+        else if(height == Finals.DETAIL_RIDER) view.text = "라이더상세"
         else view.text = "오더상세"
     }
 
@@ -630,7 +679,7 @@ object MainAdapter {
     @JvmStatic
     @BindingAdapter("sub_scroll_up")
     fun sub_scroll_up(view: TextView, height: Boolean) {
-        if(height == true) view.setBackgroundResource(R.drawable.arrow_down)
+        if(height) view.setBackgroundResource(R.drawable.arrow_down)
         else view.setBackgroundResource(R.drawable.arrow_up)
     }
 
@@ -995,6 +1044,36 @@ object MainAdapter {
         view.text = result + "원"
         if(cnt.toLong() < 0) view.setTextColor(Vars.mContext!!.getColor(R.color.brief))
         else view.setTextColor(Vars.mContext!!.getColor(R.color.menu1))
+    }
+
+    @JvmStatic
+    @BindingAdapter("Riderlist_work")
+    fun Riderlist_work(view: TextView, cnt : String) {
+        if(cnt == "Y")
+        {
+            view.setTextColor(Vars.mContext!!.getColor(R.color.complite))
+            view.text = "출근"
+        }
+        else
+        {
+            view.setTextColor(Vars.mContext!!.getColor(R.color.brief))
+            view.text = "퇴근"
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("Riderlist_state")
+    fun Riderlist_state(view: TextView, cnt : String) {
+        if(cnt == "1001")
+        {
+            view.setTextColor(Vars.mContext!!.getColor(R.color.pickup))
+            view.text = "재직"
+        }
+        else
+        {
+            view.setTextColor(Vars.mContext!!.getColor(R.color.gray))
+            view.text = "퇴사"
+        }
     }
 
     @JvmStatic

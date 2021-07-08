@@ -17,6 +17,7 @@ object Logindata {
     var UserDesc: String? = null
     var LastLoginDT: String? = null
     var MSG: String? = null
+    var SessionExpireMin : Int = 1800
 
     var CenterList : Boolean = false
     var RiderList : Boolean = false

@@ -29,8 +29,9 @@ interface MainsFun {
 
     fun send_call(tel : String)
 
-    fun re_login()
+    fun re_login(type : Int)
 
+    fun sendSMS(num: String)
     fun dispatchTouchEvent()
     fun setting()
     fun exit()

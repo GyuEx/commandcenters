@@ -51,6 +51,8 @@ class LoginViewModel() : ViewModel() {
     var updateTxt = MutableLiveData<String>() // 업데이트시 보여줄 텍스트
     var infotxt = MutableLiveData<String>() // 업데이트시 보여줄 안내 텍스트
 
+    var ExpireMessage = MutableLiveData<String>()
+
     var ver = MutableLiveData<String>() // 버전정보
     var proVal = MutableLiveData<Int>() // 업데이트 프로그래시브바 벨류
 
@@ -157,8 +159,9 @@ class LoginViewModel() : ViewModel() {
         (Vars.lContext as LoginsFun).closePassword()
     }
 
-    fun showMSG()
+    fun showMSG(msg:String)
     {
+        ExpireMessage.value = msg
         closechange()
         (Vars.lContext as LoginsFun).showMsg()
     }

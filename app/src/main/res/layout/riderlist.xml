@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.beyondinc.commandcenter.viewmodel.RiderListViewModel" />
+
+        <variable
+            name="pos"
+            type="Integer" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white">
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:onClick="@{v->viewModel.setUse(pos)}"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="10"
+                android:orientation="horizontal"
+                app:select_item_backcolor="@{viewModel.getUse(pos)}"
+                android:background="@color/lightgray"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingRight="15dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:orientation="vertical"
+                    android:paddingLeft="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="18dp"
+                        android:gravity="left"
+                        android:singleLine="true"
+                        android:text="@{viewModel.getName(pos)}"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15dp"
+                        android:gravity="left"
+                        android:textStyle="bold"
+                        android:text="@{viewModel.getPhone(pos)}"
+                        android:textColor="@color/darkgray"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="배정"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:text="@{viewModel.getAssingCnt(pos)}"
+                        android:textColor="@color/darkgray"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="총 오더"
+                        android:textColor="@android:color/black"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:text="@{viewModel.getAllCnt(pos)}"
+                        android:textColor="@color/darkgray"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="18dp"
+                            android:gravity="right"
+                            android:textColor="@android:color/black"
+                            android:singleLine="true"
+                            app:Riderlist_work="@{viewModel.getWork(pos)}"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="18dp"
+                            android:gravity="right"
+                            android:textColor="@android:color/black"
+                            android:singleLine="true"
+                            app:Riderlist_state="@{viewModel.getState(pos)}"
+                            android:textStyle="bold"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15dp"
+                        android:gravity="right"
+                        android:singleLine="true"
+                        android:textStyle="bold"
+                        android:text="@{viewModel.getExtMoney(pos)}"
+                        android:textColor="@color/menu1"/>>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:Agency_SetUse="@{viewModel.getUse(pos)}"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:background="@color/black"
+                android:textSize="18dp"
+                android:textColor="@drawable/click_text_color"
+                android:textStyle="bold"
+                android:onClick="@{v->viewModel.click_detail()}"
+                android:text="상세보기">
+            </TextView>
+
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+            </TextView>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:background="@color/black"
+                android:textSize="18dp"
+                android:textColor="@drawable/click_text_color"
+                android:textStyle="bold"
+                android:onClick="@{v->viewModel.click_SMS()}"
+                android:text="문자발송">
+            </TextView>
+
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+            </TextView>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:background="@color/black"
+                android:textSize="18dp"
+                android:textColor="@drawable/click_text_color"
+                android:textStyle="bold"
+                android:onClick="@{v->viewModel.click_RiderCall()}"
+                android:text="전화연결">
+            </TextView>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white">
+        </TextView>
+
+    </LinearLayout>
+</layout>

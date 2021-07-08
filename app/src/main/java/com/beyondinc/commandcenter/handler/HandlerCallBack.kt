@@ -5,6 +5,7 @@ import android.os.Message
 import android.provider.Telephony
 import android.util.Log
 import com.beyondinc.commandcenter.data.Orderdata
+import com.beyondinc.commandcenter.data.RiderListdata
 import com.beyondinc.commandcenter.repository.database.entity.Addrdata
 import com.beyondinc.commandcenter.repository.database.entity.Agencydata
 import com.beyondinc.commandcenter.repository.database.entity.Riderdata
@@ -46,7 +47,7 @@ class HandlerCallBack : Handler.Callback {
                 Finals.LOGIN_FAIL -> Vars.LoginVm?.LoginFail()
                 Finals.CHANGE_PASSWORD -> Vars.LoginVm?.changepassword(msg.obj as String)
                 Finals.CHANGE_CLOSE -> Vars.LoginVm?.closechange()
-                Finals.SHOW_MESSAGE -> Vars.LoginVm?.showMSG()
+                Finals.SHOW_MESSAGE -> Vars.LoginVm?.showMSG(msg.obj as String)
             }
             Finals.VIEW_SUBITEM -> when (msg.arg1) // 지도 하단 접수목록 뷰모델
             {
@@ -97,6 +98,11 @@ class HandlerCallBack : Handler.Callback {
                 Finals.INSERT_ORDER -> Vars.AgencyVm?.insertLogic()
                 Finals.ALL_CLEAR -> Vars.AgencyVm?.clear()
             }
+            Finals.VIEW_RIDER -> when (msg.arg1)
+            {
+                Finals.INSERT_ORDER -> Vars.RiderListVm?.insertLogic()
+                Finals.ALL_CLEAR -> Vars.RiderListVm?.clear()
+            }
             Finals.VIEW_MAIN -> when (msg.arg1) //메인 뷰모델
             {
                 Finals.CALL_RIDER -> Vars.MainVm?.getRiderList()
@@ -106,6 +112,7 @@ class HandlerCallBack : Handler.Callback {
                 Finals.CLOSE_CHECK -> Vars.MainVm?.closecheck()
                 Finals.ORDER_ITEM_SELECT -> Vars.MainVm?.showOrderDetail(msg.obj as Orderdata,msg.arg2)
                 Finals.AGENCY_ITEM_SELECT -> Vars.MainVm?.showAgencyDetail(msg.obj as Agencydata,msg.arg2)
+                Finals.RIDER_ITEM_SELECT -> Vars.MainVm?.showRiderDetail(msg.obj as RiderListdata,msg.arg2)
                 Finals.HTTP_ERROR -> Vars.MainVm?.HttpError()
                 Finals.CLOSE_KEYBOARD -> Vars.MainVm?.closeKeyBoard()
                 Finals.INSERT_ORDER_COUNT -> Vars.MainVm?.order_count!!.postValue(msg.obj as String)
@@ -141,7 +148,8 @@ class HandlerCallBack : Handler.Callback {
                 Finals.GET_DELIVERY_FEE -> Vars.MainVm?.DeliveryFee(msg.obj as Addrdata)
                 Finals.INSERT_NEW_ORDER -> Vars.MainVm?.insertNewOrderRegSend(msg.obj as HashMap<String, String>)
                 Finals.LOG_OUT -> Vars.MainVm?.Logout()
-                Finals.RE_LOGIN -> Vars.MainVm?.Re_login()
+                Finals.RE_LOGIN -> Vars.MainVm?.Re_login(msg.arg2)
+                Finals.SEND_SMS -> Vars.MainVm?.sendSMS(msg.obj as String)
             }
         }
 

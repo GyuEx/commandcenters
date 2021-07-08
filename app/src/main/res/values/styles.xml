@@ -3,4 +3,8 @@
     <style name="BBB">
         <item name="android:windowBackground">@color/backgroundLoading</item>
     </style>
+
+    <style name="trans">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

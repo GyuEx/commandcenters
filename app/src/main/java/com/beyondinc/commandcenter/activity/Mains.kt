@@ -10,6 +10,7 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -45,6 +46,7 @@ class Mains : AppCompatActivity(), MainsFun {
         var checkfrag: Fragment? = null
         var infofrag : Fragment? = null
         var agency : Fragment? = null
+        var rider : Fragment? = null
         var fragmentTransaction: FragmentTransaction? = null
         var fragmentTransactionSub: FragmentTransaction? = null
         var dialog:DialogFragment? = null
@@ -101,7 +103,7 @@ class Mains : AppCompatActivity(), MainsFun {
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig);
+        super.onConfigurationChanged(newConfig)
 
         if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             Toast.makeText(this, "세로모드", Toast.LENGTH_SHORT).show();
@@ -134,6 +136,7 @@ class Mains : AppCompatActivity(), MainsFun {
         oderfrag = OrderFragment()
         infofrag = InfoFragment()
         agency = AgencyListFragment()
+        rider = RiderListFragment()
 
         fragmentTransactionSub!!.add(R.id.mL02, checkfrag!!)
         fragmentTransactionSub!!.show(checkfrag!!)
@@ -144,11 +147,13 @@ class Mains : AppCompatActivity(), MainsFun {
         fragmentTransaction!!.add(R.id.mL01, oderfrag!!)
         fragmentTransaction!!.add(R.id.mL01, infofrag!!)
         fragmentTransaction!!.add(R.id.mL01, agency!!)
+        fragmentTransaction!!.add(R.id.mL01, rider!!)
 
         fragmentTransaction!!.hide(oderfrag!!)
         fragmentTransaction!!.hide(infofrag!!)
         fragmentTransaction!!.hide(agency!!)
         fragmentTransaction!!.hide(mapfrag!!)
+        fragmentTransaction!!.hide(rider!!)
 
         fr = infofrag
         fragmentTransaction!!.show(fr!!).commitAllowingStateLoss()
@@ -178,6 +183,8 @@ class Mains : AppCompatActivity(), MainsFun {
 
     override fun onBackPressed() {
 
+        Logindata.SessionExpireMin = Vars.timecntExit // 터치 이벤트 없으면 일정시간 후 앱 종료
+
         if(Vars.MainVm?.layer!!.value == Finals.SELECT_MENU)
         {
             val tempTime = System.currentTimeMillis()
@@ -197,6 +204,20 @@ class Mains : AppCompatActivity(), MainsFun {
         }
     }
 
+    override fun sendSMS(num: String)
+    {
+        try {
+            val i = Intent(Intent.ACTION_VIEW)
+            i.putExtra("address", num)
+            i.putExtra("sms_body", "")
+            i.type = "vnd.android-dir/mms-sms"
+            this.startActivity(i)
+        }
+        catch (e: java.lang.Exception) {
+            Toast.makeText(this,"문자발송을 할 수 없습니다.",Toast.LENGTH_LONG).show()
+        }
+    }
+
     override fun exit(){
         Vars.MainVm!!.Logout()
         stopService(serviceIntent)
@@ -205,10 +226,11 @@ class Mains : AppCompatActivity(), MainsFun {
         android.os.Process.killProcess(android.os.Process.myPid())	// 앱 프로세스 종료
     }
 
-    override fun re_login() {
+    override fun re_login(type : Int) {
         Vars.MainVm!!.Logout()
         val intent = Intent(Vars.mContext,Logins::class.java)
-        intent.putExtra("ReLogin",Finals.CHANGE_PASSWORD)
+        if(type == Finals.CHANGE_PASSWORD) intent.putExtra("ReLogin",Finals.CHANGE_PASSWORD)
+        else if (type == Finals.EXPIRE) intent.putExtra("Expire",Finals.EXPIRE)
         startActivity(intent)
         finish()
     }
@@ -240,6 +262,13 @@ class Mains : AppCompatActivity(), MainsFun {
             val ft = supportFragmentManager.beginTransaction()
             ft!!.hide(fr!!)
             fr = agency
+            ft!!.show(fr!!).commitAllowingStateLoss()
+        }
+        else if(Vars.MainVm?.layer!!.value == Finals.SELECT_RIDERLIST)
+        {
+            val ft = supportFragmentManager.beginTransaction()
+            ft!!.hide(fr!!)
+            fr = rider
             ft!!.show(fr!!).commitAllowingStateLoss()
         }
     }

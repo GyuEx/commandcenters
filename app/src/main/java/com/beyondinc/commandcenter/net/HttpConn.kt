@@ -137,6 +137,8 @@ class HttpConn : Thread(), ThreadFun {
 
                         Log.e("HTTP" , "" + receivedBody)
 
+                        if(!results.containsKey("Method")) return
+
                         val resultMethodBlock: JSONArray = results["Method"] as JSONArray
                         val returnData = makeResponseData(resultMethodBlock)
 

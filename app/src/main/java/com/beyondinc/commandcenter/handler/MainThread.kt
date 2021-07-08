@@ -6,6 +6,7 @@ import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Alarmdata
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.data.Orderdata
+import com.beyondinc.commandcenter.data.RiderListdata
 import com.beyondinc.commandcenter.net.DACallerInterface
 import com.beyondinc.commandcenter.repository.database.entity.*
 import com.beyondinc.commandcenter.util.Codes
@@ -65,6 +66,10 @@ class MainThread() : Thread() , ThreadFun{
                                 Logindata.UserDesc=data!![0]["UserDesc"]
                                 Logindata.LastLoginDT=data!![0]["LastLoginDT"]
                                 Logindata.MSG=data!![0]["MSG"]
+                                Logindata.SessionExpireMin = (data!![0]["SessionExpireMin"]!!.toInt() * 60)
+                                //Logindata.SessionExpireMin = 1 * 60
+
+                                Vars.timecntExit = Logindata.SessionExpireMin
 
                                 if(!data[0].containsKey("PasswdResetYn"))
                                 {
@@ -86,7 +91,11 @@ class MainThread() : Thread() , ThreadFun{
                             {
                                 if(data!![0]["MSG"] == "비밀번호 변경에 성공하였습니다.")
                                 {
-                                    Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.SHOW_MESSAGE,0).sendToTarget()
+                                    isKeep = false
+                                    Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.DISCONN_ALRAM,0).sendToTarget()
+
+                                    var msg = "비밀번호 변경에 성공하였습니다\n시스템을 다시 시작합니다"
+                                    Vars.DataHandler!!.obtainMessage(Finals.VIEW_LOGIN,Finals.SHOW_MESSAGE,0,msg).sendToTarget()
                                 }
                                 else
                                 {
@@ -138,6 +147,18 @@ class MainThread() : Thread() , ThreadFun{
                         }
                         Vars.agencyList.putAll(agencytemp)
                         Vars.DataHandler!!.obtainMessage(Finals.VIEW_AGENCY,Finals.INSERT_ORDER,0).sendToTarget()
+                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_LOADING,0).sendToTarget()
+                    }
+                    else if(code == Procedures.RIDER_LIST)
+                    {
+                        var riderlisttemp : ConcurrentHashMap<String,RiderListdata> = ConcurrentHashMap()
+                        for (i in 0 until data!!.size) {
+                            val ar = riderpassing(data[i]) // 너무길어서 따로 메소드 처리
+                            riderlisttemp[ar.RiderId] = ar
+                        }
+                        Vars.riderlistList.putAll(riderlisttemp)
+                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_RIDER,Finals.INSERT_ORDER,0).sendToTarget()
+                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_LOADING,0).sendToTarget()
                     }
                     else if(code == Procedures.ORDER_LIST_IN_CENTER)
                     {
@@ -335,6 +356,10 @@ class MainThread() : Thread() , ThreadFun{
                         }
                         Vars.DataHandler!!.obtainMessage(Finals.VIEW_ADDRESS,Finals.GET_DELIVERY_FEE,0,arrayList).sendToTarget()
                     }
+                    else if(code == Procedures.REG_NEW_ORDER)
+                    {
+                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.ORDER_TOAST_SHOW,0,data!![0]["MSG"]).sendToTarget()
+                    }
                 }
                 Thread.sleep(200)
 //            } catch (e: Exception) {
@@ -397,6 +422,58 @@ class MainThread() : Thread() , ThreadFun{
         ar.StoreTypeId = data["StoreTypeId"].toString()
 
         return ar
+    }
+    
+    fun riderpassing(data : ConcurrentHashMap<String,String>) : RiderListdata
+    {
+        val rr = RiderListdata()
+        
+        rr.InsuranceCompany = data["InsuranceCompany"].toString()
+        rr.RiderCallFeeId = data["RiderCallFeeId"].toString()
+        rr.LicenseExpireFinish = data["LicenseExpireFinish"].toString()
+        rr.DeviceId = data["DeviceId"].toString()
+        rr.AttendanceYn = data["AttendanceYn"].toString()
+        rr.BalanceLimitAmt = data["BalanceLimitAmt"].toString()
+        rr.RiderId = data["RiderId"].toString()
+        rr.Latitude = data["Latitude"].toString()
+        rr.OffLineColor = data["OffLineColor"].toString()
+        rr.RecvAlarmDelayId = data["RecvAlarmDelayId"].toString()
+        rr.InsuranceRemark = data["InsuranceRemark"].toString()
+        rr.RetiredDt = data["RetiredDt"].toString()
+        rr.TaxPaymentTypeId = data["TaxPaymentTypeId"].toString()
+        rr.LicenseNo = data["LicenseNo"].toString()
+        rr.LicenseExpireFrom = data["LicenseExpireFrom"].toString()
+        rr.RetiredRemark = data["RetiredRemark"].toString()
+        rr.AgencyDistance = data["AgencyDistance"].toString()
+        rr.CurrWorkingOrderCnt = data["CurrWorkingOrderCnt"].toString()
+        rr.EatTimeColor = data["EatTimeColor"].toString()
+        rr.RiderCallFee = data["RiderCallFee"].toString()
+        rr.AssignCancelByRiderYnByRiderSettingYn = data["AssignCancelByRiderYnByRiderSettingYn"].toString()
+        rr.AccountBankName = data["AccountBankName"].toString()
+        rr.AccountOwner = data["AccountOwner"].toString()
+        rr.ShowOrderStatusYn = data["ShowOrderStatusYn"].toString()
+        rr.Deposit = data["Deposit"].toString()
+        rr.LoginId = data["LoginId"].toString()
+        rr.AccountNo = data["AccountNo"].toString()
+        rr.AssignCancelByRiderYn = data["AssignCancelByRiderYn"].toString()
+        rr.ShareOrderViewTypeId = data["ShareOrderViewTypeId"].toString()
+        rr.VehicleType = data["VehicleType"].toString()
+        rr.SSNumber = data["SSNumber"].toString()
+        rr.Mobile = data["Mobile"].toString()
+        rr.InsuranceNo = data["InsuranceNo"].toString()
+        rr.Longitude = data["Longitude"].toString()
+        rr.JoinDt = data["JoinDt"].toString()
+        rr.InsuranceExpireDt = data["InsuranceExpireDt"].toString()
+        rr.InputType = data["InputType"].toString()
+        rr.JoinRemark = data["JoinRemark"].toString()
+        rr.State = data["State"].toString()
+        rr.TotalOrderCnt = data["TotalOrderCnt"].toString()
+        rr.RiderNewListCntLimit = data["RiderNewListCntLimit"].toString()
+        rr.ActiveYn = data["ActiveYn"].toString()
+        rr.RiderName = data["RiderName"].toString()
+        rr.RiderWorkingCntLimit = data["RiderWorkingCntLimit"].toString()
+        
+        return rr
     }
 
     fun passing(data : ConcurrentHashMap<String, String>) : Orderdata

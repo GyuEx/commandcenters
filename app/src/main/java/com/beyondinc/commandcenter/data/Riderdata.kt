@@ -18,4 +18,5 @@ class Riderdata
     var pickupCount : Int = 0
     var completeCount : Int = 0
     var MakerID: Marker? = null
+    var setUse : Boolean = false
 }

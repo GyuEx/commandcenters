@@ -350,6 +350,22 @@ class MakeJsonParam {
         return parameterArray
     }
 
+    fun makeRiderInfoListParameter(loginID: String, rType: String, type : String, CenterId : String, Sort : String ,Work : String, Keyword : String): JSONArray {
+        var parameterArray = JSONArray()
+
+        val parameterJSON = makeBaseParameter(loginID)
+        parameterJSON["ReqType"] = rType
+        parameterJSON["CallCenterId"] = CenterId
+        parameterJSON["TYPE"] = type
+        parameterJSON["ORDER_BY_TYPE"] = Sort
+        parameterJSON["WORK_SEARCHING_TYPE"] = Work
+        parameterJSON["CENTER_ID"] = CenterId
+        parameterJSON["KEYWORD"] = Keyword
+        parameterArray.add(parameterJSON)
+
+        return parameterArray
+    }
+
     fun makeDeliveryFeeInfoParameter(loginID: String, Type: String, AgencyId : String, BuldingNo : String, Lat : String, Lon : String, TownCode : String): JSONArray {
         var parameterArray = JSONArray()
 

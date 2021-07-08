@@ -14,6 +14,7 @@ object Finals {
     val VIEW_MAP = 8
     val VIEW_ASSIGN = 9
     val VIEW_AGENCY = 10
+    val VIEW_RIDER = 11
 
     //View Codes
     val NOT_USE_CODE : Int = 0
@@ -33,6 +34,7 @@ object Finals {
     val SELECT_ORDER : Int = 15
     val SELECT_CHECK : Int = 16
     val SELECT_AGENCY : Int = 17
+    val SELECT_RIDERLIST : Int = 18
 
     val CLOSE_CHECK : Int = 21
     val SUCCESS_MESSAGE : Int = 22
@@ -41,6 +43,7 @@ object Finals {
     val DETAIL_MAP : Int = 31
     val DETAIL_ORDER : Int = 32
     val DETAIL_AGENCY : Int = 33
+    val DETAIL_RIDER : Int = 34
 
     val ORDER_ASSIGN : Int = 26
     val ORDER_TOAST_SHOW : Int = 27
@@ -106,6 +109,7 @@ object Finals {
     val APK_UPDATE : Int = 131
     val APK_INSTALL : Int = 132
     val DOWNLOADVALUE : Int = 133
+    val SEND_SMS : Int = 134
 
     val SHOW_LOADING : Int = 141
     val CLOSE_LOADING : Int = 142
@@ -133,6 +137,7 @@ object Finals {
     val POPUP_MAP_CC : Int = 187
 
     val ALL_CLEAR : Int = 200
+    val EXPIRE : Int = 201
 
     const val REQUEST_PERMISSION = 10001
     const val KAKAO_KEY = "c5a3395640f428b7cd90ea429d902c8d"

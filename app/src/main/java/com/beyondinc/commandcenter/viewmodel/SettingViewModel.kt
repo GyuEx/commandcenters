@@ -105,7 +105,7 @@ class SettingViewModel : ViewModel() {
     }
 
     fun click_change_password(){
-        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.RE_LOGIN,0).sendToTarget()
+        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.RE_LOGIN,Finals.CHANGE_PASSWORD).sendToTarget()
         closeEmer()
         exit()
     }
