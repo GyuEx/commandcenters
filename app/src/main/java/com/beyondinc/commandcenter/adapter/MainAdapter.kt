@@ -24,6 +24,8 @@ import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 object MainAdapter {
@@ -47,9 +49,16 @@ object MainAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter("text_color")
-    fun setTextColor(view: TextView, velue: Int) {
-        if (velue < 7) {
+    @BindingAdapter("text_color","text_color_bit")
+    fun setTextColor(view: TextView, velue: String, arg : String) {
+        var a: String = "0"
+        var ft = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        var transtime = velue
+        var now = ft.parse(ft.format(Date()))
+        var nt = ft.parse(ft.format(ft.parse(transtime)))
+        a = ((now.time - nt.time) / 60000).toString()
+
+        if (a.toInt() > arg.toInt()) {
             view.setTextColor(Vars.mContext!!.getColor(R.color.brief))
         } else {
             view.setTextColor(Vars.mContext!!.getColor(R.color.black))
@@ -609,8 +618,8 @@ object MainAdapter {
     @BindingAdapter("detail_title")
     fun setDetailBackTitle(view: TextView, height: Int) {
         if(height == Finals.DETAIL_MAP) view.text = "지도보기"
-        else if(height == Finals.DETAIL_AGENCY) view.text = "가맹점상세"
-        else if(height == Finals.DETAIL_RIDER) view.text = "라이더상세"
+        else if(height == Finals.DETAIL_AGENCY) view.text = "가맹점 상세정보"
+        else if(height == Finals.DETAIL_RIDER) view.text = "라이더 상세정보"
         else view.text = "오더상세"
     }
 
@@ -833,6 +842,38 @@ object MainAdapter {
         else
         {
             layoutParams.weight = 0f
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("PaySelector")
+    fun Payselector(view: LinearLayout, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == 1)
+        {
+            layoutParams.weight = 1F
+            view.layoutParams = layoutParams
+        }
+        else
+        {
+            layoutParams.weight = 0f
+            view.layoutParams = layoutParams
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("PaySelector_line")
+    fun Payselector_Line(view: TextView, height: Int) {
+        val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+        if (height == 1)
+        {
+            layoutParams.height = 1
+            view.layoutParams = layoutParams
+        }
+        else
+        {
+            layoutParams.height = 0
             view.layoutParams = layoutParams
         }
     }

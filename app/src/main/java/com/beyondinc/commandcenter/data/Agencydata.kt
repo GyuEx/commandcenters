@@ -55,5 +55,7 @@ class Agencydata
     var v2 : Int = 0
     var v3 : Int = 0
 
+    var CenterName : String? =""
+
     var setUse : Boolean = false
 }

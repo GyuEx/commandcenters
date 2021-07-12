@@ -178,7 +178,7 @@ class SettingViewModel : ViewModel() {
     }
 
     fun click_brigth_minus(){
-        if(bright.value!! > 0) {
+        if(bright.value!! > 1) {
             var i = bright.value!! - 1
             bright.value = i
         }

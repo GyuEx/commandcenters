@@ -49,6 +49,7 @@ class StoreViewModel : ViewModel() {
             else {
                 val memo = Agencydata()
                 memo.AgencyName = Vars.orderList[rittemp]!!.AgencyName
+                memo.CenterName = Vars.orderList[rittemp]!!.CenterName
                 tempmap[Vars.orderList[rittemp]!!.AgencyName] = memo
             }
 
@@ -83,7 +84,8 @@ class StoreViewModel : ViewModel() {
     }
 
     fun getName(pos: Int): String? {
-        return items!![pos]?.AgencyName
+        if(Vars.Usenick) return Vars.centerNick[items!![pos]?.CenterName] + "] " + items!![pos]?.AgencyName
+        else return items!![pos]?.CenterName + "] " + items!![pos]?.AgencyName
     }
 
     fun getVelue1(pos: Int): String? {

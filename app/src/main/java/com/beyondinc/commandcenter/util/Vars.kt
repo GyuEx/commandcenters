@@ -36,7 +36,7 @@ object Vars {
     var multiSelectCnt = 0 // 아이템뷰 다중배차 선택 갯수
 
     var timecntGPS = 10 // 라이더 요청주기
-    var timecntOT = 60 // 오더갯수 요청주기
+    var timecntOT = 30 // 오더갯수 요청주기
     var timecntExit = 0 // 자동종료 주기
 
     var DeviceSize = Point() // 디바이스 사이즈 (메인 엑티비티 생성시 가져온다, 다이얼로그가 전역으로 사용)

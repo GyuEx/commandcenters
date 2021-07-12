@@ -47,7 +47,7 @@ class PlaySoundThread(private val oid:Int, private val sid:Int) : Thread(), Thre
         }
         else
         {
-            soundPool = SoundPool(1, AudioManager.STREAM_RING, 0)
+            soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 0)
             var wav: Int? = null
             when (sid) {
                 AlarmCodes.ALARM_ORDER_STATE_301 -> if(Vars.UseJ) wav = Finals.soundArray[0]

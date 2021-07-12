@@ -83,7 +83,8 @@ class RiderViewModel : ViewModel() {
     }
 
     fun getName(pos: Int): String? {
-        return "${Vars.centerList[items!![pos]?.centerId]?.centerName}]${items!![pos]?.riderName}"
+        if(Vars.Usenick) return Vars.centerNick[Vars.centerList[items!![pos]?.centerId]?.centerName] + "] " + items!![pos]?.riderName
+        else return Vars.centerList[items!![pos]?.centerId]?.centerName + "] " + items!![pos]?.riderName
     }
 
     fun getVelue1(pos: Int): String? {

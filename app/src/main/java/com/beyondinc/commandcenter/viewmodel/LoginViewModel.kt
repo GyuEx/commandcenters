@@ -93,7 +93,6 @@ class LoginViewModel() : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         Log.e("LoginsViewmodel","distory LongisViewModel")
-        Vars.LoginVm = null
     }
 
     fun QuestAction(){

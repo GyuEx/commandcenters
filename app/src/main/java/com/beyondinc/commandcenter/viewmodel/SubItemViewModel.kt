@@ -10,6 +10,7 @@ import com.beyondinc.commandcenter.adapter.RecyclerAdapterSub
 import com.beyondinc.commandcenter.data.Orderdata
 import com.beyondinc.commandcenter.util.Finals
 import com.beyondinc.commandcenter.util.Vars
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.HashMap
@@ -184,26 +185,13 @@ class SubItemViewModel : ViewModel() {
     }
 
     fun getResttime(pos: Int): String? {
-        //오더시간을 계산해보자 -> 접수건은 계산할 필요가 없음
-//        var a : String = "0"
-//        if(items!![pos]!!.DeliveryStateName == "배정") {
-//            var ft = SimpleDateFormat("HH:mm:ss")
-//            var now = ft.parse(ft.format(Date()))
-//            var nt = ft.parse(ft.format(ft.parse(items!![pos]!!.DriverAssignDT)))
-//            a = ((now.time - nt.time)/60000).toString()
-//        }
-//        else if(items!![pos]!!.DeliveryStateName == "접수")
-//        {
-//            a = "0"
-//        }
-//        else if(items!![pos]!!.DeliveryStateName == "픽업")
-//        {
-//            var ft = SimpleDateFormat("HH:mm:ss")
-//            var nt = ft.parse(ft.format(ft.parse(items!![pos]!!.DriverAssignDT)))
-//            var pt = ft.parse(ft.format(ft.parse(items!![pos]!!.PickupDT)))
-//            a = ((pt.time - nt.time)/60000).toString()
-//        }
-        return "0"
+        var a : String = "0"
+        var ft = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        var transtime = itemss!![pos]!!.ReceiptDT
+        var now = ft.parse(ft.format(Date()))
+        var nt = ft.parse(ft.format(ft.parse(transtime)))
+        a = ((now.time - nt.time)/60000).toString()
+        return a
     }
 
     fun getPay(pos: Int): String? {

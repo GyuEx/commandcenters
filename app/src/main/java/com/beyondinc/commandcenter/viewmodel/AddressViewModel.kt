@@ -76,6 +76,8 @@ class AddressViewModel : ViewModel() {
 
     val CustMarker = Marker() // 지도 맵 마커
 
+    val ArriveTime : MutableLiveData<Array<String>> = MutableLiveData() // 시간목록
+
     var DeliveryDistance : MutableLiveData<String> = MutableLiveData()
     var DeliveryFee : MutableLiveData<String> = MutableLiveData()
 
@@ -186,7 +188,7 @@ class AddressViewModel : ViewModel() {
     fun onItemSelectedArriveTime(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
          if((parent.getChildAt(0) as TextView).text.toString() != "즉시") {
              var st = (parent.getChildAt(0) as TextView).text.toString().replace("분", "").toInt()
-             orderarriveTime.value = (st + 20).toString()
+             orderarriveTime.value = st.toString()
          }
     }
 
@@ -195,11 +197,15 @@ class AddressViewModel : ViewModel() {
     }
 
     fun onItemSelectedBuildName(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-        detailtxt.value += (parent.getChildAt(0) as TextView).text.toString() + " "
+        if((parent.getChildAt(0) as TextView).text.toString() != "건물명")
+        {
+            detailtxt.value += (parent.getChildAt(0) as TextView).text.toString() + " "
+        }
     }
 
     fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         //  스피너의 선택 내용이 바뀌면 호출된다
+        Log.e("aaaa","aaaaaaaaaaaaaaaaaaaaa111" + dong.value + " // " + dongcode)
 //        if(!first && statecode == 0) {
 //            Log.e("aaaa","aaaaaaaaaaaaaaaaaaaaa111" + dong.value)
 //            for (i in 0 until itemsdong.value!!.size) {
@@ -218,10 +224,8 @@ class AddressViewModel : ViewModel() {
 //        {
             (parent.getChildAt(0) as TextView).setTextColor(Color.BLACK)
             (parent.getChildAt(0) as TextView).textSize = 20f
-
             dong.value = itemsdong.value?.get(position)
-            dongcode = (Vars.dongList[itemsdong.value?.get(position)] as Dongdata).code.toString()
-            searchAddr()
+            //searchAddr()
 //       }
     }
 
@@ -261,10 +265,30 @@ class AddressViewModel : ViewModel() {
         {
             item_agency = initdata
             statecode = 1
-            titletext.value = "오더등록"
+            titletext.value = "오더접수"
             selection.value = "Jibun"
             hinttxt.value = "지번주소를 입력해주세요."
             from.value = 0
+
+            var time = 0
+
+            if(!item_agency.CallCenterOrderDelay.isNullOrEmpty())
+            {
+                time = item_agency.CallCenterOrderDelay?.toInt()!!
+            }
+            if(!item_agency.ArriveAgencyPlanTime.isNullOrEmpty())
+            {
+                time = item_agency.ArriveAgencyPlanTime?.toInt()!!
+            }
+
+            var temptime = ArrayList<String>()
+            for(i in time .. 60 step 5)
+            {
+                if(i == 0) temptime.add("즉시")
+                else temptime.add("${i}분")
+            }
+            ArriveTime.value = temptime.toArray(arrayOfNulls(temptime.size))
+
             getdonglist()
         }
     }
@@ -340,7 +364,7 @@ class AddressViewModel : ViewModel() {
 
             var temp : HashMap<Int, String> = HashMap()
             temp[0] = selection.value.toString()
-            temp[1] = dongcode
+            temp[1] = (Vars.dongList[dong.value!!] as Dongdata).code.toString()
             temp[2] = searchTxt.value.toString()
             if(statecode == 0) Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.SEARCH_ADDR,0, temp).sendToTarget()
             else Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.SEARCH_NEW_ADDR,0, temp).sendToTarget()
@@ -432,9 +456,9 @@ class AddressViewModel : ViewModel() {
                 Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.GET_DELIVERY_FEE,0,addr).sendToTarget()
                 btntext.value = "저장"
             }
-            else if(orderHistory.value.isNullOrEmpty() || orderSailMoney.value.isNullOrEmpty() || orderTelnumber.value.isNullOrEmpty())
+            else if(orderSailMoney.value.isNullOrEmpty() || orderTelnumber.value.isNullOrEmpty())
             {
-                Toast.makeText(Vars.mContext,"금액,주문내역 또는 전화번호가 없습니다.",Toast.LENGTH_LONG).show()
+                Toast.makeText(Vars.mContext,"금액 또는 전화번호가 없습니다.",Toast.LENGTH_LONG).show()
                 return
             }
             else

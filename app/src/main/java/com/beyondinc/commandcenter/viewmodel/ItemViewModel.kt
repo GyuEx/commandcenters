@@ -298,23 +298,11 @@ class ItemViewModel : ViewModel() {
     fun getResttime(pos: Int): String? {
         //오더시간을 계산해보자
         var a : String = "0"
-        var ft = SimpleDateFormat("HH:mm:ss")
-
-        if(items!![pos]!!.DeliveryStateName == "배정") {
-            var now = ft.parse(ft.format(Date()))
-            var nt = ft.parse(ft.format(ft.parse(items!![pos]!!.DriverAssignDT)))
-            a = ((now.time - nt.time)/60000).toString()
-        }
-        else if(items!![pos]!!.DeliveryStateName == "접수")
-        {
-            a = "0"
-        }
-        else if(items!![pos]!!.DeliveryStateName == "픽업")
-        {
-            var nt = ft.parse(ft.format(ft.parse(items!![pos]!!.DriverAssignDT)))
-            var pt = ft.parse(ft.format(ft.parse(items!![pos]!!.PickupDT)))
-            a = ((pt.time - nt.time)/60000).toString()
-        }
+        var ft = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        var transtime = items!![pos]!!.ReceiptDT
+        var now = ft.parse(ft.format(Date()))
+        var nt = ft.parse(ft.format(ft.parse(transtime)))
+        a = ((now.time - nt.time)/60000).toString()
         return a
     }
 

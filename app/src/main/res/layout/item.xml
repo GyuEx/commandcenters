@@ -75,7 +75,8 @@
                         android:gravity="center"
                         app:item_font_size="@{viewModel.getfontsize()}"
                         android:singleLine="true"
-                        app:text_color="@{viewModel.items.get(pos).id}"/>
+                        app:text_color="@{viewModel.items.get(pos).receiptDT}"
+                        app:text_color_bit="@{viewModel.items.get(pos).AgencyRequestTime}"/>
                     <TextView
                         android:id="@+id/pay"
                         android:layout_width="match_parent"

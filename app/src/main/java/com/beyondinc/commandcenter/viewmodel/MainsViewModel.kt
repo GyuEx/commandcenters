@@ -110,8 +110,6 @@ class MainsViewModel : ViewModel() {
 
         riderselect_name.value = true
         riderselect_out.value = false
-
-        if(!Logindata.CenterList) Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CALL_CENTER,0).sendToTarget()
     }
 
     fun onTouch() : Boolean{
@@ -134,6 +132,11 @@ class MainsViewModel : ViewModel() {
         {
             riderselect_name.value = false
         }
+    }
+
+    fun afterTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
+    {
+        pay.value = s.toString().replace(",","")
     }
 
     fun click_RiderList_out(){
@@ -1143,6 +1146,21 @@ class MainsViewModel : ViewModel() {
 
     fun closeKeyBoard(){
         (Vars.mContext as MainsFun).dispatchTouchEvent()
+    }
+
+    fun getdriverAssignDT() : String {
+        if(OrderItem.value!!.DriverAssignDT.isNullOrEmpty()) return ""
+        else return OrderItem.value!!.ModDT.substring(0,OrderItem.value!!.ModDT.indexOf(" ")) + " " + OrderItem.value!!.DriverAssignDT
+    }
+
+    fun getpickupDT() : String {
+        if(OrderItem.value!!.PickupDT.isNullOrEmpty()) return ""
+        else return OrderItem.value!!.ModDT.substring(0,OrderItem.value!!.ModDT.indexOf(" ")) + " " + OrderItem.value!!.PickupDT
+    }
+
+    fun getcompleteDT() : String {
+        if(OrderItem.value!!.CompleteDT.isNullOrEmpty()) return ""
+        else return OrderItem.value!!.ModDT.substring(0,OrderItem.value!!.ModDT.indexOf(" ")) + " " + OrderItem.value!!.CompleteDT
     }
 
     fun successMessage(msg: String)

@@ -2,13 +2,16 @@ package com.beyondinc.commandcenter.activity
 
 import RiderDialog
 import StoreDialog
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
@@ -16,6 +19,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -25,19 +29,28 @@ import com.beyondinc.commandcenter.R
 import com.beyondinc.commandcenter.data.Logindata
 import com.beyondinc.commandcenter.databinding.ActivityMainBinding
 import com.beyondinc.commandcenter.fragment.*
+import com.beyondinc.commandcenter.handler.*
+import com.beyondinc.commandcenter.net.HttpConn
 import com.beyondinc.commandcenter.service.AppActivateService
+import com.beyondinc.commandcenter.service.ForecdTerminationService
 import com.beyondinc.commandcenter.util.Finals
+import com.beyondinc.commandcenter.util.MakeJsonParam
+import com.beyondinc.commandcenter.util.Procedures
 import com.beyondinc.commandcenter.util.Vars
 import com.beyondinc.commandcenter.viewmodel.MainsViewModel
 import com.kakao.util.helper.Utility.getPackageInfo
+import org.json.simple.JSONArray
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.util.ArrayList
+import java.util.concurrent.ConcurrentHashMap
 
 
 class Mains : AppCompatActivity(), MainsFun {
     var binding: ActivityMainBinding? = null
     private val Tag = "Mains Activity"
     private val serviceIntent = Intent(AppActivateService.ACTION_FOREGROUND)
+    private val serviceBackIntent = Intent(AppActivateService.ACTION_BACKGROUND)
 
     companion object {
         var fr: Fragment? = null
@@ -65,16 +78,6 @@ class Mains : AppCompatActivity(), MainsFun {
     override fun onDestroy() {
         super.onDestroy()
         Log.e(Tag, "Destory")
-//        exit()
-//        (Vars.MainThread as ThreadFun).stopThread()
-//        (Vars.AlarmThread as ThreadFun).stopThread()
-//        (Vars.MarkerThread as ThreadFun).stopThread()
-//        (Vars.HttpThread as ThreadFun).stopThread()
-//
-//        Vars.MainThread = null
-//        Vars.AlarmThread = null
-//        Vars.MarkerThread = null
-//        Vars.HttpThread = null
     }
 
     override fun onStart() {
@@ -119,7 +122,55 @@ class Mains : AppCompatActivity(), MainsFun {
         Vars.mContext = this
         Log.e(Tag, "Create")
 
+        if(savedInstanceState == null) Log.e(Tag, "Null")
+        else Log.e(Tag, "Create" + savedInstanceState)
+
+        checkpermission() // 퍼미션 가져오기
+
+        if(Vars.MainThread == null)
+        {
+            Vars.MainThread = MainThread()
+            Vars.MainThread!!.isDaemon = true
+            Vars.MainThread!!.start()
+        } //외부데이터 처리해줄 메인 쓰레드
+        if(Vars.HttpThread == null)
+        {
+            Vars.HttpThread = HttpConn()
+            Vars.HttpThread!!.isDaemon = true
+            Vars.HttpThread!!.start()
+        } //서버랑 통신할 통신 쓰레드
+        if(Vars.AlarmThread == null)
+        {
+            Vars.AlarmThread = AlarmThread()
+            Vars.AlarmThread!!.isDaemon = true
+            Vars.AlarmThread!!.start()
+        } //서버 알람 받아 처리하는 알람 쓰레드
+        if(Vars.MarkerThread == null)
+        {
+            Vars.MarkerThread = MarkerThread()
+            Vars.MarkerThread!!.isDaemon = true
+            Vars.MarkerThread!!.start()
+        } //맵뷰가 마커를 직접생성하면 느려서 마커를 관리해주는 마커 쓰레드
+        if(Vars.CheckThread == null)
+        {
+            Vars.CheckThread = CheckThread()
+            Vars.CheckThread!!.isDaemon = true
+            Vars.CheckThread!!.start()
+        } // 주기적으로 서버에 요청할 쓰레드 (뷰모델에 타이머를 줬더니 힘들어하는것 같아서 뺌)
+
+        if(Vars.DataHandler == null) Vars.DataHandler = Handler(HandlerCallBack()) // 모델 데이터 처리 핸들러
+
+        getDeviceSize() // 단말기 화면 사이즈 얻기
+
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        serviceIntent.setClass(this, AppActivateService::class.java)
+        serviceIntent.setPackage("com.beyondinc.commandcenter")
+        startService(serviceIntent)
+
+        serviceBackIntent.setClass(this, ForecdTerminationService::class.java)
+        serviceBackIntent.setPackage("com.beyondinc.commandcenter")
+        startService(serviceBackIntent)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
@@ -155,11 +206,13 @@ class Mains : AppCompatActivity(), MainsFun {
         fr = infofrag
         fragmentTransaction!!.show(fr!!).commitAllowingStateLoss()
 
-        if(Vars.MainVm == null)
+        if(!Logindata.isLogin)
         {
-            Vars.MainVm = MainsViewModel()
-            showLoading() // 최초 로딩화면 보여주기
+            var i = Intent(Vars.mContext, Logins::class.java)
+            startActivityForResult(i,10001)
         }
+
+        if(Vars.MainVm == null) Vars.MainVm = MainsViewModel()
         binding!!.lifecycleOwner = this
         binding!!.viewModel = Vars.MainVm
 
@@ -176,6 +229,28 @@ class Mains : AppCompatActivity(), MainsFun {
             } catch (e: NoSuchAlgorithmException) {
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 10001)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                if(!Logindata.CenterList)
+                {
+                    Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CALL_CENTER,0).sendToTarget()
+                    showLoading() // 최초 로딩화면 보여주기
+                }
+            }
+        }
+    }
+
+    fun getDeviceSize() {
+        /// 사용하는 핸드폰 전체 화면 사이즈 가져옴
+        val windowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val display = windowManager.defaultDisplay
+        display.getSize(Vars.DeviceSize)
     }
 
     override fun onBackPressed() {
@@ -535,6 +610,91 @@ class Mains : AppCompatActivity(), MainsFun {
         intent.data = Uri.parse("tel:${tel}")
         if(intent.resolveActivity(packageManager) != null){
             startActivity(intent)
+        }
+    }
+
+    fun checkpermission(){
+        if (Build.VERSION.SDK_INT >= 17) {
+            val pms: MutableList<String> = ArrayList()
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_PHONE_STATE
+                ) !== PackageManager.PERMISSION_GRANTED
+            ) pms.add(
+                Manifest.permission.READ_PHONE_STATE
+            )
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) !== PackageManager.PERMISSION_GRANTED
+            ) pms.add(
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) !== PackageManager.PERMISSION_GRANTED
+            ) pms.add(
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.CALL_PHONE
+                ) !== PackageManager.PERMISSION_GRANTED
+            ) pms.add(
+                Manifest.permission.CALL_PHONE
+            )
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) !== PackageManager.PERMISSION_GRANTED
+            ) pms.add(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) !== PackageManager.PERMISSION_GRANTED
+
+            ) pms.add(
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.REQUEST_INSTALL_PACKAGES
+                ) !== PackageManager.PERMISSION_GRANTED
+
+            ) pms.add(
+                Manifest.permission.REQUEST_INSTALL_PACKAGES
+            )
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.RECORD_AUDIO
+                ) !== PackageManager.PERMISSION_GRANTED
+            ) pms.add(
+                Manifest.permission.RECORD_AUDIO
+            )
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_PHONE_STATE
+                ) !== PackageManager.PERMISSION_GRANTED
+            ) pms.add(
+                Manifest.permission.READ_PHONE_STATE
+            )
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_PHONE_NUMBERS
+                ) !== PackageManager.PERMISSION_GRANTED
+
+            ) pms.add(
+                Manifest.permission.READ_PHONE_NUMBERS
+            )
+            if (pms.size == 0) {
+
+            } else ActivityCompat.requestPermissions(
+                this,
+                pms.toTypedArray(), Finals.REQUEST_PERMISSION
+            )
         }
     }
 }

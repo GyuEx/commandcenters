@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.beyondinc.commandcenter.isok",
+  "variantName": "beyondRelease",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "versionCode": 4,
+      "versionName": "1.1.1",
+      "outputFile": "beyond_manager_1.1.1.apk"
+    }
+  ]
+}

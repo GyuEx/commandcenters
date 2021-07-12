@@ -35,8 +35,8 @@ class MainThread() : Thread() , ThreadFun{
 
     override fun run() {
         while (isKeep) {
-            try {
-
+//            try {
+//
                 if (Vars.receiveList.size > 0 && Vars.receiveList.isNotEmpty() && !Vars.receiveList.isNullOrEmpty()) {
 
                     var rdata = Vars.receiveList.removeAt(0)
@@ -66,10 +66,19 @@ class MainThread() : Thread() , ThreadFun{
                                 Logindata.UserDesc=data!![0]["UserDesc"]
                                 Logindata.LastLoginDT=data!![0]["LastLoginDT"]
                                 Logindata.MSG=data!![0]["MSG"]
-                                Logindata.SessionExpireMin = (data!![0]["SessionExpireMin"]!!.toInt() * 60)
-                                //Logindata.SessionExpireMin = 1 * 60
 
-                                Vars.timecntExit = Logindata.SessionExpireMin
+                                if(data[0].containsKey("SessionExpireMin"))
+                                {
+                                    Logindata.SessionExpireMin = (data!![0]["SessionExpireMin"]!!.toInt() * 60)
+                                    //Logindata.SessionExpireMin = 1 * 60
+
+                                    Vars.timecntExit = Logindata.SessionExpireMin
+                                }
+                                else
+                                {
+                                    Logindata.SessionExpireMin = 30 * 60
+                                    Vars.timecntExit = Logindata.SessionExpireMin
+                                }
 
                                 if(!data[0].containsKey("PasswdResetYn"))
                                 {
@@ -201,7 +210,7 @@ class MainThread() : Thread() , ThreadFun{
                         {
                             if(orcnt == 0)
                             {
-                                Vars.timecntOT = 60 // 체크 주기 다시 1분으로 변경하고
+                                Vars.timecntOT = 30 // 체크 주기 다시 1분으로 변경하고
                                 allcnt = 0 // 재시도 횟수 0으로 초기화
                                 Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CONN_ALRAM,0).sendToTarget() // 알람켜기
                                 Log.e("MainThread" , "일치할걸?")
@@ -271,6 +280,7 @@ class MainThread() : Thread() , ThreadFun{
                             msg = data!![i]["MSG"].toString()
                         }
                         Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.ORDER_TOAST_SHOW,0,msg).sendToTarget()
+                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CLOSE_DETAIL,0).sendToTarget()
                     }
                     else if(code == Procedures.EDIT_ORDER_INFO)
                     {
@@ -362,10 +372,10 @@ class MainThread() : Thread() , ThreadFun{
                     }
                 }
 
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Log.e("MainThread",e.toString())
-            }
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//                Log.e("MainThread",e.toString())
+//            }
             Thread.sleep(200)
         }
     }

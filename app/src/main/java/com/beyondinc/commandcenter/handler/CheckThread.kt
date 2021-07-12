@@ -31,8 +31,11 @@ class CheckThread () : Thread() , ThreadFun {
                     time++
                 }
 
-                if (refrash >= Vars.timecntOT) { // 기본 60초
-                    if (Vars.mLayer == Finals.SELECT_ORDER) Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget() //시간경과 갱신주기 1분
+                if (refrash >= Vars.timecntOT) { // 기본 30초
+                    if (Vars.mLayer == Finals.SELECT_ORDER)
+                    {
+                        Vars.DataHandler!!.obtainMessage(Finals.VIEW_ITEM,Finals.INSERT_ORDER,0).sendToTarget()
+                    } //시간경과 갱신주기 1분
                     Vars.DataHandler!!.obtainMessage(Finals.VIEW_MAIN,Finals.CHECK_COUNT,0).sendToTarget() // 카운터를 줌
                     refrash = 0
                 } else {

@@ -17,7 +17,8 @@
 		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="0dp"
-			android:layout_weight="3"
+			android:layout_weight="1"
+			app:PaySelector="@{viewModel.payselect}"
 			android:orientation="horizontal">
 
 			<TextView
@@ -43,23 +44,47 @@
 
 		</LinearLayout>
 
-		<TextView
-			android:layout_width="match_parent"
-			android:layout_height="1dp"
-			android:layout_marginLeft="20dp"
-			android:layout_marginRight="20dp"
-			android:background="@color/whitegray">
-		</TextView>
-
 		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="0dp"
-			android:layout_weight="3">
+			app:PaySelector="@{viewModel.payselect}"
+			android:layout_weight="1">
 
 			<TextView
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
-				android:text="금액"
+				android:text="배달금액"
+				android:textSize="20dp"
+				android:gravity="center"
+				android:textColor="@color/white"
+				android:layout_weight="1">
+
+			</TextView>
+
+			<TextView
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:textColorHint="@color/whitegray"
+				android:textColor="@color/white"
+				android:textSize="18dp"
+				android:gravity="center_vertical"
+				android:text="@{viewModel.orderItem.salesPrice}"
+				android:paddingRight="10dp"
+				android:textStyle="bold"
+				android:layout_weight="2">
+			</TextView>
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="1">
+
+			<TextView
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:text="변경금액"
 				android:textSize="20dp"
 				android:gravity="center"
 				android:textColor="@color/white"
@@ -72,10 +97,11 @@
 				android:layout_height="match_parent"
 				android:hint='@{viewModel.payselect == 1? "변경금액을 입력해주세요" : "추가배달료를 입력해주세요"}'
 				android:textColorHint="@color/whitegray"
-				android:text="@={viewModel.pay}"
+				android:text="@{viewModel.orderItem.salesPrice}"
+				android:onTextChanged="@{viewModel::afterTextChanged}"
 				android:textColor="@color/white"
 				android:textSize="18dp"
-				android:layout_marginRight="10dp"
+				android:paddingRight="10dp"
 				android:inputType="number"
 				android:digits="0123456789"
 				android:textStyle="bold"
@@ -87,7 +113,7 @@
 		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="0dp"
-			android:layout_weight="2"
+			android:layout_weight="1"
 			android:layout_marginTop="10dp"
 			android:orientation="horizontal">
 

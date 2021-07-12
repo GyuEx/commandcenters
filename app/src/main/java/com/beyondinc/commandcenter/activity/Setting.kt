@@ -1,6 +1,7 @@
 package com.beyondinc.commandcenter.activity
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -84,6 +85,13 @@ class Setting : AppCompatActivity(), SettingFun {
     }
 
     override fun Exit(){
+
+        Log.e("aaaaaaaa","aaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
+        var intent : Intent = Intent()
+        //intent.putExtra("AAA","aaaaa")
+        //setResult(RESULT_OK,intent)
+        setResult(RESULT_OK)
         this.finish()
     }
 

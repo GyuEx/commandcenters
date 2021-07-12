@@ -43,7 +43,7 @@ class PaymentDialog : DialogFragment(){
         val deviceWidth = Vars.DeviceSize.x
         val deviceHeight = Vars.DeviceSize.y
         params?.width = (deviceWidth).toInt()
-        params?.height = (deviceHeight).toInt() / 3
+        params?.height = (deviceHeight).toInt() / 2
         dialog?.window?.attributes = params as WindowManager.LayoutParams
     }
 }

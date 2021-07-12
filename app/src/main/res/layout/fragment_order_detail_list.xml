@@ -751,7 +751,7 @@
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:singleLine="true"
-                    android:text="@{viewModel.orderItem.driverAssignDT}"
+                    android:text='@{viewModel.getdriverAssignDT}'
                     android:textColor="@color/black"></TextView>
             </LinearLayout>
 
@@ -778,7 +778,7 @@
                     android:textColor="@color/black"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
-                    android:text="@{viewModel.orderItem.pickupDT}"
+                    android:text='@{viewModel.getpickupDT}'
                     android:singleLine="true"
                     android:background="@drawable/detail_data_background">
                 </TextView>
@@ -807,7 +807,7 @@
                     android:textColor="@color/black"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
-                    android:text="@{viewModel.orderItem.completeDT}"
+                    android:text='@{viewModel.getcompleteDT}'
                     android:singleLine="true"
                     android:background="@drawable/detail_data_background">
                 </TextView>
